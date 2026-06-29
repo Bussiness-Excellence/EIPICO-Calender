@@ -252,7 +252,6 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       <div class="f-group"><label class="f-label">Password</label><input class="f-input" type="password" id="lPw" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <button class="btn-main" onclick="doLogin()">Sign in</button>
       <div class="err" id="lErr"></div>
-      <div class="hint">Default password is <strong>1356</strong> — change it after first login</div>
     </div>
 
     <!-- REGISTER -->
@@ -274,7 +273,7 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
         </select>
       </div>
       <div class="row2">
-        <div class="f-group"><label class="f-label">Password</label><input class="f-input" type="password" id="rPw" placeholder="Min 4 characters"></div>
+        <div class="f-group"><label class="f-label">Password</label><input class="f-input" type="password" id="rPw" placeholder="Min 6 characters"></div>
         <div class="f-group"><label class="f-label">Confirm password</label><input class="f-input" type="password" id="rPw2" placeholder="Repeat password"></div>
       </div>
       <button class="btn-main" onclick="doRegister()">Create account</button>
@@ -429,8 +428,7 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
   <div class="modal" style="max-width:360px">
     <div class="mh"><span class="mh-title">Change password</span><button class="mclose" onclick="closePwModal()"><i class="ti ti-x"></i></button></div>
     <div class="mb">
-      <div class="mf"><label class="ml">Current password</label><input type="password" class="mi" id="pwCur" placeholder="••••"></div>
-      <div class="mf"><label class="ml">New password</label><input type="password" class="mi" id="pwNew" placeholder="Min 4 characters"></div>
+      <div class="mf"><label class="ml">New password</label><input type="password" class="mi" id="pwNew" placeholder="Min 6 characters"></div>
       <div class="mf"><label class="ml">Confirm new password</label><input type="password" class="mi" id="pwConf" placeholder="Repeat"></div>
       <div class="err" id="pwErr"></div>
     </div>
@@ -440,7 +438,7 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div id="toast"></div>
 
-<!-- 1. Add the Supabase library right ABOVE your existing script tag -->
+<!-- SUPABASE SCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -448,226 +446,247 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 // SUPABASE INIT
 // ═══════════════════════
 const { createClient } = supabase;
-
-// 2. Paste your URL and Anon Key inside these quotes:
 const supabaseUrl = 'https://xxbfwvlqixnmonxytdxq.supabase.co'; 
 const supabaseKey = 'sb_publishable_EmW0iOc7qMdpEtGdKbjRgQ_-ETHGD2m';
 const _supabase = createClient(supabaseUrl, supabaseKey);
+
 // ═══════════════════════
-// CONSTANTS
+// CONSTANTS & STATE
 // ═══════════════════════
 const DEPT_LABELS={marketing:'Marketing Team',fieldforce:'Field Force Trainers',crm:'CRM Department',be:'BE Department',medical:'Medical Advisors',others:'Others'};
 const DEPT_COLORS={marketing:'#7C3AED',fieldforce:'#059669',crm:'#DC2626',be:'#D97706',medical:'#0891B2',others:'#64748B'};
 const DEPT_CLS={marketing:'dp-marketing',fieldforce:'dp-fieldforce',crm:'dp-crm',be:'dp-be',medical:'dp-medical',others:'dp-others'};
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const initials=n=>n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
 
-// ═══════════════════════
-// STATE
-// ═══════════════════════
-let CU=null,events=[],curYear=new Date().getFullYear(),curMonth=new Date().getMonth();
-let selectedDay=null,activeDept='all',activeUser=null,curView='month';
+let CU=null, events=[], allUsers=[], curYear=new Date().getFullYear(), curMonth=new Date().getMonth();
+let selectedDay=null, activeDept='all', activeUser=null, curView='month';
 let pendingKpis=[];
 
 // ═══════════════════════
-// STORAGE
-// ═══════════════════════
-const initials=n=>n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-
-function getUsers(){
-  const d=localStorage.getItem('eipico_users');
-  if(d)return JSON.parse(d);
-  // Seed default users
-  const defaults=[
-    {email:'ahmed.kamal@eipico.net',name:'Ahmed Kamal',dept:'marketing',pw:'1356'},
-    {email:'sara.nasser@eipico.net',name:'Sara Nasser',dept:'marketing',pw:'1356'},
-    {email:'omar.fathy@eipico.net',name:'Omar Fathy',dept:'fieldforce',pw:'1356'},
-    {email:'hana.samir@eipico.net',name:'Hana Samir',dept:'fieldforce',pw:'1356'},
-    {email:'nadia.wahba@eipico.net',name:'Nadia Wahba',dept:'crm',pw:'1356'},
-    {email:'youssef.amin@eipico.net',name:'Youssef Amin',dept:'crm',pw:'1356'},
-    {email:'tarek.soliman@eipico.net',name:'Tarek Soliman',dept:'be',pw:'1356'},
-    {email:'dina.ramadan@eipico.net',name:'Dina Ramadan',dept:'be',pw:'1356'},
-    {email:'amr.sayed@eipico.net',name:'Amr Sayed',dept:'medical',pw:'1356'},
-    {email:'laila.ibrahim@eipico.net',name:'Laila Ibrahim',dept:'medical',pw:'1356'},
-    {email:'eman.ali@eipico.net',name:'Eman Ali',dept:'others',pw:'1356'},
-  ];
-  localStorage.setItem('eipico_users',JSON.stringify(defaults));
-  return defaults;
-}
-function saveUsers(u){localStorage.setItem('eipico_users',JSON.stringify(u));}
-function getEvents(){
-  const d=localStorage.getItem('eipico_events');
-  if(d)return JSON.parse(d);
-  return seedEvents();
-}
-function saveEventsDB(){localStorage.setItem('eipico_events',JSON.stringify(events));}
-function seedEvents(){
-  const y=new Date().getFullYear(),m=new Date().getMonth();
-  const mk=(day,title,email,dept,pri,notes,kpis=[])=>{
-    const u=getUsers().find(u=>u.email===email)||getUsers()[0];
-    return{id:Date.now()+Math.random(),date:`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`,title,email,userName:u.name,dept,priority:pri,notes,kpis};
-  };
-  const ev=[
-    mk(2,'Marketing kick-off','ahmed.kamal@eipico.net','marketing','high','Q3 campaign launch',[{name:'New leads',actual:12,target:20},{name:'Campaigns sent',actual:3,target:5}]),
-    mk(4,'Field training – Cairo','omar.fathy@eipico.net','fieldforce','normal','New reps onboarding',[{name:'Reps trained',actual:18,target:25},{name:'Sessions done',actual:2,target:3}]),
-    mk(6,'CRM data review','nadia.wahba@eipico.net','crm','high','Monthly pipeline audit',[{name:'Records updated',actual:340,target:400}]),
-    mk(9,'BE performance report','tarek.soliman@eipico.net','be','urgent','Board-ready presentation',[{name:'Reports submitted',actual:1,target:1},{name:'Data accuracy %',actual:98,target:100}]),
-    mk(11,'Medical advisor meeting','amr.sayed@eipico.net','medical','normal','Product updates briefing',[{name:'Advisors attended',actual:8,target:10}]),
-    mk(15,'Social media strategy','sara.nasser@eipico.net','marketing','normal','Q3 content calendar',[{name:'Posts scheduled',actual:6,target:10}]),
-    mk(18,'Field training – Alex','hana.samir@eipico.net','fieldforce','normal','Product knowledge session',[{name:'Reps trained',actual:22,target:30}]),
-    mk(22,'BE quarterly review','dina.ramadan@eipico.net','be','high','KPI deep-dive',[{name:'KPIs on target',actual:7,target:10}]),
-    mk(25,'Scientific symposium','laila.ibrahim@eipico.net','medical','urgent','National pharma conference',[{name:'Drs contacted',actual:45,target:60}]),
-  ];
-  localStorage.setItem('eipico_events',JSON.stringify(ev));
-  return ev;
-}
-
-// ═══════════════════════
-// AUTH TABS
+// AUTHENTICATION LOGIC
 // ═══════════════════════
 function switchTab(t){
-  ['login','register'].forEach(tab=>{
-    document.getElementById(tab+'Panel').classList.toggle('on',tab===t);
-    document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='register')));
+  document.getElementById('loginPanel').classList.toggle('on', t==='login');
+  document.getElementById('regPanel').classList.toggle('on', t==='register');
+  document.querySelectorAll('.auth-tab').forEach((el,i)=>{
+    el.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='register'));
   });
+  document.getElementById('lErr').classList.remove('on');
+  document.getElementById('rErr').classList.remove('on');
+  document.getElementById('rOk').classList.remove('on');
 }
 
-// ═══════════════════════
-// LOGIN
-// ═══════════════════════
-function doLogin(){
-  const email=document.getElementById('lEmail').value.trim().toLowerCase();
-  const pw=document.getElementById('lPw').value;
-  const err=document.getElementById('lErr');
+async function doRegister() {
+  const email = document.getElementById('rEmail').value.trim().toLowerCase();
+  const first = document.getElementById('rFirst').value.trim();
+  const last = document.getElementById('rLast').value.trim();
+  const dept = document.getElementById('rDept').value;
+  const pw = document.getElementById('rPw').value;
+  const pw2 = document.getElementById('rPw2').value;
+  const err = document.getElementById('rErr');
+  const ok = document.getElementById('rOk');
+  
+  err.classList.remove('on'); ok.classList.remove('on');
+
+  if(!email || !first || !last || !dept) { err.textContent = 'Please fill all fields'; err.classList.add('on'); return; }
+  if(pw.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.add('on'); return; }
+  if(pw !== pw2) { err.textContent = 'Passwords do not match.'; err.classList.add('on'); return; }
+
+  // 1. Create the user in Supabase Auth
+  const { data, error } = await _supabase.auth.signUp({ email, password: pw });
+  if (error) { err.textContent = error.message; err.classList.add('on'); return; }
+
+  // 2. Save their profile info to the database
+  if (data.user) {
+    await _supabase.from('profiles').insert([
+      { id: data.user.id, email: email, first_name: first, last_name: last, department: dept }
+    ]);
+    ok.textContent = 'Registration successful! Switching to login...';
+    ok.classList.add('on');
+    
+    // Clear fields
+    ['rFirst','rLast','rEmail','rPw','rPw2','rDept'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('lEmail').value = email;
+    setTimeout(() => switchTab('login'), 1500);
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('lEmail').value.trim().toLowerCase();
+  const pw = document.getElementById('lPw').value;
+  const err = document.getElementById('lErr');
   err.classList.remove('on');
-  if(!email.endsWith('@eipico.net')){err.textContent='Please use your @eipico.net email.';err.classList.add('on');return;}
-  const users=getUsers();
-  const u=users.find(u=>u.email===email);
-  if(!u){err.textContent='No account found. Please register first or contact admin.';err.classList.add('on');return;}
-  if(u.pw!==pw){err.textContent='Incorrect password. Default is 1356.';err.classList.add('on');return;}
-  CU=u;
-  sessionStorage.setItem('eipico_sess',email);
-  startApp();
+
+  if(!email || !pw){ err.textContent='Enter email and password'; err.classList.add('on'); return; }
+
+  const { data, error } = await _supabase.auth.signInWithPassword({ email, password: pw });
+  if (error) { err.textContent = error.message; err.classList.add('on'); return; }
+  
+  await checkSession(); // Load user profile and start app
 }
 
-// ═══════════════════════
-// REGISTER
-// ═══════════════════════
-function doRegister(){
-  const first=document.getElementById('rFirst').value.trim();
-  const last=document.getElementById('rLast').value.trim();
-  const email=document.getElementById('rEmail').value.trim().toLowerCase();
-  const dept=document.getElementById('rDept').value;
-  const pw=document.getElementById('rPw').value;
-  const pw2=document.getElementById('rPw2').value;
-  const err=document.getElementById('rErr');
-  const ok=document.getElementById('rOk');
-  err.classList.remove('on');ok.classList.remove('on');
-  if(!first||!last){err.textContent='Please enter your full name.';err.classList.add('on');return;}
-  if(!email.endsWith('@eipico.net')){err.textContent='Email must end with @eipico.net';err.classList.add('on');return;}
-  if(!dept){err.textContent='Please select your department.';err.classList.add('on');return;}
-  if(pw.length<4){err.textContent='Password must be at least 4 characters.';err.classList.add('on');return;}
-  if(pw!==pw2){err.textContent='Passwords do not match.';err.classList.add('on');return;}
-  const users=getUsers();
-  if(users.find(u=>u.email===email)){err.textContent='This email is already registered. Please sign in.';err.classList.add('on');return;}
-  users.push({email,name:`${first} ${last}`,dept,pw});
-  saveUsers(users);
-  ok.textContent=`Account created for ${first} ${last}! You can now sign in.`;
-  ok.classList.add('on');
-  setTimeout(()=>switchTab('login'),1800);
-}
-
-// ═══════════════════════
-// LOGOUT
-// ═══════════════════════
-function doLogout(){
-  sessionStorage.removeItem('eipico_sess');
-  CU=null;
+async function doLogout() {
+  await _supabase.auth.signOut();
+  CU = null;
   document.getElementById('appScreen').classList.remove('on');
   document.getElementById('authScreen').classList.add('on');
-  document.getElementById('lEmail').value='';
-  document.getElementById('lPw').value='';
+  document.getElementById('lEmail').value = '';
+  document.getElementById('lPw').value = '';
 }
 
-function checkSession(){
-  const e=sessionStorage.getItem('eipico_sess');
-  if(e){const u=getUsers().find(u=>u.email===e);if(u){CU=u;startApp();return;}}
+async function checkSession() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (session) {
+    const { data: profile } = await _supabase.from('profiles').select('*').eq('id', session.user.id).single();
+    if (profile) {
+      CU = { 
+        email: profile.email, 
+        name: profile.first_name + ' ' + profile.last_name, 
+        dept: profile.department 
+      };
+      await startApp();
+    }
+  }
 }
 
 // ═══════════════════════
-// START APP
+// CORE APP LOGIC
 // ═══════════════════════
-function startApp(){
-  events=getEvents();
-  document.body.setAttribute('data-dept',CU.dept);
-  document.getElementById('tbAv').textContent=initials(CU.name);
-  document.getElementById('tbName').textContent=CU.name;
-  document.getElementById('deptBadge').textContent=DEPT_LABELS[CU.dept]||CU.dept;
+async function startApp() {
+  document.body.setAttribute('data-dept', CU.dept);
+  document.getElementById('tbAv').textContent = initials(CU.name);
+  document.getElementById('tbName').textContent = CU.name;
+  document.getElementById('deptBadge').textContent = DEPT_LABELS[CU.dept] || CU.dept;
+  
   document.getElementById('authScreen').classList.remove('on');
   document.getElementById('appScreen').classList.add('on');
-  activeDept=CU.dept;
+  
+  activeDept = CU.dept;
   updateDeptNav();
+  
+  await loadUsersDB();
   renderFilterBar();
   renderUserList();
-  renderCal();
-  renderRecentAct();
+  
+  await loadEventsDB();
+}
+
+async function loadUsersDB() {
+  const { data } = await _supabase.from('profiles').select('*');
+  if (data) {
+    allUsers = data.map(p => ({ email: p.email, name: p.first_name + ' ' + p.last_name, dept: p.department }));
+  }
+}
+
+async function loadEventsDB() {
+  const { data, error } = await _supabase.from('events').select(`*, profiles(first_name, last_name)`);
+  if (error) { showToast('Failed to load events'); console.error(error); return; }
+
+  events = data.map(dbEvent => ({
+    id: dbEvent.id,
+    date: dbEvent.date,
+    title: dbEvent.title,
+    email: dbEvent.profiles ? dbEvent.profiles.email : null,
+    userName: dbEvent.profiles ? `${dbEvent.profiles.first_name} ${dbEvent.profiles.last_name}` : 'Unknown',
+    dept: dbEvent.department,
+    priority: dbEvent.priority,
+    notes: dbEvent.notes,
+    kpis: dbEvent.kpis || []
+  }));
+
+  renderCal(); 
+  if(curView === 'list') renderList();
+}
+
+async function saveEvent() {
+  const date = document.getElementById('eDate').value;
+  const title = document.getElementById('eTitle').value.trim();
+  const assignedEmail = document.getElementById('eUser').value; // from select
+  const dept = document.getElementById('eDept').value;
+  const pri = document.getElementById('ePri').value;
+  const notes = document.getElementById('eNotes').value.trim();
+  
+  if(!date || !title || !assignedEmail){ showToast('Please fill in date, title, and team member.'); return; }
+  
+  // Find assigned user's ID to store
+  const { data: profileData } = await _supabase.from('profiles').select('id').eq('email', assignedEmail).single();
+  if(!profileData) { showToast('Selected user not found in database.'); return; }
+
+  const { error } = await _supabase.from('events').insert([
+    { user_id: profileData.id, date: date, title: title, department: dept, priority: pri, notes: notes, kpis: pendingKpis }
+  ]);
+
+  if (error) { showToast('Error saving event: ' + error.message); return; }
+
+  closeModal();
+  await loadEventsDB();
+  selectDay(date);
+  showToast('Event added successfully');
+}
+
+async function removeEvent(id){
+  const { error } = await _supabase.from('events').delete().eq('id', id);
+  if(error) { showToast('Error removing event.'); return; }
+  
+  events = events.filter(e => String(e.id) !== String(id));
+  if(selectedDay) updatePanel(selectedDay);
+  renderCal(); 
+  showToast('Event removed');
 }
 
 // ═══════════════════════
-// CHANGE PASSWORD
+// PASSWORD MANAGEMENT
 // ═══════════════════════
-function openPwModal(){document.getElementById('pwBg').classList.add('open');}
-function closePwModal(){document.getElementById('pwBg').classList.remove('open');['pwCur','pwNew','pwConf'].forEach(id=>document.getElementById(id).value='');document.getElementById('pwErr').classList.remove('on');}
-function savePw(){
-  const cur=document.getElementById('pwCur').value;
-  const nw=document.getElementById('pwNew').value;
-  const cf=document.getElementById('pwConf').value;
-  const err=document.getElementById('pwErr');
+function openPwModal(){ document.getElementById('pwBg').classList.add('open'); }
+function closePwModal(){ document.getElementById('pwBg').classList.remove('open'); ['pwNew','pwConf'].forEach(id=>document.getElementById(id).value=''); document.getElementById('pwErr').classList.remove('on'); }
+
+async function savePw() {
+  const nw = document.getElementById('pwNew').value;
+  const cf = document.getElementById('pwConf').value;
+  const err = document.getElementById('pwErr');
   err.classList.remove('on');
-  if(cur!==CU.pw){err.textContent='Current password is incorrect.';err.classList.add('on');return;}
-  if(nw.length<4){err.textContent='New password must be at least 4 characters.';err.classList.add('on');return;}
-  if(nw!==cf){err.textContent='Passwords do not match.';err.classList.add('on');return;}
-  const users=getUsers();
-  const idx=users.findIndex(u=>u.email===CU.email);
-  users[idx].pw=nw;saveUsers(users);CU.pw=nw;
-  closePwModal();showToast('Password updated successfully');
+  
+  if(nw.length < 6) { err.textContent = 'New password must be at least 6 characters.'; err.classList.add('on'); return; }
+  if(nw !== cf) { err.textContent = 'Passwords do not match.'; err.classList.add('on'); return; }
+  
+  const { error } = await _supabase.auth.updateUser({ password: nw });
+  if (error) { err.textContent = error.message; err.classList.add('on'); return; }
+  
+  closePwModal(); 
+  showToast('Password updated successfully');
 }
 
 // ═══════════════════════
-// FILTER BAR
+// FILTER BAR & SIDEBAR
 // ═══════════════════════
 function renderFilterBar(){
-  const bar=document.getElementById('filterBar');
-  const users=getUsers().filter(u=>activeDept==='all'||u.dept===activeDept);
-  bar.innerHTML=`<div class="fp ${!activeUser?'active':''}" onclick="setUserFilter(null)">All</div>`
-    +users.map(u=>`<div class="fp ${activeUser===u.email?'active':''}" onclick="setUserFilter('${u.email}')">${u.name}</div>`).join('');
+  const bar = document.getElementById('filterBar');
+  const users = allUsers.filter(u => activeDept === 'all' || u.dept === activeDept);
+  bar.innerHTML = `<div class="fp ${!activeUser ? 'active' : ''}" onclick="setUserFilter(null)">All</div>`
+    + users.map(u => `<div class="fp ${activeUser === u.email ? 'active' : ''}" onclick="setUserFilter('${u.email}')">${u.name}</div>`).join('');
 }
-function setUserFilter(email){activeUser=email===activeUser?null:email;renderFilterBar();renderCal();}
+function setUserFilter(email){ activeUser = email === activeUser ? null : email; renderFilterBar(); renderCal(); }
 
-// ═══════════════════════
-// SIDEBAR USERS
-// ═══════════════════════
 function renderUserList(){
-  const c=document.getElementById('userList');
-  const users=getUsers().filter(u=>activeDept==='all'||u.dept===activeDept);
-  c.innerHTML=users.map(u=>`<div class="urow" onclick="setUserFilter('${u.email}')">
-    <div class="uav" style="background:${DEPT_COLORS[u.dept]||'#1D5FA8'}">${initials(u.name)}</div>
+  const c = document.getElementById('userList');
+  const users = allUsers.filter(u => activeDept === 'all' || u.dept === activeDept);
+  c.innerHTML = users.map(u => `<div class="urow" onclick="setUserFilter('${u.email}')">
+    <div class="uav" style="background:${DEPT_COLORS[u.dept] || '#1D5FA8'}">${initials(u.name)}</div>
     <span class="uname">${u.name}</span>
   </div>`).join('');
 }
 
-// ═══════════════════════
-// DEPT FILTER
-// ═══════════════════════
 function filterDept(d){
-  activeDept=d;activeUser=null;
-  document.body.setAttribute('data-dept',d==='all'?CU.dept:d);
-  updateDeptNav();renderFilterBar();renderUserList();renderCal();
+  activeDept = d; activeUser = null;
+  document.body.setAttribute('data-dept', d === 'all' ? CU.dept : d);
+  updateDeptNav(); renderFilterBar(); renderUserList(); renderCal();
 }
 function updateDeptNav(){
-  ['all','marketing','fieldforce','crm','be','medical','others'].forEach(d=>{
-    const el=document.getElementById('dn-'+d);
-    if(el)el.classList.toggle('active',activeDept===d);
+  ['all','marketing','fieldforce','crm','be','medical','others'].forEach(d => {
+    const el = document.getElementById('dn-' + d);
+    if(el) el.classList.toggle('active', activeDept === d);
   });
 }
 
@@ -675,25 +694,22 @@ function updateDeptNav(){
 // VIEW SWITCHING
 // ═══════════════════════
 function setView(v){
-  curView=v;
-  ['month','week','list'].forEach(vv=>{
-    document.getElementById('nv-'+vv)?.classList.toggle('active',vv===v);
-    document.getElementById('vb-'+vv)?.classList.toggle('active',vv===v);
-    const el=document.getElementById(vv+'View');
-    if(el)el.style.display=vv===v?'block':'none';
+  curView = v;
+  ['month','week','list'].forEach(vv => {
+    document.getElementById('nv-' + vv)?.classList.toggle('active', vv === v);
+    document.getElementById('vb-' + vv)?.classList.toggle('active', vv === v);
+    const el = document.getElementById(vv + 'View');
+    if(el) el.style.display = vv === v ? 'block' : 'none';
   });
-  if(v==='month')renderCal();
-  else if(v==='week')renderWeek();
+  if(v === 'month') renderCal();
+  else if(v === 'week') renderWeek();
   else renderList();
 }
 
-// ═══════════════════════
-// FILTERED EVENTS
-// ═══════════════════════
 function fEvents(){
-  return events.filter(e=>{
-    if(activeUser&&e.email!==activeUser)return false;
-    if(activeDept!=='all'&&e.dept!==activeDept)return false;
+  return events.filter(e => {
+    if(activeUser && e.email !== activeUser) return false;
+    if(activeDept !== 'all' && e.dept !== activeDept) return false;
     return true;
   });
 }
@@ -702,144 +718,150 @@ function fEvents(){
 // MONTH CALENDAR
 // ═══════════════════════
 function renderCal(){
-  const grid=document.getElementById('calGrid');
-  document.getElementById('monthTitle').textContent=`${MONTHS[curMonth]} ${curYear}`;
-  const first=new Date(curYear,curMonth,1).getDay();
-  const dim=new Date(curYear,curMonth+1,0).getDate();
-  const today=new Date();
-  const fe=fEvents();
-  const ms=`${curYear}-${String(curMonth+1).padStart(2,'0')}`;
-  document.getElementById('evCount').textContent=fe.filter(e=>e.date.startsWith(ms)).length;
-  let html='';
-  for(let i=0;i<42;i++){
-    const dn=i-first+1,inM=dn>=1&&dn<=dim;
-    const dt=inM?`${curYear}-${String(curMonth+1).padStart(2,'0')}-${String(dn).padStart(2,'0')}`:null;
-    const isToday=inM&&today.getFullYear()===curYear&&today.getMonth()===curMonth&&today.getDate()===dn;
-    const isSel=dt&&selectedDay===dt;
-    const de=dt?fe.filter(e=>e.date===dt):[];
-    const dispN=inM?dn:(dn<=0?new Date(curYear,curMonth,dn).getDate():dn-dim);
-    let cls='day-cell'+(inM?'':' other-month')+(isToday?' today':'')+(isSel?' selected':'');
-    html+=`<div class="${cls}" onclick="${inM?`selectDay('${dt}')`:''}" >
+  const grid = document.getElementById('calGrid');
+  document.getElementById('monthTitle').textContent = `${MONTHS[curMonth]} ${curYear}`;
+  const first = new Date(curYear, curMonth, 1).getDay();
+  const dim = new Date(curYear, curMonth + 1, 0).getDate();
+  const today = new Date();
+  const fe = fEvents();
+  const ms = `${curYear}-${String(curMonth + 1).padStart(2, '0')}`;
+  document.getElementById('evCount').textContent = fe.filter(e => e.date.startsWith(ms)).length;
+  
+  let html = '';
+  for(let i = 0; i < 42; i++){
+    const dn = i - first + 1, inM = dn >= 1 && dn <= dim;
+    const dt = inM ? `${curYear}-${String(curMonth + 1).padStart(2, '0')}-${String(dn).padStart(2, '0')}` : null;
+    const isToday = inM && today.getFullYear() === curYear && today.getMonth() === curMonth && today.getDate() === dn;
+    const isSel = dt && selectedDay === dt;
+    const de = dt ? fe.filter(e => e.date === dt) : [];
+    const dispN = inM ? dn : (dn <= 0 ? new Date(curYear, curMonth, dn).getDate() : dn - dim);
+    let cls = 'day-cell' + (inM ? '' : ' other-month') + (isToday ? ' today' : '') + (isSel ? ' selected' : '');
+    
+    html += `<div class="${cls}" onclick="${inM ? `selectDay('${dt}')` : ''}" >
       <div class="dn">${dispN}</div>
-      ${de.slice(0,3).map(e=>`<div class="epill ${DEPT_CLS[e.dept]||''}" title="${e.title} — ${e.userName}">${e.title}</div>`).join('')}
-      ${de.length>3?`<div class="more-p">+${de.length-3} more</div>`:''}
+      ${de.slice(0, 3).map(e => `<div class="epill ${DEPT_CLS[e.dept] || ''}" title="${e.title} — ${e.userName}">${e.title}</div>`).join('')}
+      ${de.length > 3 ? `<div class="more-p">+${de.length - 3} more</div>` : ''}
     </div>`;
   }
-  grid.innerHTML=html;
-  if(selectedDay)updatePanel(selectedDay);
+  grid.innerHTML = html;
+  if(selectedDay) updatePanel(selectedDay);
   renderRecentAct();
 }
 
 function selectDay(dt){
-  selectedDay=dt;
+  selectedDay = dt;
   renderCal();
-  const p=dt.split('-');
-  const d=new Date(p[0],p[1]-1,p[2]);
-  document.getElementById('sdl').textContent=d.toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const p = dt.split('-');
+  const d = new Date(p[0], p[1] - 1, p[2]);
+  document.getElementById('sdl').textContent = d.toLocaleDateString('en-GB', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
   updatePanel(dt);
-  document.getElementById('eDate').value=dt;
+  document.getElementById('eDate').value = dt;
 }
 
 // ═══════════════════════
 // DAY PANEL
 // ═══════════════════════
 function updatePanel(dt){
-  const evts=events.filter(e=>e.date===dt);
-  const c=document.getElementById('dayAssign');
-  if(!evts.length){c.innerHTML='<div class="empty"><i class="ti ti-calendar-off"></i><p>No events. Click Add event to create one.</p></div>';return;}
-  c.innerHTML=evts.map(e=>{
-    const bc=e.priority==='urgent'?'bu':e.priority==='high'?'bh':'bn';
-    const pl=e.priority==='urgent'?'Urgent':e.priority==='high'?'High':'Normal';
-    const u=getUsers().find(u=>u.email===e.email);
-    const kpiHtml=e.kpis&&e.kpis.length?`<div class="kpi-grid">${e.kpis.map(k=>{const pct=k.target>0?Math.min(100,Math.round(k.actual/k.target*100)):0;return`<div class="kpi-row"><div class="kpi-lbl">${k.name}</div><div class="kpi-val">${k.actual}<span style="font-size:10px;font-weight:400;color:var(--tm)">/${k.target}</span></div><div class="kpi-bar-wrap"><div class="kpi-bar" style="width:${pct}%"></div></div><div class="kpi-target">${pct}% of target</div></div>`;}).join('')}</div>`:'';
-    return`<div class="mt">
+  const evts = events.filter(e => e.date === dt);
+  const c = document.getElementById('dayAssign');
+  if(!evts.length){ c.innerHTML = '<div class="empty"><i class="ti ti-calendar-off"></i><p>No events. Click Add event to create one.</p></div>'; return; }
+  
+  c.innerHTML = evts.map(e => {
+    const bc = e.priority === 'urgent' ? 'bu' : e.priority === 'high' ? 'bh' : 'bn';
+    const pl = e.priority === 'urgent' ? 'Urgent' : e.priority === 'high' ? 'High' : 'Normal';
+    const kpiHtml = e.kpis && e.kpis.length ? `<div class="kpi-grid">${e.kpis.map(k => {
+      const pct = k.target > 0 ? Math.min(100, Math.round(k.actual / k.target * 100)) : 0;
+      return `<div class="kpi-row"><div class="kpi-lbl">${k.name}</div><div class="kpi-val">${k.actual}<span style="font-size:10px;font-weight:400;color:var(--tm)">/${k.target}</span></div><div class="kpi-bar-wrap"><div class="kpi-bar" style="width:${pct}%"></div></div><div class="kpi-target">${pct}% of target</div></div>`;
+    }).join('')}</div>` : '';
+    
+    return `<div class="mt">
       <div class="mtt">${e.title}</div>
       <div class="mtm">
-        <div class="uav" style="background:${DEPT_COLORS[e.dept]||'#1D5FA8'};width:18px;height:18px;font-size:9px">${u?initials(u.name):'?'}</div>
+        <div class="uav" style="background:${DEPT_COLORS[e.dept] || '#1D5FA8'};width:18px;height:18px;font-size:9px">${initials(e.userName)}</div>
         <span>${e.userName}</span>
         <span class="badge ${bc}">${pl}</span>
-        <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${DEPT_COLORS[e.dept]}22;color:${DEPT_COLORS[e.dept]};font-weight:600">${DEPT_LABELS[e.dept]||e.dept}</span>
+        <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${DEPT_COLORS[e.dept]}22;color:${DEPT_COLORS[e.dept]};font-weight:600">${DEPT_LABELS[e.dept] || e.dept}</span>
         <button onclick="removeEvent('${e.id}')" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--tm);padding:2px;border-radius:4px"><i class="ti ti-trash" style="font-size:13px"></i></button>
       </div>
-      ${e.notes?`<div style="font-size:11px;color:var(--tm);margin-top:5px;line-height:1.4">${e.notes}</div>`:''}
+      ${e.notes ? `<div style="font-size:11px;color:var(--tm);margin-top:5px;line-height:1.4">${e.notes}</div>` : ''}
       ${kpiHtml}
     </div>`;
   }).join('');
 }
 
-function removeEvent(id){
-  events=events.filter(e=>String(e.id)!==String(id));
-  saveEventsDB();
-  if(selectedDay)updatePanel(selectedDay);
-  renderCal();showToast('Event removed');
-}
-
 function renderRecentAct(){
-  const c=document.getElementById('recentAct');
-  const s=[...events].sort((a,b)=>b.id-a.id).slice(0,5);
-  if(!s.length){c.innerHTML='<div class="empty"><i class="ti ti-history"></i><p>No events yet</p></div>';return;}
-  c.innerHTML=s.map(e=>`<div style="display:flex;gap:9px;align-items:flex-start;margin-bottom:10px">
-    <div style="width:8px;height:8px;border-radius:50%;background:${DEPT_COLORS[e.dept]||'#1D5FA8'};margin-top:5px;flex-shrink:0"></div>
+  const c = document.getElementById('recentAct');
+  const s = [...events].sort((a, b) => b.id > a.id ? 1 : -1).slice(0, 5); // Simplistic sorting based on UUIDs string values
+  if(!s.length){ c.innerHTML = '<div class="empty"><i class="ti ti-history"></i><p>No events yet</p></div>'; return; }
+  
+  c.innerHTML = s.map(e => `<div style="display:flex;gap:9px;align-items:flex-start;margin-bottom:10px">
+    <div style="width:8px;height:8px;border-radius:50%;background:${DEPT_COLORS[e.dept] || '#1D5FA8'};margin-top:5px;flex-shrink:0"></div>
     <div><div style="font-size:12px;font-weight:500">${e.title}</div><div style="font-size:11px;color:var(--tm)">${e.userName} · ${e.date}</div></div>
   </div>`).join('');
 }
 
 // ═══════════════════════
-// WEEK VIEW
+// WEEK & LIST VIEWS
 // ═══════════════════════
 function renderWeek(){
-  const c=document.getElementById('weekView');
-  const today=new Date();
-  const sow=new Date(curYear,curMonth,today.getDate()-today.getDay());
-  const days=Array.from({length:7},(_,i)=>{const d=new Date(sow);d.setDate(sow.getDate()+i);return d;});
-  const fe=fEvents();
-  let html=`<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:5">`;
-  days.forEach(d=>{
-    const isT=d.toDateString()===today.toDateString();
-    html+=`<div style="padding:10px 8px;text-align:center;border-right:1px solid var(--border)">
+  const c = document.getElementById('weekView');
+  const today = new Date();
+  const sow = new Date(curYear, curMonth, today.getDate() - today.getDay());
+  const days = Array.from({length: 7}, (_, i) => { const d = new Date(sow); d.setDate(sow.getDate() + i); return d; });
+  const fe = fEvents();
+  
+  let html = `<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:5">`;
+  days.forEach(d => {
+    const isT = d.toDateString() === today.toDateString();
+    html += `<div style="padding:10px 8px;text-align:center;border-right:1px solid var(--border)">
       <div style="font-size:10px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.06em">${DAYS[d.getDay()]}</div>
-      <div style="font-size:17px;font-weight:700;margin-top:2px;${isT?'color:var(--da,var(--bm))':''}">${d.getDate()}</div>
+      <div style="font-size:17px;font-weight:700;margin-top:2px;${isT ? 'color:var(--da,var(--bm))' : ''}">${d.getDate()}</div>
     </div>`;
   });
-  html+=`</div><div style="display:grid;grid-template-columns:repeat(7,1fr);min-height:400px">`;
-  days.forEach(d=>{
-    const dt=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    const de=fe.filter(e=>e.date===dt);
-    const isT=d.toDateString()===today.toDateString();
-    html+=`<div style="border-right:1px solid var(--border);padding:8px 6px;min-height:300px;background:${isT?'var(--dl,var(--bp))':'#fff'}" onclick="selectDay('${dt}')">
-      ${de.map(e=>`<div class="epill ${DEPT_CLS[e.dept]||''}" style="margin-bottom:4px;display:block;cursor:pointer">${e.title}</div>`).join('')}
+  html += `</div><div style="display:grid;grid-template-columns:repeat(7,1fr);min-height:400px">`;
+  
+  days.forEach(d => {
+    const dt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const de = fe.filter(e => e.date === dt);
+    const isT = d.toDateString() === today.toDateString();
+    
+    html += `<div style="border-right:1px solid var(--border);padding:8px 6px;min-height:300px;background:${isT ? 'var(--dl,var(--bp))' : '#fff'}" onclick="selectDay('${dt}')">
+      ${de.map(e => `<div class="epill ${DEPT_CLS[e.dept] || ''}" style="margin-bottom:4px;display:block;cursor:pointer">${e.title}</div>`).join('')}
     </div>`;
   });
-  html+=`</div>`;
-  c.innerHTML=html;
+  html += `</div>`;
+  c.innerHTML = html;
 }
 
-// ═══════════════════════
-// LIST VIEW
-// ═══════════════════════
 function renderList(){
-  const c=document.getElementById('listView');
-  const fe=fEvents().sort((a,b)=>a.date.localeCompare(b.date));
-  if(!fe.length){c.innerHTML='<div class="empty" style="margin-top:60px"><i class="ti ti-calendar-off" style="font-size:40px"></i><p>No events found.</p></div>';return;}
-  const grp={};
-  fe.forEach(e=>{const k=e.date.slice(0,7);(grp[k]=grp[k]||[]).push(e);});
-  c.innerHTML=Object.keys(grp).sort().map(mk=>{
-    const[y,m]=mk.split('-');
-    return`<div class="lmg"><div class="lmt">${MONTHS[+m-1]} ${y}</div>${grp[mk].map(e=>{
-      const d=new Date(e.date+'T00:00:00');
-      const bc=e.priority==='urgent'?'bu':e.priority==='high'?'bh':'bn';
-      const pl=e.priority==='urgent'?'Urgent':e.priority==='high'?'High':'Normal';
-      const kpiSum=e.kpis&&e.kpis.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:5px">${e.kpis.map(k=>{const pct=k.target>0?Math.min(100,Math.round(k.actual/k.target*100)):0;return`<span style="font-size:11px;background:var(--s0);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--t2)">${k.name}: <strong>${k.actual}/${k.target}</strong> <span style="color:${pct>=80?'#059669':'#DC2626'}">(${pct}%)</span></span>`;}).join('')}</div>`:'';
-      return`<div class="lrow"><div class="ldc"><div class="ldn">${d.getDate()}</div><div class="ldw">${DAYS[d.getDay()]}</div></div>
+  const c = document.getElementById('listView');
+  const fe = fEvents().sort((a, b) => a.date.localeCompare(b.date));
+  if(!fe.length){ c.innerHTML = '<div class="empty" style="margin-top:60px"><i class="ti ti-calendar-off" style="font-size:40px"></i><p>No events found.</p></div>'; return; }
+  
+  const grp = {};
+  fe.forEach(e => { const k = e.date.slice(0, 7); (grp[k] = grp[k] || []).push(e); });
+  
+  c.innerHTML = Object.keys(grp).sort().map(mk => {
+    const [y, m] = mk.split('-');
+    return `<div class="lmg"><div class="lmt">${MONTHS[+m - 1]} ${y}</div>${grp[mk].map(e => {
+      const d = new Date(e.date + 'T00:00:00');
+      const bc = e.priority === 'urgent' ? 'bu' : e.priority === 'high' ? 'bh' : 'bn';
+      const pl = e.priority === 'urgent' ? 'Urgent' : e.priority === 'high' ? 'High' : 'Normal';
+      const kpiSum = e.kpis && e.kpis.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:5px">${e.kpis.map(k => {
+        const pct = k.target > 0 ? Math.min(100, Math.round(k.actual / k.target * 100)) : 0;
+        return `<span style="font-size:11px;background:var(--s0);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--t2)">${k.name}: <strong>${k.actual}/${k.target}</strong> <span style="color:${pct >= 80 ? '#059669' : '#DC2626'}">(${pct}%)</span></span>`;
+      }).join('')}</div>` : '';
+      
+      return `<div class="lrow"><div class="ldc"><div class="ldn">${d.getDate()}</div><div class="ldw">${DAYS[d.getDay()]}</div></div>
         <div class="ldiv"></div>
         <div class="linfo"><div class="ltitle">${e.title}</div>
           <div class="lmeta">
-            <div class="uav" style="background:${DEPT_COLORS[e.dept]||'#1D5FA8'};width:18px;height:18px;font-size:9px">${initials(e.userName)}</div>
+            <div class="uav" style="background:${DEPT_COLORS[e.dept] || '#1D5FA8'};width:18px;height:18px;font-size:9px">${initials(e.userName)}</div>
             <span style="font-size:12px;color:var(--t2)">${e.userName}</span>
-            <span style="font-size:11px;color:var(--tm)">${DEPT_LABELS[e.dept]||e.dept}</span>
+            <span style="font-size:11px;color:var(--tm)">${DEPT_LABELS[e.dept] || e.dept}</span>
             <span class="badge ${bc}">${pl}</span>
           </div>
-          ${e.notes?`<div style="font-size:11px;color:var(--tm);margin-top:4px">${e.notes}</div>`:''}
+          ${e.notes ? `<div style="font-size:11px;color:var(--tm);margin-top:4px">${e.notes}</div>` : ''}
           ${kpiSum}
         </div>
         <button class="ldel" onclick="removeEvent('${e.id}')"><i class="ti ti-trash"></i></button>
@@ -848,81 +870,65 @@ function renderList(){
   }).join('');
 }
 
-// ═══════════════════════
-// NAV
-// ═══════════════════════
-function prevMonth(){if(curMonth===0){curMonth=11;curYear--;}else curMonth--;renderCal();if(curView==='list')renderList();}
-function nextMonth(){if(curMonth===11){curMonth=0;curYear++;}else curMonth++;renderCal();if(curView==='list')renderList();}
-function goToday(){const t=new Date();curYear=t.getFullYear();curMonth=t.getMonth();renderCal();if(curView==='week')renderWeek();if(curView==='list')renderList();}
+function prevMonth(){ if(curMonth === 0){ curMonth = 11; curYear--; } else curMonth--; renderCal(); if(curView === 'list') renderList(); }
+function nextMonth(){ if(curMonth === 11){ curMonth = 0; curYear++; } else curMonth++; renderCal(); if(curView === 'list') renderList(); }
+function goToday(){ const t = new Date(); curYear = t.getFullYear(); curMonth = t.getMonth(); renderCal(); if(curView === 'week') renderWeek(); if(curView === 'list') renderList(); }
 
 // ═══════════════════════
-// ADD EVENT MODAL
+// EVENT MODAL & KPIs
 // ═══════════════════════
 function onDeptChange(){
-  const d=document.getElementById('eDept').value;
-  const users=getUsers().filter(u=>u.dept===d);
-  const s=document.getElementById('eUser');
-  s.innerHTML=`<option value="">— select team member —</option>`+users.map(u=>`<option value="${u.email}">${u.name}</option>`).join('');
-  if(CU.dept===d)s.value=CU.email;
+  const d = document.getElementById('eDept').value;
+  const users = allUsers.filter(u => u.dept === d);
+  const s = document.getElementById('eUser');
+  s.innerHTML = `<option value="">— select team member —</option>` + users.map(u => `<option value="${u.email}">${u.name}</option>`).join('');
+  if(CU && CU.dept === d) s.value = CU.email;
 }
 
 function openModal(){
-  pendingKpis=[];renderKpiList();
+  pendingKpis = []; renderKpiList();
   document.getElementById('modalBg').classList.add('open');
-  if(!document.getElementById('eDate').value)document.getElementById('eDate').value=new Date().toISOString().slice(0,10);
-  document.getElementById('eDept').value=CU.dept;
+  if(!document.getElementById('eDate').value) document.getElementById('eDate').value = new Date().toISOString().slice(0, 10);
+  document.getElementById('eDept').value = CU.dept;
   onDeptChange();
-  document.getElementById('eUser').value=CU.email;
+  document.getElementById('eUser').value = CU.email;
 }
-function closeModal(){document.getElementById('modalBg').classList.remove('open');document.getElementById('eTitle').value='';document.getElementById('eNotes').value='';document.getElementById('kpiName').value='';document.getElementById('kpiActual').value='';document.getElementById('kpiTarget').value='';pendingKpis=[];renderKpiList();}
 
-// KPIs
+function closeModal(){
+  document.getElementById('modalBg').classList.remove('open');
+  document.getElementById('eTitle').value = '';
+  document.getElementById('eNotes').value = '';
+  document.getElementById('kpiName').value = '';
+  document.getElementById('kpiActual').value = '';
+  document.getElementById('kpiTarget').value = '';
+  pendingKpis = []; renderKpiList();
+}
+
 function addKpi(){
-  const name=document.getElementById('kpiName').value.trim();
-  const actual=parseFloat(document.getElementById('kpiActual').value)||0;
-  const target=parseFloat(document.getElementById('kpiTarget').value)||0;
-  if(!name){showToast('Please enter a KPI name.');return;}
-  pendingKpis.push({name,actual,target});
-  document.getElementById('kpiName').value='';document.getElementById('kpiActual').value='';document.getElementById('kpiTarget').value='';
+  const name = document.getElementById('kpiName').value.trim();
+  const actual = parseFloat(document.getElementById('kpiActual').value) || 0;
+  const target = parseFloat(document.getElementById('kpiTarget').value) || 0;
+  if(!name){ showToast('Please enter a KPI name.'); return; }
+  pendingKpis.push({name, actual, target});
+  document.getElementById('kpiName').value = ''; document.getElementById('kpiActual').value = ''; document.getElementById('kpiTarget').value = '';
   renderKpiList();
 }
-function removeKpi(i){pendingKpis.splice(i,1);renderKpiList();}
+function removeKpi(i){ pendingKpis.splice(i, 1); renderKpiList(); }
+
 function renderKpiList(){
-  document.getElementById('kpiList').innerHTML=pendingKpis.length?pendingKpis.map((k,i)=>{
-    const pct=k.target>0?Math.min(100,Math.round(k.actual/k.target*100)):0;
-    return`<div class="kpi-entry"><span class="kn">${k.name}</span><span class="kv">${k.actual}</span><span class="kt">/${k.target}</span><span style="font-size:11px;color:${pct>=80?'#059669':'#DC2626'}">${pct}%</span><button class="kpi-del-btn" onclick="removeKpi(${i})"><i class="ti ti-x"></i></button></div>`;
-  }).join(''):'<div style="font-size:12px;color:var(--tm);margin-bottom:10px;padding:8px 0">No KPIs added yet. Fill in the fields below and click Add.</div>';
+  document.getElementById('kpiList').innerHTML = pendingKpis.length ? pendingKpis.map((k, i) => {
+    const pct = k.target > 0 ? Math.min(100, Math.round(k.actual / k.target * 100)) : 0;
+    return `<div class="kpi-entry"><span class="kn">${k.name}</span><span class="kv">${k.actual}</span><span class="kt">/${k.target}</span><span style="font-size:11px;color:${pct >= 80 ? '#059669' : '#DC2626'}">${pct}%</span><button class="kpi-del-btn" onclick="removeKpi(${i})"><i class="ti ti-x"></i></button></div>`;
+  }).join('') : '<div style="font-size:12px;color:var(--tm);margin-bottom:10px;padding:8px 0">No KPIs added yet. Fill in the fields below and click Add.</div>';
 }
 
-function saveEvent(){
-  const date=document.getElementById('eDate').value;
-  const title=document.getElementById('eTitle').value.trim();
-  const email=document.getElementById('eUser').value;
-  const dept=document.getElementById('eDept').value;
-  const pri=document.getElementById('ePri').value;
-  const notes=document.getElementById('eNotes').value.trim();
-  if(!date||!title||!email){showToast('Please fill in date, title, and team member.');return;}
-  const u=getUsers().find(u=>u.email===email);
-  events.push({id:Date.now(),date,title,email,userName:u.name,dept,priority:pri,notes,kpis:[...pendingKpis]});
-  saveEventsDB();
-  closeModal();
-  renderCal();
-  if(curView==='list')renderList();
-  selectDay(date);
-  showToast('Event added successfully');
-}
-
-// ═══════════════════════
-// TOAST
-// ═══════════════════════
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+function showToast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
 
 // ═══════════════════════
 // INIT
 // ═══════════════════════
+document.getElementById('lEmail').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('lPw').focus(); });
 checkSession();
-document.getElementById('lEmail').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lPw').focus();});
-
 </script>
 </body>
 </html>
