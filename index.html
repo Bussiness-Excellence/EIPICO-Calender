@@ -9,113 +9,301 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bd:#0C3D7A;--bm:#1D5FA8;--bl:#3B82C4;--bp:#EBF3FB;
-  --s0:#F5F7FA;--s1:#FFFFFF;--s2:#F0F4F8;
-  --border:#E2E8F0;--border2:#CBD5E1;
-  --t1:#1A2332;--t2:#475569;--tm:#94A3B8;
-  --r:8px;--rl:12px;
-  --sh:0 1px 3px rgba(0,0,0,.08);
-  --shm:0 4px 16px rgba(0,0,0,.10);
-  --shl:0 12px 40px rgba(0,0,0,.15);
+  --bd:#0A1F44;--bm:#1B3A6B;--bl:#2D5FA8;--bp:#E8EEF8;
+  --s0:#F4F6FA;--s1:#FFFFFF;--s2:#EDF0F7;
+  --border:#D8DDE8;--border2:#B8C0D0;
+  --t1:#0D1B30;--t2:#3D4F6E;--tm:#8A96AA;
+  --r:8px;--rl:14px;
+  --sh:0 1px 4px rgba(10,31,68,.07);
+  --shm:0 4px 20px rgba(10,31,68,.12);
+  --shl:0 16px 48px rgba(10,31,68,.18);
+  --accent:#1B3A6B;
 }
 body{font-family:'Inter',system-ui,sans-serif;background:var(--s0);color:var(--t1);font-size:14px;line-height:1.5;height:100vh;overflow:hidden;display:flex;flex-direction:column}
 
 /* DEPT THEMES */
-body[data-dept="marketing"]{--da:#7C3AED;--dl:#EDE9FE}
-body[data-dept="fieldforce"]{--da:#059669;--dl:#D1FAE5}
-body[data-dept="crm"]{--da:#DC2626;--dl:#FEE2E2}
-body[data-dept="be"]{--da:#D97706;--dl:#FEF3C7}
-body[data-dept="medical"]{--da:#0891B2;--dl:#CFFAFE}
-body[data-dept="others"]{--da:#64748B;--dl:#F1F5F9}
+body[data-dept="marketing"]{--da:#6D28D9;--dl:#EDE9FE}
+body[data-dept="fieldforce"]{--da:#047857;--dl:#D1FAE5}
+body[data-dept="crm"]{--da:#B91C1C;--dl:#FEE2E2}
+body[data-dept="be"]{--da:#B45309;--dl:#FEF3C7}
+body[data-dept="medical"]{--da:#0E7490;--dl:#CFFAFE}
+body[data-dept="others"]{--da:#1B3A6B;--dl:#E8EEF8}
 
 /* SCREENS */
 .screen{display:none}
 .screen.on{display:flex}
 
-/* ── LOGIN / REGISTER ── */
-#authScreen{position:fixed;inset:0;background:linear-gradient(135deg,#0C3D7A,#1D5FA8 50%,#3B82C4);align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:12px}
-.auth-card{background:#fff;border-radius:20px;padding:36px 32px;width:440px;max-width:92vw;box-shadow:var(--shl)}
-.auth-logo-row{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
-.logo-svg{width:60px;height:60px;flex-shrink:0}
-.brand-block{display:flex;flex-direction:column}
-.brand-name{font-size:22px;font-weight:700;color:var(--bd);letter-spacing:-.3px}
-.brand-sub{font-size:12px;color:var(--tm)}
-.auth-tabs{display:flex;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:24px}
-.auth-tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:var(--s0);color:var(--t2);transition:all .15s;border:none;font-family:inherit}
-.auth-tab.active{background:#fff;color:var(--bm);box-shadow:var(--sh)}
+/* ── AUTH ── */
+#authScreen{
+  position:fixed;inset:0;
+  background:linear-gradient(150deg,#050E1F 0%,#0A1F44 45%,#1B3A6B 100%);
+  align-items:center;justify-content:center;z-index:1000;flex-direction:column;gap:16px
+}
+#authScreen::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(45,95,168,.25) 0%,transparent 70%);
+  pointer-events:none
+}
+
+.auth-card{
+  background:#fff;border-radius:20px;padding:40px 36px;width:460px;max-width:93vw;
+  box-shadow:0 24px 64px rgba(5,14,31,.45),0 0 0 1px rgba(255,255,255,.06);
+  position:relative;z-index:1
+}
+
+/* Real EIPICO logo layout */
+.auth-logo-row{
+  display:flex;align-items:center;gap:16px;margin-bottom:32px;
+  padding-bottom:24px;border-bottom:1px solid var(--border)
+}
+.logo-wrap{
+  width:68px;height:68px;flex-shrink:0;
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 4px 12px rgba(10,31,68,.18);
+  border:2px solid #0A1F44
+}
+.logo-wrap svg{width:100%;height:100%;display:block}
+.brand-block{display:flex;flex-direction:column;gap:3px}
+.brand-name{font-size:22px;font-weight:800;color:var(--bd);letter-spacing:-.4px;line-height:1.1}
+.brand-name span{color:var(--bl)}
+.brand-sub{font-size:11.5px;color:var(--tm);font-weight:400;line-height:1.4}
+
+.auth-tabs{
+  display:flex;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;
+  margin-bottom:26px;background:var(--s0)
+}
+.auth-tab{
+  flex:1;padding:9px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;
+  background:transparent;color:var(--tm);transition:all .18s;border:none;font-family:inherit;
+  letter-spacing:.01em
+}
+.auth-tab.active{
+  background:#fff;color:var(--bd);
+  box-shadow:0 2px 8px rgba(10,31,68,.08);
+  border-radius:8px;margin:2px
+}
+
 .auth-panel{display:none}
 .auth-panel.on{display:block}
-.f-group{margin-bottom:14px}
-.f-label{display:block;font-size:12px;font-weight:500;color:var(--t2);margin-bottom:5px}
-.f-input{width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--t1);background:#fff;transition:border-color .15s}
-.f-input:focus{outline:none;border-color:var(--bm)}
-select.f-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn-main{width:100%;padding:11px;background:var(--bm);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;margin-top:6px}
-.btn-main:hover{background:var(--bd)}
-.err{background:#FEF2F2;border:1px solid #FECACA;border-radius:var(--r);padding:9px 13px;font-size:12px;color:#DC2626;margin-top:10px;display:none}
-.err.on{display:block}
-.ok{background:#F0FDF4;border:1px solid #86EFAC;border-radius:var(--r);padding:9px 13px;font-size:12px;color:#15803D;margin-top:10px;display:none}
-.ok.on{display:block}
-.hint{font-size:11px;color:var(--tm);text-align:center;margin-top:14px}
+
+.f-group{margin-bottom:15px}
+.f-label{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px;letter-spacing:.02em
+}
+.f-label i{font-size:13px;color:var(--bl)}
+.f-input{
+  width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;
+  font-size:13.5px;font-family:inherit;color:var(--t1);background:#fff;
+  transition:border-color .18s,box-shadow .18s
+}
+.f-input:focus{outline:none;border-color:var(--bl);box-shadow:0 0 0 3px rgba(45,95,168,.1)}
+.f-input::placeholder{color:#b0bac9}
+select.f-input{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A96AA' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;cursor:pointer
+}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.f-divider{
+  display:flex;align-items:center;gap:10px;margin:18px 0 16px;
+  font-size:11px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.08em
+}
+.f-divider::before,.f-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.dept-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:2px}
+.dept-option{
+  display:flex;align-items:center;gap:8px;padding:9px 12px;
+  border:1.5px solid var(--border);border-radius:9px;cursor:pointer;
+  font-size:12px;font-weight:500;color:var(--t2);background:#fff;
+  transition:all .15s;font-family:inherit;text-align:left
+}
+.dept-option:hover{border-color:var(--bl);background:var(--bp)}
+.dept-option.selected{border-color:var(--bl);background:var(--bp);color:var(--bd);font-weight:600}
+.dept-option i{font-size:15px;flex-shrink:0}
+.dept-option.selected i{color:var(--bl)}
+
+.btn-main{
+  width:100%;padding:12px;
+  background:linear-gradient(135deg,var(--bm) 0%,var(--bl) 100%);
+  color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;
+  cursor:pointer;font-family:inherit;transition:all .18s;margin-top:8px;
+  letter-spacing:.02em;box-shadow:0 4px 14px rgba(27,58,107,.35)
+}
+.btn-main:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(27,58,107,.45)}
+.btn-main:active{transform:translateY(0)}
+
+.err{
+  background:#FEF2F2;border:1px solid #FECACA;border-radius:9px;
+  padding:10px 14px;font-size:12px;color:#DC2626;margin-top:10px;display:none;
+  display:flex;align-items:center;gap:7px
+}
+.err.on{display:flex}
+.ok{
+  background:#F0FDF4;border:1px solid #86EFAC;border-radius:9px;
+  padding:10px 14px;font-size:12px;color:#15803D;margin-top:10px;display:none;
+  display:flex;align-items:center;gap:7px
+}
+.ok.on{display:flex}
+.hint{font-size:11.5px;color:var(--tm);text-align:center;margin-top:16px}
+.hint a{color:var(--bl);font-weight:500;cursor:pointer;text-decoration:none}
+
+/* pw strength */
+.pw-wrap{position:relative}
+.pw-toggle{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--tm);padding:4px;
+  display:flex;align-items:center;font-size:15px
+}
+.pw-toggle:hover{color:var(--t2)}
 
 /* ── TOPBAR ── */
-.topbar{background:#fff;border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;box-shadow:var(--sh);z-index:10}
+.topbar{
+  background:#fff;border-bottom:1px solid var(--border);height:58px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 22px;
+  flex-shrink:0;box-shadow:var(--sh);z-index:10
+}
 .tb-left{display:flex;align-items:center;gap:14px}
-.tb-logo-svg{height:36px;width:auto}
-.tb-title{font-size:15px;font-weight:600;color:var(--t1);padding-left:14px;border-left:1px solid var(--border)}
-.dept-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--dl,var(--bp));color:var(--da,var(--bm));text-transform:uppercase;letter-spacing:.04em}
+.tb-logo{
+  width:40px;height:40px;border-radius:8px;overflow:hidden;
+  border:1.5px solid #0A1F44;flex-shrink:0
+}
+.tb-logo svg{width:100%;height:100%;display:block}
+.tb-title{
+  font-size:15px;font-weight:700;color:var(--t1);padding-left:14px;
+  border-left:1px solid var(--border);letter-spacing:-.2px
+}
+.dept-badge{
+  font-size:11px;font-weight:600;padding:3px 11px;border-radius:20px;
+  background:var(--dl,var(--bp));color:var(--da,var(--bm));
+  text-transform:uppercase;letter-spacing:.05em
+}
 .tb-right{display:flex;align-items:center;gap:10px}
-.user-chip{display:flex;align-items:center;gap:8px;background:var(--s0);border:1px solid var(--border);border-radius:20px;padding:5px 12px 5px 6px;cursor:pointer}
-.uav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;background:var(--da,var(--bm));flex-shrink:0}
-.chip-name{font-size:12px;font-weight:500}
-.tb-btn{background:none;border:1px solid var(--border);padding:6px 12px;border-radius:var(--r);font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px}
-.tb-btn:hover{background:var(--s0)}
+.user-chip{
+  display:flex;align-items:center;gap:8px;background:var(--s0);
+  border:1.5px solid var(--border);border-radius:20px;
+  padding:5px 13px 5px 6px;cursor:pointer;transition:all .15s
+}
+.user-chip:hover{border-color:var(--bl)}
+.uav{
+  width:30px;height:30px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;color:#fff;
+  background:var(--da,var(--bm));flex-shrink:0
+}
+.chip-name{font-size:12px;font-weight:600;color:var(--t1)}
+.tb-btn{
+  background:none;border:1.5px solid var(--border);padding:6px 13px;border-radius:var(--r);
+  font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:5px;transition:all .15s
+}
+.tb-btn:hover{border-color:var(--bl);color:var(--bl);background:var(--bp)}
 
 /* ── LAYOUT ── */
 #appScreen{flex-direction:column;height:100vh;overflow:hidden}
 .app-body{display:flex;flex:1;overflow:hidden}
 
 /* ── SIDEBAR ── */
-.sidebar{width:210px;background:#fff;border-right:1px solid var(--border);padding:14px 0;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
-.sb-lbl{font-size:10px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.08em;padding:0 16px;margin:10px 0 4px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:7px 16px;font-size:13px;cursor:pointer;color:var(--t2);border-left:3px solid transparent;transition:all .12s}
+.sidebar{
+  width:216px;background:#fff;border-right:1px solid var(--border);
+  padding:16px 0;display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto
+}
+.sb-lbl{
+  font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;
+  letter-spacing:.1em;padding:0 18px;margin:12px 0 5px
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:8px 18px;
+  font-size:13px;cursor:pointer;color:var(--t2);
+  border-left:3px solid transparent;transition:all .12s
+}
 .nav-item:hover{background:var(--s0);color:var(--t1)}
-.nav-item.active{background:var(--dl,var(--bp));color:var(--da,var(--bm));border-left-color:var(--da,var(--bm));font-weight:500}
+.nav-item.active{
+  background:var(--dl,var(--bp));color:var(--da,var(--bm));
+  border-left-color:var(--da,var(--bm));font-weight:600
+}
 .nav-item i{font-size:16px;flex-shrink:0}
-.sb-footer{padding:12px 16px;border-top:1px solid var(--border);margin-top:auto;font-size:11px;color:var(--tm)}
+.sb-footer{
+  padding:14px 18px;border-top:1px solid var(--border);
+  margin-top:auto;font-size:11px;color:var(--tm)
+}
 
 /* ── MAIN ── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--s0)}
-.cal-hdr{background:#fff;border-bottom:1px solid var(--border);padding:11px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.cal-hdr{
+  background:#fff;border-bottom:1px solid var(--border);
+  padding:12px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0
+}
 .mnav{display:flex;align-items:center;gap:8px}
-.month-title{font-size:17px;font-weight:700;min-width:158px;text-align:center;letter-spacing:-.3px}
-.nav-btn{background:none;border:1px solid var(--border);padding:6px 9px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;display:flex;align-items:center;transition:all .12s}
-.nav-btn:hover{background:var(--s0)}
-.today-btn{font-size:12px;font-weight:500;padding:6px 14px}
+.month-title{font-size:18px;font-weight:800;min-width:165px;text-align:center;letter-spacing:-.4px}
+.nav-btn{
+  background:none;border:1.5px solid var(--border);padding:6px 10px;border-radius:var(--r);
+  cursor:pointer;color:var(--t2);font-size:14px;display:flex;align-items:center;transition:all .12s
+}
+.nav-btn:hover{background:var(--s0);border-color:var(--bl)}
+.today-btn{font-size:12px;font-weight:600;padding:6px 15px}
 .cal-tools{display:flex;gap:8px;align-items:center}
-.vt{display:flex;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--s0)}
-.vbtn{padding:6px 11px;font-size:12px;cursor:pointer;background:none;border:none;color:var(--tm);font-family:inherit;font-weight:500}
+.vt{display:flex;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--s0)}
+.vbtn{
+  padding:6px 12px;font-size:12px;cursor:pointer;background:none;
+  border:none;color:var(--tm);font-family:inherit;font-weight:500
+}
 .vbtn.active{background:#fff;color:var(--t1);box-shadow:var(--sh)}
-.btn-add{background:var(--da,var(--bm));color:#fff;border:none;padding:7px 15px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit}
-.btn-add:hover{opacity:.9}
-.filter-bar{display:flex;gap:6px;padding:8px 20px;background:#fff;border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0}
-.fp{font-size:11px;font-weight:500;padding:4px 11px;border-radius:20px;cursor:pointer;border:1px solid var(--border);color:var(--t2);background:var(--s0);white-space:nowrap;transition:all .12s}
-.fp.active{background:var(--dl,var(--bp));color:var(--da,var(--bm));border-color:var(--da,var(--bm))}
+.btn-add{
+  background:linear-gradient(135deg,var(--bm) 0%,var(--bl) 100%);
+  color:#fff;border:none;padding:8px 16px;border-radius:var(--r);
+  font-size:13px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;gap:6px;font-family:inherit;
+  box-shadow:0 2px 8px rgba(27,58,107,.3);transition:all .15s
+}
+.btn-add:hover{opacity:.92;transform:translateY(-1px)}
+
+.filter-bar{
+  display:flex;gap:6px;padding:9px 22px;background:#fff;
+  border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0
+}
+.fp{
+  font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;cursor:pointer;
+  border:1.5px solid var(--border);color:var(--t2);background:var(--s0);
+  white-space:nowrap;transition:all .12s
+}
+.fp.active{
+  background:var(--dl,var(--bp));color:var(--da,var(--bm));
+  border-color:var(--da,var(--bm));font-weight:600
+}
 
 /* ── CALENDAR ── */
 .cal-body{flex:1;overflow-y:auto}
-.weekdays{display:grid;grid-template-columns:repeat(7,1fr);background:#fff;border-bottom:1px solid var(--border)}
-.wday{padding:9px 4px;text-align:center;font-size:10px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.07em}
+.weekdays{
+  display:grid;grid-template-columns:repeat(7,1fr);
+  background:#fff;border-bottom:1px solid var(--border)
+}
+.wday{
+  padding:10px 4px;text-align:center;font-size:10px;font-weight:700;
+  color:var(--tm);text-transform:uppercase;letter-spacing:.08em
+}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
-.day-cell{min-height:96px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px;cursor:pointer;background:#fff;transition:background .1s;position:relative}
-.day-cell:hover{background:var(--bp)}
+.day-cell{
+  min-height:98px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:7px;cursor:pointer;background:#fff;transition:background .1s;position:relative
+}
+.day-cell:hover{background:#F0F5FF}
 .day-cell.other-month{background:var(--s0)}
 .day-cell.other-month .dn{color:var(--tm)}
-.day-cell.today .dn{background:var(--da,var(--bm));color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin:-1px}
-.day-cell.selected{background:var(--dl,var(--bp))}
-.dn{font-size:12px;font-weight:600;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin-bottom:3px}
-.epill{font-size:10px;padding:2px 6px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;border-left:3px solid transparent}
+.day-cell.today .dn{
+  background:linear-gradient(135deg,var(--bm),var(--bl));color:#fff;border-radius:50%;
+  width:26px;height:26px;display:flex;align-items:center;justify-content:center;margin:-1px
+}
+.day-cell.selected{background:var(--dl,#E8EEF8)}
+.dn{
+  font-size:12px;font-weight:700;width:26px;height:26px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:3px
+}
+.epill{
+  font-size:10px;padding:2px 6px;border-radius:4px;margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;
+  border-left:3px solid transparent
+}
 .more-p{font-size:10px;color:var(--tm);padding:1px 4px}
 
 /* DEPT PILL COLORS */
@@ -124,161 +312,281 @@ select.f-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg x
 .dp-crm{background:#FEE2E2;color:#B91C1C;border-left-color:#DC2626}
 .dp-be{background:#FEF3C7;color:#B45309;border-left-color:#D97706}
 .dp-medical{background:#CFFAFE;color:#0E7490;border-left-color:#0891B2}
-.dp-others{background:#F1F5F9;color:#475569;border-left-color:#64748B}
+.dp-others{background:#E8EEF8;color:#1B3A6B;border-left-color:#2D5FA8}
 
 /* ── LIST VIEW ── */
-.list-view{padding:20px;overflow-y:auto;flex:1}
-.lmg{margin-bottom:28px}
-.lmt{font-size:12px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px}
-.lrow{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:12px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;transition:box-shadow .12s}
-.lrow:hover{box-shadow:var(--sh)}
+.list-view{padding:22px;overflow-y:auto;flex:1}
+.lmg{margin-bottom:30px}
+.lmt{font-size:12px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:11px}
+.lrow{
+  background:#fff;border:1.5px solid var(--border);border-radius:10px;
+  padding:13px 17px;margin-bottom:8px;display:flex;align-items:flex-start;
+  gap:12px;transition:box-shadow .12s
+}
+.lrow:hover{box-shadow:var(--shm)}
 .ldc{min-width:50px;text-align:center}
-.ldn{font-size:20px;font-weight:700;color:var(--da,var(--bm));line-height:1}
-.ldw{font-size:10px;color:var(--tm);text-transform:uppercase}
+.ldn{font-size:21px;font-weight:800;color:var(--da,var(--bm));line-height:1}
+.ldw{font-size:10px;color:var(--tm);text-transform:uppercase;font-weight:600}
 .ldiv{width:1px;background:var(--border);align-self:stretch;margin:0 4px}
 .linfo{flex:1}
-.ltitle{font-size:13px;font-weight:600;margin-bottom:4px}
+.ltitle{font-size:13px;font-weight:700;margin-bottom:4px}
 .lmeta{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.ldel{background:none;border:none;cursor:pointer;color:var(--tm);padding:4px;border-radius:4px;font-size:15px;display:flex;align-items:center}
-.ldel:hover{color:#DC2626}
+.ldel{
+  background:none;border:none;cursor:pointer;color:var(--tm);
+  padding:4px;border-radius:6px;font-size:15px;display:flex;align-items:center;transition:all .12s
+}
+.ldel:hover{color:#DC2626;background:#FEF2F2}
 
 /* ── KPI SECTION ── */
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.kpi-row{background:var(--s0);border:1px solid var(--border);border-radius:6px;padding:8px 10px}
-.kpi-lbl{font-size:10px;color:var(--tm);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.kpi-val{font-size:13px;font-weight:700;color:var(--da,var(--bm))}
+.kpi-row{background:var(--s0);border:1px solid var(--border);border-radius:7px;padding:9px 11px}
+.kpi-lbl{font-size:10px;color:var(--tm);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.kpi-val{font-size:14px;font-weight:800;color:var(--da,var(--bm))}
 .kpi-target{font-size:10px;color:var(--tm);margin-top:1px}
-.kpi-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden}
-.kpi-bar{height:100%;border-radius:2px;background:var(--da,var(--bm));transition:width .4s}
+.kpi-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.kpi-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--bm),var(--bl));transition:width .4s}
 
 /* ── SIDE PANEL ── */
-.side-panel{width:272px;border-left:1px solid var(--border);background:#fff;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
-.ph{padding:14px 16px 12px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.side-panel{
+  width:278px;border-left:1px solid var(--border);background:#fff;
+  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0
+}
+.ph{
+  padding:15px 17px 13px;border-bottom:1px solid var(--border);
+  font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px
+}
 .psc{flex:1;overflow-y:auto}
-.ps{padding:12px 16px;border-bottom:1px solid var(--border)}
-.pst{font-size:10px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
-.sdl{font-size:12px;color:var(--tm);padding:8px 16px;background:var(--s0);border-bottom:1px solid var(--border)}
-.mt{background:var(--s0);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;position:relative}
-.mtt{font-size:12px;font-weight:600;margin-bottom:5px}
-.mtm{font-size:11px;color:var(--tm);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600}
+.ps{padding:13px 17px;border-bottom:1px solid var(--border)}
+.pst{font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}
+.sdl{font-size:12px;color:var(--tm);padding:9px 17px;background:var(--s0);border-bottom:1px solid var(--border)}
+.mt{
+  background:var(--s0);border:1.5px solid var(--border);border-radius:10px;
+  padding:11px 13px;margin-bottom:9px;position:relative
+}
+.mtt{font-size:13px;font-weight:700;margin-bottom:5px}
+.mtm{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700}
 .bu{background:#FEE2E2;color:#DC2626}
-.bh{background:#EBF3FB;color:var(--bm)}
+.bh{background:#E8EEF8;color:var(--bm)}
 .bn{background:#F0FDF4;color:#059669}
-.urow{display:flex;align-items:center;gap:9px;margin-bottom:6px;cursor:pointer;padding:5px 6px;border-radius:6px}
+.urow{
+  display:flex;align-items:center;gap:9px;margin-bottom:7px;
+  cursor:pointer;padding:6px 7px;border-radius:8px;transition:background .12s
+}
 .urow:hover{background:var(--s0)}
-.uav{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
 .uname{font-size:12px;font-weight:500;flex:1}
 
 /* ── MODAL ── */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(2px)}
+.modal-bg{
+  position:fixed;inset:0;background:rgba(5,14,31,.55);
+  display:none;align-items:center;justify-content:center;z-index:500;backdrop-filter:blur(3px)
+}
 .modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:var(--rl);width:480px;max-width:95vw;max-height:92vh;overflow-y:auto;box-shadow:var(--shl)}
-.mh{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
-.mh-title{font-size:15px;font-weight:700}
-.mclose{background:none;border:none;cursor:pointer;color:var(--tm);padding:4px;border-radius:6px;display:flex;align-items:center;font-size:16px}
-.mclose:hover{color:var(--t1)}
-.mb{padding:20px}
-.mf{margin-bottom:14px}
-.ml{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:5px;display:block}
-.mi{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);font-size:13px;background:#fff;color:var(--t1);font-family:inherit;transition:border-color .15s}
-.mi:focus{outline:none;border-color:var(--da,var(--bm))}
-select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.modal{
+  background:#fff;border-radius:16px;width:500px;max-width:95vw;
+  max-height:92vh;overflow-y:auto;box-shadow:var(--shl)
+}
+.mh{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:#fff;z-index:1
+}
+.mh-title{font-size:16px;font-weight:800;letter-spacing:-.2px}
+.mclose{
+  background:none;border:none;cursor:pointer;color:var(--tm);
+  padding:5px;border-radius:7px;display:flex;align-items:center;font-size:17px;transition:all .12s
+}
+.mclose:hover{color:var(--t1);background:var(--s0)}
+.mb{padding:22px}
+.mf{margin-bottom:15px}
+.ml{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px;display:block;letter-spacing:.01em}
+.mi{
+  width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:9px;
+  font-size:13px;background:#fff;color:var(--t1);font-family:inherit;transition:all .15s
+}
+.mi:focus{outline:none;border-color:var(--bl);box-shadow:0 0 0 3px rgba(45,95,168,.1)}
+select.mi{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A96AA' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;cursor:pointer
+}
 .mi[type=date]{color-scheme:light}
-.section-divider{font-size:11px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.07em;padding:12px 0 6px;border-top:1px solid var(--border);margin-top:6px;display:flex;align-items:center;gap:8px}
+.section-divider{
+  font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;
+  letter-spacing:.08em;padding:13px 0 7px;border-top:1px solid var(--border);
+  margin-top:7px;display:flex;align-items:center;gap:8px
+}
 .section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 .kpi-add-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:8px;align-items:end}
-.kpi-entry{background:var(--s0);border:1px solid var(--border);border-radius:6px;padding:9px 12px;margin-bottom:6px;display:flex;gap:8px;align-items:center;font-size:12px}
-.kpi-entry .kn{flex:1;font-weight:500}
-.kpi-entry .kv{color:var(--da,var(--bm));font-weight:700}
+.kpi-entry{
+  background:var(--s0);border:1.5px solid var(--border);border-radius:7px;
+  padding:9px 13px;margin-bottom:7px;display:flex;gap:8px;align-items:center;font-size:12px
+}
+.kpi-entry .kn{flex:1;font-weight:600}
+.kpi-entry .kv{color:var(--da,var(--bm));font-weight:800}
 .kpi-entry .kt{color:var(--tm)}
-.kpi-del-btn{background:none;border:none;cursor:pointer;color:var(--tm);padding:2px;border-radius:4px;font-size:13px;flex-shrink:0}
+.kpi-del-btn{
+  background:none;border:none;cursor:pointer;color:var(--tm);
+  padding:2px;border-radius:4px;font-size:14px;flex-shrink:0
+}
 .kpi-del-btn:hover{color:#DC2626}
-.btn-ghost{background:none;border:1.5px solid var(--border);padding:7px 12px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);font-family:inherit;display:flex;align-items:center;gap:5px;white-space:nowrap}
-.btn-ghost:hover{border-color:var(--bm);color:var(--bm)}
-.mfoot{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:#fff}
-.btn-cancel{background:none;border:1.5px solid var(--border);padding:7px 16px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;color:var(--t1);font-family:inherit}
+.btn-ghost{
+  background:none;border:1.5px solid var(--border);padding:8px 13px;border-radius:9px;
+  font-size:12px;font-weight:600;cursor:pointer;color:var(--t2);font-family:inherit;
+  display:flex;align-items:center;gap:5px;white-space:nowrap;transition:all .15s
+}
+.btn-ghost:hover{border-color:var(--bl);color:var(--bl)}
+.mfoot{
+  padding:15px 22px;border-top:1px solid var(--border);display:flex;gap:8px;
+  justify-content:flex-end;position:sticky;bottom:0;background:#fff
+}
+.btn-cancel{
+  background:none;border:1.5px solid var(--border);padding:8px 18px;
+  border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;
+  color:var(--t1);font-family:inherit;transition:all .15s
+}
 .btn-cancel:hover{background:var(--s0)}
-.btn-save{background:var(--da,var(--bm));color:#fff;border:none;padding:7px 16px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit}
+.btn-save{
+  background:linear-gradient(135deg,var(--bm) 0%,var(--bl) 100%);
+  color:#fff;border:none;padding:8px 18px;border-radius:9px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;gap:6px;font-family:inherit;
+  box-shadow:0 2px 8px rgba(27,58,107,.3);transition:all .15s
+}
 .btn-save:hover{opacity:.9}
 
 /* TOAST */
-#toast{position:fixed;bottom:22px;right:22px;background:#1A2332;color:#fff;padding:11px 17px;border-radius:var(--r);font-size:13px;font-weight:500;box-shadow:var(--shm);z-index:9999;transform:translateY(70px);opacity:0;transition:all .25s;pointer-events:none}
+#toast{
+  position:fixed;bottom:22px;right:22px;
+  background:linear-gradient(135deg,#0A1F44,#1B3A6B);
+  color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:600;
+  box-shadow:var(--shm);z-index:9999;transform:translateY(70px);opacity:0;
+  transition:all .25s;pointer-events:none;display:flex;align-items:center;gap:8px
+}
 #toast.show{transform:translateY(0);opacity:1}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
 
-.empty{text-align:center;padding:28px 16px;color:var(--tm)}
-.empty i{font-size:28px;opacity:.4;display:block;margin-bottom:8px}
+.empty{text-align:center;padding:30px 18px;color:var(--tm)}
+.empty i{font-size:30px;opacity:.35;display:block;margin-bottom:9px}
 .empty p{font-size:12px}
 </style>
 </head>
 <body data-dept="others">
 
 <!-- ══════════════════════════════════════════
-     AUTH SCREEN (Login + Register)
+     AUTH SCREEN
 ══════════════════════════════════════════ -->
 <div id="authScreen" class="screen on">
   <div class="auth-card">
     <div class="auth-logo-row">
-      <!-- EIPICO LOGO SVG -->
-      <svg class="logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="95" fill="#1B4F9B" stroke="#0D2B5A" stroke-width="7"/>
-        <circle cx="100" cy="100" r="72" fill="none" stroke="white" stroke-width="5"/>
-        <ellipse cx="100" cy="100" rx="34" ry="72" fill="none" stroke="white" stroke-width="3.5"/>
-        <line x1="28" y1="100" x2="172" y2="100" stroke="white" stroke-width="3.5"/>
-        <line x1="100" y1="28" x2="100" y2="172" stroke="white" stroke-width="3.5"/>
-        <path d="M38,66 Q100,50 162,66" fill="none" stroke="white" stroke-width="3"/>
-        <path d="M38,134 Q100,150 162,134" fill="none" stroke="white" stroke-width="3"/>
-        <rect x="33" y="82" width="134" height="36" rx="4" fill="#0D2B5A"/>
-        <text x="100" y="107" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="25" fill="white" letter-spacing="2">EIPICO</text>
-      </svg>
+      <!-- Faithful EIPICO logo SVG recreation -->
+      <div class="logo-wrap">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="200" fill="#fff"/>
+          <!-- Outer ring -->
+          <circle cx="100" cy="100" r="92" fill="#1B3A6B" stroke="#0A1F44" stroke-width="8"/>
+          <!-- Globe latitude/longitude lines -->
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#fff" stroke-width="4"/>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#fff" stroke-width="0"/>
+          <!-- Vertical ellipse (meridian) -->
+          <ellipse cx="100" cy="100" rx="32" ry="70" fill="none" stroke="#fff" stroke-width="3"/>
+          <!-- Horizontal lines -->
+          <line x1="30" y1="100" x2="170" y2="100" stroke="#fff" stroke-width="3"/>
+          <line x1="100" y1="30" x2="100" y2="170" stroke="#fff" stroke-width="3"/>
+          <!-- Latitude arcs -->
+          <path d="M36,68 Q100,52 164,68" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <path d="M36,132 Q100,148 164,132" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <!-- Black ribbon band -->
+          <rect x="30" y="82" width="140" height="36" rx="4" fill="#0A1F44"/>
+          <!-- EIPICO text -->
+          <text x="100" y="108" text-anchor="middle" font-family="Arial Black,Arial,sans-serif"
+            font-weight="900" font-size="24" fill="#FFFFFF" letter-spacing="3">EIPICO</text>
+        </svg>
+      </div>
       <div class="brand-block">
-        <div class="brand-name">EIPICO Calendar</div>
-        <div class="brand-sub">Shared Team Scheduling &amp; KPI Platform</div>
+        <div class="brand-name">EIPICO <span>Calendar</span></div>
+        <div class="brand-sub">Shared Team Scheduling &amp; KPI Platform<br>Egyptian International Pharmaceutical Industries</div>
       </div>
     </div>
 
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Sign in</button>
-      <button class="auth-tab" onclick="switchTab('register')">Register</button>
+      <button class="auth-tab" onclick="switchTab('register')">Create account</button>
     </div>
 
     <!-- LOGIN -->
     <div class="auth-panel on" id="loginPanel">
-      <div class="f-group"><label class="f-label">Email address</label><input class="f-input" type="email" id="lEmail" placeholder="yourname@eipico.net"></div>
-      <div class="f-group"><label class="f-label">Password</label><input class="f-input" type="password" id="lPw" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <button class="btn-main" onclick="doLogin()">Sign in</button>
-      <div class="err" id="lErr"></div>
+      <div class="f-group">
+        <label class="f-label"><i class="ti ti-mail"></i> Email address</label>
+        <input class="f-input" type="email" id="lEmail" placeholder="yourname@eipico.net" autocomplete="email">
+      </div>
+      <div class="f-group">
+        <label class="f-label"><i class="ti ti-lock"></i> Password</label>
+        <div class="pw-wrap">
+          <input class="f-input" type="password" id="lPw" placeholder="Enter your password"
+            style="padding-right:42px" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password">
+          <button class="pw-toggle" type="button" onclick="togglePw('lPw',this)">
+            <i class="ti ti-eye"></i>
+          </button>
+        </div>
+      </div>
+      <button class="btn-main" onclick="doLogin()">Sign in to EIPICO</button>
+      <div class="err" id="lErr"><i class="ti ti-alert-circle"></i><span></span></div>
+      <p class="hint">Don't have an account? <a onclick="switchTab('register')">Create one</a></p>
     </div>
 
     <!-- REGISTER -->
     <div class="auth-panel" id="regPanel">
       <div class="row2">
-        <div class="f-group"><label class="f-label">First name</label><input class="f-input" type="text" id="rFirst" placeholder="Ahmed"></div>
-        <div class="f-group"><label class="f-label">Last name</label><input class="f-input" type="text" id="rLast" placeholder="Kamal"></div>
+        <div class="f-group">
+          <label class="f-label"><i class="ti ti-user"></i> First name</label>
+          <input class="f-input" type="text" id="rFirst" placeholder="Ahmed">
+        </div>
+        <div class="f-group">
+          <label class="f-label"><i class="ti ti-user"></i> Last name</label>
+          <input class="f-input" type="text" id="rLast" placeholder="Kamal">
+        </div>
       </div>
-      <div class="f-group"><label class="f-label">Work email (@eipico.net)</label><input class="f-input" type="email" id="rEmail" placeholder="ahmed.kamal@eipico.net"></div>
-      <div class="f-group"><label class="f-label">Department</label>
-        <select class="f-input" id="rDept">
-          <option value="">— select your department —</option>
-          <option value="marketing">Marketing Team</option>
-          <option value="fieldforce">Field Force Trainers</option>
-          <option value="crm">CRM Department</option>
-          <option value="be">BE Department</option>
-          <option value="medical">Medical Advisors</option>
-          <option value="others">Others</option>
-        </select>
+      <div class="f-group">
+        <label class="f-label"><i class="ti ti-mail"></i> Work email</label>
+        <input class="f-input" type="email" id="rEmail" placeholder="ahmed.kamal@eipico.net" autocomplete="email">
       </div>
+
+      <div class="f-divider">Choose your department</div>
+      <input type="hidden" id="rDept" value="">
+      <div class="dept-grid">
+        <button class="dept-option" onclick="selectDept('marketing',this)"><i class="ti ti-speakerphone" style="color:#7C3AED"></i> Marketing</button>
+        <button class="dept-option" onclick="selectDept('fieldforce',this)"><i class="ti ti-map-pin" style="color:#059669"></i> Field Force</button>
+        <button class="dept-option" onclick="selectDept('crm',this)"><i class="ti ti-users" style="color:#DC2626"></i> CRM</button>
+        <button class="dept-option" onclick="selectDept('be',this)"><i class="ti ti-chart-bar" style="color:#D97706"></i> BE Dept</button>
+        <button class="dept-option" onclick="selectDept('medical',this)"><i class="ti ti-stethoscope" style="color:#0891B2"></i> Medical</button>
+        <button class="dept-option" onclick="selectDept('others',this)"><i class="ti ti-dots" style="color:#64748B"></i> Others</button>
+      </div>
+
+      <div class="f-divider" style="margin-top:16px">Create password</div>
       <div class="row2">
-        <div class="f-group"><label class="f-label">Password</label><input class="f-input" type="password" id="rPw" placeholder="Min 6 characters"></div>
-        <div class="f-group"><label class="f-label">Confirm password</label><input class="f-input" type="password" id="rPw2" placeholder="Repeat password"></div>
+        <div class="f-group">
+          <label class="f-label"><i class="ti ti-lock"></i> Password</label>
+          <div class="pw-wrap">
+            <input class="f-input" type="password" id="rPw" placeholder="Min 6 chars" style="padding-right:42px">
+            <button class="pw-toggle" type="button" onclick="togglePw('rPw',this)"><i class="ti ti-eye"></i></button>
+          </div>
+        </div>
+        <div class="f-group">
+          <label class="f-label"><i class="ti ti-lock-check"></i> Confirm</label>
+          <div class="pw-wrap">
+            <input class="f-input" type="password" id="rPw2" placeholder="Repeat" style="padding-right:42px">
+            <button class="pw-toggle" type="button" onclick="togglePw('rPw2',this)"><i class="ti ti-eye"></i></button>
+          </div>
+        </div>
       </div>
-      <button class="btn-main" onclick="doRegister()">Create account</button>
-      <div class="err" id="rErr"></div>
-      <div class="ok" id="rOk"></div>
+      <button class="btn-main" onclick="doRegister()">Create my account</button>
+      <div class="err" id="rErr"><i class="ti ti-alert-circle"></i><span></span></div>
+      <div class="ok" id="rOk"><i class="ti ti-circle-check"></i><span></span></div>
+      <p class="hint">Already registered? <a onclick="switchTab('login')">Sign in</a></p>
     </div>
   </div>
 </div>
@@ -290,17 +598,21 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="tb-left">
-      <svg class="tb-logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="100" r="95" fill="#1B4F9B" stroke="#0D2B5A" stroke-width="7"/>
-        <circle cx="100" cy="100" r="72" fill="none" stroke="white" stroke-width="5"/>
-        <ellipse cx="100" cy="100" rx="34" ry="72" fill="none" stroke="white" stroke-width="3.5"/>
-        <line x1="28" y1="100" x2="172" y2="100" stroke="white" stroke-width="3.5"/>
-        <line x1="100" y1="28" x2="100" y2="172" stroke="white" stroke-width="3.5"/>
-        <path d="M38,66 Q100,50 162,66" fill="none" stroke="white" stroke-width="3"/>
-        <path d="M38,134 Q100,150 162,134" fill="none" stroke="white" stroke-width="3"/>
-        <rect x="33" y="82" width="134" height="36" rx="4" fill="#0D2B5A"/>
-        <text x="100" y="107" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="25" fill="white" letter-spacing="2">EIPICO</text>
-      </svg>
+      <div class="tb-logo">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="200" fill="#fff"/>
+          <circle cx="100" cy="100" r="92" fill="#1B3A6B" stroke="#0A1F44" stroke-width="8"/>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#fff" stroke-width="4"/>
+          <ellipse cx="100" cy="100" rx="32" ry="70" fill="none" stroke="#fff" stroke-width="3"/>
+          <line x1="30" y1="100" x2="170" y2="100" stroke="#fff" stroke-width="3"/>
+          <line x1="100" y1="30" x2="100" y2="170" stroke="#fff" stroke-width="3"/>
+          <path d="M36,68 Q100,52 164,68" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <path d="M36,132 Q100,148 164,132" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <rect x="30" y="82" width="140" height="36" rx="4" fill="#0A1F44"/>
+          <text x="100" y="108" text-anchor="middle" font-family="Arial Black,Arial,sans-serif"
+            font-weight="900" font-size="24" fill="#FFFFFF" letter-spacing="3">EIPICO</text>
+        </svg>
+      </div>
       <div class="tb-title">Calendar</div>
       <div class="dept-badge" id="deptBadge"></div>
     </div>
@@ -329,7 +641,7 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       <div class="nav-item" id="dn-be" onclick="filterDept('be')"><i class="ti ti-chart-bar"></i> BE</div>
       <div class="nav-item" id="dn-medical" onclick="filterDept('medical')"><i class="ti ti-stethoscope"></i> Medical</div>
       <div class="nav-item" id="dn-others" onclick="filterDept('others')"><i class="ti ti-dots"></i> Others</div>
-      <div class="sb-footer"><span id="evCount" style="font-weight:600;color:var(--t2)">0</span> events this month</div>
+      <div class="sb-footer"><span id="evCount" style="font-weight:700;color:var(--t2)">0</span> events this month</div>
     </div>
 
     <!-- MAIN CALENDAR -->
@@ -353,7 +665,10 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
       <div class="filter-bar" id="filterBar"></div>
       <div class="cal-body" id="calBody">
         <div id="monthView">
-          <div class="weekdays"><div class="wday">Sun</div><div class="wday">Mon</div><div class="wday">Tue</div><div class="wday">Wed</div><div class="wday">Thu</div><div class="wday">Fri</div><div class="wday">Sat</div></div>
+          <div class="weekdays">
+            <div class="wday">Sun</div><div class="wday">Mon</div><div class="wday">Tue</div>
+            <div class="wday">Wed</div><div class="wday">Thu</div><div class="wday">Fri</div><div class="wday">Sat</div>
+          </div>
           <div class="cal-grid" id="calGrid"></div>
         </div>
         <div id="weekView" style="display:none;overflow-y:auto;flex:1"></div>
@@ -363,7 +678,7 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
     <!-- SIDE PANEL -->
     <div class="side-panel">
-      <div class="ph"><i class="ti ti-calendar-event" style="color:var(--da,var(--bm))"></i> Day details</div>
+      <div class="ph"><i class="ti ti-calendar-event" style="color:var(--da,var(--bl))"></i> Day details</div>
       <div id="sdl" class="sdl">Select a day to view details</div>
       <div class="psc">
         <div class="ps"><div class="pst">Team members</div><div id="userList"></div></div>
@@ -374,9 +689,7 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     ADD EVENT MODAL (with KPIs)
-══════════════════════════════════════════ -->
+<!-- ADD EVENT MODAL -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <div class="mh">
@@ -405,12 +718,10 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
         </select>
       </div>
       <div class="mf"><label class="ml">Notes</label><textarea class="mi" id="eNotes" rows="2" placeholder="Additional details visible to all team members..."></textarea></div>
-
-      <!-- KPI SECTION -->
       <div class="section-divider"><i class="ti ti-target" style="font-size:14px"></i> KPIs for this event</div>
       <div id="kpiList"></div>
       <div class="kpi-add-row">
-        <div><label class="ml">KPI name</label><input type="text" class="mi" id="kpiName" placeholder="e.g. Calls made, Visits done"></div>
+        <div><label class="ml">KPI name</label><input type="text" class="mi" id="kpiName" placeholder="e.g. Calls made"></div>
         <div><label class="ml">Actual</label><input type="number" class="mi" id="kpiActual" placeholder="0" min="0"></div>
         <div><label class="ml">Target</label><input type="number" class="mi" id="kpiTarget" placeholder="100" min="0"></div>
         <div style="padding-bottom:0"><button class="btn-ghost" onclick="addKpi()" style="margin-top:20px"><i class="ti ti-plus"></i> Add</button></div>
@@ -425,443 +736,363 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <!-- CHANGE PASSWORD MODAL -->
 <div class="modal-bg" id="pwBg">
-  <div class="modal" style="max-width:360px">
+  <div class="modal" style="max-width:380px">
     <div class="mh"><span class="mh-title">Change password</span><button class="mclose" onclick="closePwModal()"><i class="ti ti-x"></i></button></div>
     <div class="mb">
       <div class="mf"><label class="ml">New password</label><input type="password" class="mi" id="pwNew" placeholder="Min 6 characters"></div>
       <div class="mf"><label class="ml">Confirm new password</label><input type="password" class="mi" id="pwConf" placeholder="Repeat"></div>
-      <div class="err" id="pwErr"></div>
+      <div class="err" id="pwErr"><i class="ti ti-alert-circle"></i><span></span></div>
     </div>
-    <div class="mfoot"><button class="btn-cancel" onclick="closePwModal()">Cancel</button><button class="btn-save" onclick="savePw()"><i class="ti ti-lock"></i> Update</button></div>
+    <div class="mfoot"><button class="btn-cancel" onclick="closePwModal()">Cancel</button><button class="btn-save" onclick="savePw()"><i class="ti ti-lock"></i> Update password</button></div>
   </div>
 </div>
 
-<div id="toast"></div>
+<div id="toast"><i class="ti ti-check"></i><span id="toastMsg"></span></div>
 
-<!-- SUPABASE SCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-// ═══════════════════════
-// SUPABASE INIT
-// ═══════════════════════
 const { createClient } = supabase;
-const supabaseUrl = 'https://xxbfwvlqixnmonxytdxq.supabase.co'; 
+const supabaseUrl = 'https://xxbfwvlqixnmonxytdxq.supabase.co';
 const supabaseKey = 'sb_publishable_EmW0iOc7qMdpEtGdKbjRgQ_-ETHGD2m';
 const _supabase = createClient(supabaseUrl, supabaseKey);
 
-// ═══════════════════════
-// CONSTANTS & STATE
-// ═══════════════════════
 const DEPT_LABELS={marketing:'Marketing Team',fieldforce:'Field Force Trainers',crm:'CRM Department',be:'BE Department',medical:'Medical Advisors',others:'Others'};
-const DEPT_COLORS={marketing:'#7C3AED',fieldforce:'#059669',crm:'#DC2626',be:'#D97706',medical:'#0891B2',others:'#64748B'};
+const DEPT_COLORS={marketing:'#7C3AED',fieldforce:'#059669',crm:'#DC2626',be:'#D97706',medical:'#0891B2',others:'#2D5FA8'};
 const DEPT_CLS={marketing:'dp-marketing',fieldforce:'dp-fieldforce',crm:'dp-crm',be:'dp-be',medical:'dp-medical',others:'dp-others'};
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const initials=n=>n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
 
-let CU=null, events=[], allUsers=[], curYear=new Date().getFullYear(), curMonth=new Date().getMonth();
-let selectedDay=null, activeDept='all', activeUser=null, curView='month';
-let pendingKpis=[];
+let CU=null,events=[],allUsers=[],curYear=new Date().getFullYear(),curMonth=new Date().getMonth();
+let selectedDay=null,activeDept='all',activeUser=null,curView='month',pendingKpis=[];
 
-// ═══════════════════════
-// AUTHENTICATION LOGIC
-// ═══════════════════════
+// ── HELPERS ──
+function showErr(id,msg){const el=document.getElementById(id);el.querySelector('span').textContent=msg;el.classList.add('on')}
+function hideErr(id){document.getElementById(id).classList.remove('on')}
+function showOk(id,msg){const el=document.getElementById(id);el.querySelector('span').textContent=msg;el.classList.add('on')}
+
+function togglePw(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.querySelector('i').className = show ? 'ti ti-eye-off' : 'ti ti-eye';
+}
+
+function selectDept(val, el) {
+  document.querySelectorAll('.dept-option').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('rDept').value = val;
+}
+
+// ── AUTH ──
 function switchTab(t){
-  document.getElementById('loginPanel').classList.toggle('on', t==='login');
-  document.getElementById('regPanel').classList.toggle('on', t==='register');
+  document.getElementById('loginPanel').classList.toggle('on',t==='login');
+  document.getElementById('regPanel').classList.toggle('on',t==='register');
   document.querySelectorAll('.auth-tab').forEach((el,i)=>{
     el.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='register'));
   });
-  document.getElementById('lErr').classList.remove('on');
-  document.getElementById('rErr').classList.remove('on');
-  document.getElementById('rOk').classList.remove('on');
+  ['lErr','rErr','rOk'].forEach(id=>document.getElementById(id).classList.remove('on'));
 }
 
-async function doRegister() {
-  const email = document.getElementById('rEmail').value.trim().toLowerCase();
-  const first = document.getElementById('rFirst').value.trim();
-  const last = document.getElementById('rLast').value.trim();
-  const dept = document.getElementById('rDept').value;
-  const pw = document.getElementById('rPw').value;
-  const pw2 = document.getElementById('rPw2').value;
-  const err = document.getElementById('rErr');
-  const ok = document.getElementById('rOk');
-  
-  err.classList.remove('on'); ok.classList.remove('on');
+async function doRegister(){
+  const email=document.getElementById('rEmail').value.trim().toLowerCase();
+  const first=document.getElementById('rFirst').value.trim();
+  const last=document.getElementById('rLast').value.trim();
+  const dept=document.getElementById('rDept').value;
+  const pw=document.getElementById('rPw').value;
+  const pw2=document.getElementById('rPw2').value;
+  hideErr('rErr'); hideErr('rOk');
+  document.getElementById('rOk').classList.remove('on');
 
-  if(!email || !first || !last || !dept) { err.textContent = 'Please fill all fields'; err.classList.add('on'); return; }
-  if(pw.length < 6) { err.textContent = 'Password must be at least 6 characters.'; err.classList.add('on'); return; }
-  if(pw !== pw2) { err.textContent = 'Passwords do not match.'; err.classList.add('on'); return; }
+  if(!email||!first||!last){showErr('rErr','Please fill in your name and email.');return}
+  if(!dept){showErr('rErr','Please select your department.');return}
+  if(pw.length<6){showErr('rErr','Password must be at least 6 characters.');return}
+  if(pw!==pw2){showErr('rErr','Passwords do not match.');return}
 
-  // 1. Create the user in Supabase Auth
-  const { data, error } = await _supabase.auth.signUp({ email, password: pw });
-  if (error) { err.textContent = error.message; err.classList.add('on'); return; }
-
-  // 2. Save their profile info to the database
-  if (data.user) {
-    await _supabase.from('profiles').insert([
-      { id: data.user.id, email: email, first_name: first, last_name: last, department: dept }
-    ]);
-    ok.textContent = 'Registration successful! Switching to login...';
-    ok.classList.add('on');
-    
-    // Clear fields
-    ['rFirst','rLast','rEmail','rPw','rPw2','rDept'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('lEmail').value = email;
-    setTimeout(() => switchTab('login'), 1500);
+  const{data,error}=await _supabase.auth.signUp({email,password:pw});
+  if(error){showErr('rErr',error.message);return}
+  if(data.user){
+    await _supabase.from('profiles').insert([{id:data.user.id,email,first_name:first,last_name:last,department:dept}]);
+    showOk('rOk','Account created! Redirecting to sign in...');
+    ['rFirst','rLast','rEmail','rPw','rPw2'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('rDept').value='';
+    document.querySelectorAll('.dept-option').forEach(d=>d.classList.remove('selected'));
+    document.getElementById('lEmail').value=email;
+    setTimeout(()=>switchTab('login'),1800);
   }
 }
 
-async function doLogin() {
-  const email = document.getElementById('lEmail').value.trim().toLowerCase();
-  const pw = document.getElementById('lPw').value;
-  const err = document.getElementById('lErr');
-  err.classList.remove('on');
-
-  if(!email || !pw){ err.textContent='Enter email and password'; err.classList.add('on'); return; }
-
-  const { data, error } = await _supabase.auth.signInWithPassword({ email, password: pw });
-  if (error) { err.textContent = error.message; err.classList.add('on'); return; }
-  
-  await checkSession(); // Load user profile and start app
+async function doLogin(){
+  const email=document.getElementById('lEmail').value.trim().toLowerCase();
+  const pw=document.getElementById('lPw').value;
+  hideErr('lErr');
+  if(!email||!pw){showErr('lErr','Please enter your email and password.');return}
+  const{data,error}=await _supabase.auth.signInWithPassword({email,password:pw});
+  if(error){showErr('lErr',error.message);return}
+  await checkSession();
 }
 
-async function doLogout() {
-  await _supabase.auth.signOut();
-  CU = null;
+async function doLogout(){
+  await _supabase.auth.signOut();CU=null;
   document.getElementById('appScreen').classList.remove('on');
   document.getElementById('authScreen').classList.add('on');
-  document.getElementById('lEmail').value = '';
-  document.getElementById('lPw').value = '';
+  document.getElementById('lPw').value='';
 }
 
-async function checkSession() {
-  const { data: { session } } = await _supabase.auth.getSession();
-  if (session) {
-    const { data: profile } = await _supabase.from('profiles').select('*').eq('id', session.user.id).single();
-    if (profile) {
-      CU = { 
-        email: profile.email, 
-        name: profile.first_name + ' ' + profile.last_name, 
-        dept: profile.department 
-      };
+async function checkSession(){
+  const{data:{session}}=await _supabase.auth.getSession();
+  if(session){
+    const{data:profile}=await _supabase.from('profiles').select('*').eq('id',session.user.id).single();
+    if(profile){
+      CU={email:profile.email,name:profile.first_name+' '+profile.last_name,dept:profile.department};
       await startApp();
     }
   }
 }
 
-// ═══════════════════════
-// CORE APP LOGIC
-// ═══════════════════════
-async function startApp() {
-  document.body.setAttribute('data-dept', CU.dept);
-  document.getElementById('tbAv').textContent = initials(CU.name);
-  document.getElementById('tbName').textContent = CU.name;
-  document.getElementById('deptBadge').textContent = DEPT_LABELS[CU.dept] || CU.dept;
-  
+// ── APP START ──
+async function startApp(){
+  document.body.setAttribute('data-dept',CU.dept);
+  document.getElementById('tbAv').textContent=initials(CU.name);
+  document.getElementById('tbName').textContent=CU.name;
+  document.getElementById('deptBadge').textContent=DEPT_LABELS[CU.dept]||CU.dept;
   document.getElementById('authScreen').classList.remove('on');
   document.getElementById('appScreen').classList.add('on');
-  
-  activeDept = CU.dept;
-  updateDeptNav();
-  
-  await loadUsersDB();
-  renderFilterBar();
-  renderUserList();
-  
+  activeDept=CU.dept;updateDeptNav();
+  await loadUsersDB();renderFilterBar();renderUserList();
   await loadEventsDB();
 }
 
-async function loadUsersDB() {
-  const { data } = await _supabase.from('profiles').select('*');
-  if (data) {
-    allUsers = data.map(p => ({ email: p.email, name: p.first_name + ' ' + p.last_name, dept: p.department }));
-  }
+async function loadUsersDB(){
+  const{data}=await _supabase.from('profiles').select('*');
+  if(data)allUsers=data.map(p=>({email:p.email,name:p.first_name+' '+p.last_name,dept:p.department}));
 }
 
-async function loadEventsDB() {
-  const { data, error } = await _supabase.from('events').select(`*, profiles(first_name, last_name)`);
-  if (error) { showToast('Failed to load events'); console.error(error); return; }
-
-  events = data.map(dbEvent => ({
-    id: dbEvent.id,
-    date: dbEvent.date,
-    title: dbEvent.title,
-    email: dbEvent.profiles ? dbEvent.profiles.email : null,
-    userName: dbEvent.profiles ? `${dbEvent.profiles.first_name} ${dbEvent.profiles.last_name}` : 'Unknown',
-    dept: dbEvent.department,
-    priority: dbEvent.priority,
-    notes: dbEvent.notes,
-    kpis: dbEvent.kpis || []
+async function loadEventsDB(){
+  const{data,error}=await _supabase.from('events').select(`*, profiles(first_name, last_name)`);
+  if(error){showToast('Failed to load events');return}
+  events=data.map(e=>({
+    id:e.id,date:e.date,title:e.title,
+    email:e.profiles?e.profiles.email:null,
+    userName:e.profiles?`${e.profiles.first_name} ${e.profiles.last_name}`:'Unknown',
+    dept:e.department,priority:e.priority,notes:e.notes,kpis:e.kpis||[]
   }));
-
-  renderCal(); 
-  if(curView === 'list') renderList();
+  renderCal();if(curView==='list')renderList();
 }
 
-async function saveEvent() {
-  const date = document.getElementById('eDate').value;
-  const title = document.getElementById('eTitle').value.trim();
-  const assignedEmail = document.getElementById('eUser').value; // from select
-  const dept = document.getElementById('eDept').value;
-  const pri = document.getElementById('ePri').value;
-  const notes = document.getElementById('eNotes').value.trim();
-  
-  if(!date || !title || !assignedEmail){ showToast('Please fill in date, title, and team member.'); return; }
-  
-  // Find assigned user's ID to store
-  const { data: profileData } = await _supabase.from('profiles').select('id').eq('email', assignedEmail).single();
-  if(!profileData) { showToast('Selected user not found in database.'); return; }
-
-  const { error } = await _supabase.from('events').insert([
-    { user_id: profileData.id, date: date, title: title, department: dept, priority: pri, notes: notes, kpis: pendingKpis }
-  ]);
-
-  if (error) { showToast('Error saving event: ' + error.message); return; }
-
-  closeModal();
-  await loadEventsDB();
-  selectDay(date);
-  showToast('Event added successfully');
+async function saveEvent(){
+  const date=document.getElementById('eDate').value;
+  const title=document.getElementById('eTitle').value.trim();
+  const assignedEmail=document.getElementById('eUser').value;
+  const dept=document.getElementById('eDept').value;
+  const pri=document.getElementById('ePri').value;
+  const notes=document.getElementById('eNotes').value.trim();
+  if(!date||!title||!assignedEmail){showToast('Please fill in date, title, and team member.');return}
+  const{data:profileData}=await _supabase.from('profiles').select('id').eq('email',assignedEmail).single();
+  if(!profileData){showToast('Selected user not found.');return}
+  const{error}=await _supabase.from('events').insert([{user_id:profileData.id,date,title,department:dept,priority:pri,notes,kpis:pendingKpis}]);
+  if(error){showToast('Error saving: '+error.message);return}
+  closeModal();await loadEventsDB();selectDay(date);showToast('Event added successfully');
 }
 
 async function removeEvent(id){
-  const { error } = await _supabase.from('events').delete().eq('id', id);
-  if(error) { showToast('Error removing event.'); return; }
-  
-  events = events.filter(e => String(e.id) !== String(id));
-  if(selectedDay) updatePanel(selectedDay);
-  renderCal(); 
-  showToast('Event removed');
+  const{error}=await _supabase.from('events').delete().eq('id',id);
+  if(error){showToast('Error removing event.');return}
+  events=events.filter(e=>String(e.id)!==String(id));
+  if(selectedDay)updatePanel(selectedDay);renderCal();showToast('Event removed');
 }
 
-// ═══════════════════════
-// PASSWORD MANAGEMENT
-// ═══════════════════════
-function openPwModal(){ document.getElementById('pwBg').classList.add('open'); }
-function closePwModal(){ document.getElementById('pwBg').classList.remove('open'); ['pwNew','pwConf'].forEach(id=>document.getElementById(id).value=''); document.getElementById('pwErr').classList.remove('on'); }
-
-async function savePw() {
-  const nw = document.getElementById('pwNew').value;
-  const cf = document.getElementById('pwConf').value;
-  const err = document.getElementById('pwErr');
-  err.classList.remove('on');
-  
-  if(nw.length < 6) { err.textContent = 'New password must be at least 6 characters.'; err.classList.add('on'); return; }
-  if(nw !== cf) { err.textContent = 'Passwords do not match.'; err.classList.add('on'); return; }
-  
-  const { error } = await _supabase.auth.updateUser({ password: nw });
-  if (error) { err.textContent = error.message; err.classList.add('on'); return; }
-  
-  closePwModal(); 
-  showToast('Password updated successfully');
+// ── PASSWORD ──
+function openPwModal(){document.getElementById('pwBg').classList.add('open')}
+function closePwModal(){document.getElementById('pwBg').classList.remove('open');['pwNew','pwConf'].forEach(id=>document.getElementById(id).value='');document.getElementById('pwErr').classList.remove('on')}
+async function savePw(){
+  const nw=document.getElementById('pwNew').value;
+  const cf=document.getElementById('pwConf').value;
+  hideErr('pwErr');
+  if(nw.length<6){showErr('pwErr','Password must be at least 6 characters.');return}
+  if(nw!==cf){showErr('pwErr','Passwords do not match.');return}
+  const{error}=await _supabase.auth.updateUser({password:nw});
+  if(error){showErr('pwErr',error.message);return}
+  closePwModal();showToast('Password updated');
 }
 
-// ═══════════════════════
-// FILTER BAR & SIDEBAR
-// ═══════════════════════
+// ── FILTER & SIDEBAR ──
 function renderFilterBar(){
-  const bar = document.getElementById('filterBar');
-  const users = allUsers.filter(u => activeDept === 'all' || u.dept === activeDept);
-  bar.innerHTML = `<div class="fp ${!activeUser ? 'active' : ''}" onclick="setUserFilter(null)">All</div>`
-    + users.map(u => `<div class="fp ${activeUser === u.email ? 'active' : ''}" onclick="setUserFilter('${u.email}')">${u.name}</div>`).join('');
+  const bar=document.getElementById('filterBar');
+  const users=allUsers.filter(u=>activeDept==='all'||u.dept===activeDept);
+  bar.innerHTML=`<div class="fp ${!activeUser?'active':''}" onclick="setUserFilter(null)">All</div>`
+    +users.map(u=>`<div class="fp ${activeUser===u.email?'active':''}" onclick="setUserFilter('${u.email}')">${u.name}</div>`).join('');
 }
-function setUserFilter(email){ activeUser = email === activeUser ? null : email; renderFilterBar(); renderCal(); }
-
+function setUserFilter(email){activeUser=email===activeUser?null:email;renderFilterBar();renderCal()}
 function renderUserList(){
-  const c = document.getElementById('userList');
-  const users = allUsers.filter(u => activeDept === 'all' || u.dept === activeDept);
-  c.innerHTML = users.map(u => `<div class="urow" onclick="setUserFilter('${u.email}')">
-    <div class="uav" style="background:${DEPT_COLORS[u.dept] || '#1D5FA8'}">${initials(u.name)}</div>
+  const c=document.getElementById('userList');
+  const users=allUsers.filter(u=>activeDept==='all'||u.dept===activeDept);
+  c.innerHTML=users.map(u=>`<div class="urow" onclick="setUserFilter('${u.email}')">
+    <div class="uav" style="background:${DEPT_COLORS[u.dept]||'#1B3A6B'}">${initials(u.name)}</div>
     <span class="uname">${u.name}</span>
   </div>`).join('');
 }
-
 function filterDept(d){
-  activeDept = d; activeUser = null;
-  document.body.setAttribute('data-dept', d === 'all' ? CU.dept : d);
-  updateDeptNav(); renderFilterBar(); renderUserList(); renderCal();
+  activeDept=d;activeUser=null;
+  document.body.setAttribute('data-dept',d==='all'?CU.dept:d);
+  updateDeptNav();renderFilterBar();renderUserList();renderCal();
 }
 function updateDeptNav(){
-  ['all','marketing','fieldforce','crm','be','medical','others'].forEach(d => {
-    const el = document.getElementById('dn-' + d);
-    if(el) el.classList.toggle('active', activeDept === d);
+  ['all','marketing','fieldforce','crm','be','medical','others'].forEach(d=>{
+    const el=document.getElementById('dn-'+d);
+    if(el)el.classList.toggle('active',activeDept===d);
   });
 }
 
-// ═══════════════════════
-// VIEW SWITCHING
-// ═══════════════════════
+// ── VIEWS ──
 function setView(v){
-  curView = v;
-  ['month','week','list'].forEach(vv => {
-    document.getElementById('nv-' + vv)?.classList.toggle('active', vv === v);
-    document.getElementById('vb-' + vv)?.classList.toggle('active', vv === v);
-    const el = document.getElementById(vv + 'View');
-    if(el) el.style.display = vv === v ? 'block' : 'none';
+  curView=v;
+  ['month','week','list'].forEach(vv=>{
+    document.getElementById('nv-'+vv)?.classList.toggle('active',vv===v);
+    document.getElementById('vb-'+vv)?.classList.toggle('active',vv===v);
+    const el=document.getElementById(vv+'View');
+    if(el)el.style.display=vv===v?'block':'none';
   });
-  if(v === 'month') renderCal();
-  else if(v === 'week') renderWeek();
-  else renderList();
+  if(v==='month')renderCal();else if(v==='week')renderWeek();else renderList();
 }
-
 function fEvents(){
-  return events.filter(e => {
-    if(activeUser && e.email !== activeUser) return false;
-    if(activeDept !== 'all' && e.dept !== activeDept) return false;
+  return events.filter(e=>{
+    if(activeUser&&e.email!==activeUser)return false;
+    if(activeDept!=='all'&&e.dept!==activeDept)return false;
     return true;
   });
 }
 
-// ═══════════════════════
-// MONTH CALENDAR
-// ═══════════════════════
+// ── MONTH VIEW ──
 function renderCal(){
-  const grid = document.getElementById('calGrid');
-  document.getElementById('monthTitle').textContent = `${MONTHS[curMonth]} ${curYear}`;
-  const first = new Date(curYear, curMonth, 1).getDay();
-  const dim = new Date(curYear, curMonth + 1, 0).getDate();
-  const today = new Date();
-  const fe = fEvents();
-  const ms = `${curYear}-${String(curMonth + 1).padStart(2, '0')}`;
-  document.getElementById('evCount').textContent = fe.filter(e => e.date.startsWith(ms)).length;
-  
-  let html = '';
-  for(let i = 0; i < 42; i++){
-    const dn = i - first + 1, inM = dn >= 1 && dn <= dim;
-    const dt = inM ? `${curYear}-${String(curMonth + 1).padStart(2, '0')}-${String(dn).padStart(2, '0')}` : null;
-    const isToday = inM && today.getFullYear() === curYear && today.getMonth() === curMonth && today.getDate() === dn;
-    const isSel = dt && selectedDay === dt;
-    const de = dt ? fe.filter(e => e.date === dt) : [];
-    const dispN = inM ? dn : (dn <= 0 ? new Date(curYear, curMonth, dn).getDate() : dn - dim);
-    let cls = 'day-cell' + (inM ? '' : ' other-month') + (isToday ? ' today' : '') + (isSel ? ' selected' : '');
-    
-    html += `<div class="${cls}" onclick="${inM ? `selectDay('${dt}')` : ''}" >
+  const grid=document.getElementById('calGrid');
+  document.getElementById('monthTitle').textContent=`${MONTHS[curMonth]} ${curYear}`;
+  const first=new Date(curYear,curMonth,1).getDay();
+  const dim=new Date(curYear,curMonth+1,0).getDate();
+  const today=new Date();
+  const fe=fEvents();
+  const ms=`${curYear}-${String(curMonth+1).padStart(2,'0')}`;
+  document.getElementById('evCount').textContent=fe.filter(e=>e.date.startsWith(ms)).length;
+  let html='';
+  for(let i=0;i<42;i++){
+    const dn=i-first+1,inM=dn>=1&&dn<=dim;
+    const dt=inM?`${curYear}-${String(curMonth+1).padStart(2,'0')}-${String(dn).padStart(2,'0')}`:null;
+    const isToday=inM&&today.getFullYear()===curYear&&today.getMonth()===curMonth&&today.getDate()===dn;
+    const isSel=dt&&selectedDay===dt;
+    const de=dt?fe.filter(e=>e.date===dt):[];
+    const dispN=inM?dn:(dn<=0?new Date(curYear,curMonth,dn).getDate():dn-dim);
+    let cls='day-cell'+(inM?'':' other-month')+(isToday?' today':'')+(isSel?' selected':'');
+    html+=`<div class="${cls}" onclick="${inM?`selectDay('${dt}')`:''}">
       <div class="dn">${dispN}</div>
-      ${de.slice(0, 3).map(e => `<div class="epill ${DEPT_CLS[e.dept] || ''}" title="${e.title} — ${e.userName}">${e.title}</div>`).join('')}
-      ${de.length > 3 ? `<div class="more-p">+${de.length - 3} more</div>` : ''}
+      ${de.slice(0,3).map(e=>`<div class="epill ${DEPT_CLS[e.dept]||''}" title="${e.title} — ${e.userName}">${e.title}</div>`).join('')}
+      ${de.length>3?`<div class="more-p">+${de.length-3} more</div>`:''}
     </div>`;
   }
-  grid.innerHTML = html;
-  if(selectedDay) updatePanel(selectedDay);
+  grid.innerHTML=html;
+  if(selectedDay)updatePanel(selectedDay);
   renderRecentAct();
 }
 
 function selectDay(dt){
-  selectedDay = dt;
-  renderCal();
-  const p = dt.split('-');
-  const d = new Date(p[0], p[1] - 1, p[2]);
-  document.getElementById('sdl').textContent = d.toLocaleDateString('en-GB', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+  selectedDay=dt;renderCal();
+  const p=dt.split('-');
+  const d=new Date(p[0],p[1]-1,p[2]);
+  document.getElementById('sdl').textContent=d.toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   updatePanel(dt);
-  document.getElementById('eDate').value = dt;
+  document.getElementById('eDate').value=dt;
 }
 
-// ═══════════════════════
-// DAY PANEL
-// ═══════════════════════
 function updatePanel(dt){
-  const evts = events.filter(e => e.date === dt);
-  const c = document.getElementById('dayAssign');
-  if(!evts.length){ c.innerHTML = '<div class="empty"><i class="ti ti-calendar-off"></i><p>No events. Click Add event to create one.</p></div>'; return; }
-  
-  c.innerHTML = evts.map(e => {
-    const bc = e.priority === 'urgent' ? 'bu' : e.priority === 'high' ? 'bh' : 'bn';
-    const pl = e.priority === 'urgent' ? 'Urgent' : e.priority === 'high' ? 'High' : 'Normal';
-    const kpiHtml = e.kpis && e.kpis.length ? `<div class="kpi-grid">${e.kpis.map(k => {
-      const pct = k.target > 0 ? Math.min(100, Math.round(k.actual / k.target * 100)) : 0;
-      return `<div class="kpi-row"><div class="kpi-lbl">${k.name}</div><div class="kpi-val">${k.actual}<span style="font-size:10px;font-weight:400;color:var(--tm)">/${k.target}</span></div><div class="kpi-bar-wrap"><div class="kpi-bar" style="width:${pct}%"></div></div><div class="kpi-target">${pct}% of target</div></div>`;
-    }).join('')}</div>` : '';
-    
-    return `<div class="mt">
+  const evts=events.filter(e=>e.date===dt);
+  const c=document.getElementById('dayAssign');
+  if(!evts.length){c.innerHTML='<div class="empty"><i class="ti ti-calendar-off"></i><p>No events. Click Add event to create one.</p></div>';return}
+  c.innerHTML=evts.map(e=>{
+    const bc=e.priority==='urgent'?'bu':e.priority==='high'?'bh':'bn';
+    const pl=e.priority==='urgent'?'Urgent':e.priority==='high'?'High':'Normal';
+    const kpiHtml=e.kpis&&e.kpis.length?`<div class="kpi-grid">${e.kpis.map(k=>{
+      const pct=k.target>0?Math.min(100,Math.round(k.actual/k.target*100)):0;
+      return`<div class="kpi-row"><div class="kpi-lbl">${k.name}</div><div class="kpi-val">${k.actual}<span style="font-size:10px;font-weight:400;color:var(--tm)">/${k.target}</span></div><div class="kpi-bar-wrap"><div class="kpi-bar" style="width:${pct}%"></div></div><div class="kpi-target">${pct}% of target</div></div>`;
+    }).join('')}</div>`:'';
+    return`<div class="mt">
       <div class="mtt">${e.title}</div>
       <div class="mtm">
-        <div class="uav" style="background:${DEPT_COLORS[e.dept] || '#1D5FA8'};width:18px;height:18px;font-size:9px">${initials(e.userName)}</div>
+        <div class="uav" style="background:${DEPT_COLORS[e.dept]||'#1B3A6B'};width:18px;height:18px;font-size:9px">${initials(e.userName)}</div>
         <span>${e.userName}</span>
         <span class="badge ${bc}">${pl}</span>
-        <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${DEPT_COLORS[e.dept]}22;color:${DEPT_COLORS[e.dept]};font-weight:600">${DEPT_LABELS[e.dept] || e.dept}</span>
-        <button onclick="removeEvent('${e.id}')" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--tm);padding:2px;border-radius:4px"><i class="ti ti-trash" style="font-size:13px"></i></button>
+        <span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${DEPT_COLORS[e.dept]}22;color:${DEPT_COLORS[e.dept]};font-weight:700">${DEPT_LABELS[e.dept]||e.dept}</span>
+        <button onclick="removeEvent('${e.id}')" style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--tm);padding:2px;border-radius:4px;display:flex;align-items:center"><i class="ti ti-trash" style="font-size:13px"></i></button>
       </div>
-      ${e.notes ? `<div style="font-size:11px;color:var(--tm);margin-top:5px;line-height:1.4">${e.notes}</div>` : ''}
+      ${e.notes?`<div style="font-size:11px;color:var(--tm);margin-top:6px;line-height:1.5">${e.notes}</div>`:''}
       ${kpiHtml}
     </div>`;
   }).join('');
 }
 
 function renderRecentAct(){
-  const c = document.getElementById('recentAct');
-  const s = [...events].sort((a, b) => b.id > a.id ? 1 : -1).slice(0, 5); // Simplistic sorting based on UUIDs string values
-  if(!s.length){ c.innerHTML = '<div class="empty"><i class="ti ti-history"></i><p>No events yet</p></div>'; return; }
-  
-  c.innerHTML = s.map(e => `<div style="display:flex;gap:9px;align-items:flex-start;margin-bottom:10px">
-    <div style="width:8px;height:8px;border-radius:50%;background:${DEPT_COLORS[e.dept] || '#1D5FA8'};margin-top:5px;flex-shrink:0"></div>
-    <div><div style="font-size:12px;font-weight:500">${e.title}</div><div style="font-size:11px;color:var(--tm)">${e.userName} · ${e.date}</div></div>
+  const c=document.getElementById('recentAct');
+  const s=[...events].sort((a,b)=>b.id>a.id?1:-1).slice(0,5);
+  if(!s.length){c.innerHTML='<div class="empty"><i class="ti ti-history"></i><p>No events yet</p></div>';return}
+  c.innerHTML=s.map(e=>`<div style="display:flex;gap:9px;align-items:flex-start;margin-bottom:11px">
+    <div style="width:8px;height:8px;border-radius:50%;background:${DEPT_COLORS[e.dept]||'#1B3A6B'};margin-top:5px;flex-shrink:0"></div>
+    <div><div style="font-size:12px;font-weight:600">${e.title}</div><div style="font-size:11px;color:var(--tm)">${e.userName} · ${e.date}</div></div>
   </div>`).join('');
 }
 
-// ═══════════════════════
-// WEEK & LIST VIEWS
-// ═══════════════════════
+// ── WEEK VIEW ──
 function renderWeek(){
-  const c = document.getElementById('weekView');
-  const today = new Date();
-  const sow = new Date(curYear, curMonth, today.getDate() - today.getDay());
-  const days = Array.from({length: 7}, (_, i) => { const d = new Date(sow); d.setDate(sow.getDate() + i); return d; });
-  const fe = fEvents();
-  
-  let html = `<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:5">`;
-  days.forEach(d => {
-    const isT = d.toDateString() === today.toDateString();
-    html += `<div style="padding:10px 8px;text-align:center;border-right:1px solid var(--border)">
-      <div style="font-size:10px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.06em">${DAYS[d.getDay()]}</div>
-      <div style="font-size:17px;font-weight:700;margin-top:2px;${isT ? 'color:var(--da,var(--bm))' : ''}">${d.getDate()}</div>
+  const c=document.getElementById('weekView');
+  const today=new Date();
+  const sow=new Date(curYear,curMonth,today.getDate()-today.getDay());
+  const days=Array.from({length:7},(_,i)=>{const d=new Date(sow);d.setDate(sow.getDate()+i);return d});
+  const fe=fEvents();
+  let html=`<div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);background:#fff;position:sticky;top:0;z-index:5">`;
+  days.forEach(d=>{
+    const isT=d.toDateString()===today.toDateString();
+    html+=`<div style="padding:11px 8px;text-align:center;border-right:1px solid var(--border)">
+      <div style="font-size:10px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.07em">${DAYS[d.getDay()]}</div>
+      <div style="font-size:18px;font-weight:800;margin-top:2px;${isT?'color:var(--da,var(--bl))':''}">${d.getDate()}</div>
     </div>`;
   });
-  html += `</div><div style="display:grid;grid-template-columns:repeat(7,1fr);min-height:400px">`;
-  
-  days.forEach(d => {
-    const dt = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    const de = fe.filter(e => e.date === dt);
-    const isT = d.toDateString() === today.toDateString();
-    
-    html += `<div style="border-right:1px solid var(--border);padding:8px 6px;min-height:300px;background:${isT ? 'var(--dl,var(--bp))' : '#fff'}" onclick="selectDay('${dt}')">
-      ${de.map(e => `<div class="epill ${DEPT_CLS[e.dept] || ''}" style="margin-bottom:4px;display:block;cursor:pointer">${e.title}</div>`).join('')}
+  html+=`</div><div style="display:grid;grid-template-columns:repeat(7,1fr);min-height:400px">`;
+  days.forEach(d=>{
+    const dt=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const de=fe.filter(e=>e.date===dt);
+    const isT=d.toDateString()===today.toDateString();
+    html+=`<div style="border-right:1px solid var(--border);padding:8px 7px;min-height:300px;background:${isT?'var(--dl,var(--bp))':'#fff'}" onclick="selectDay('${dt}')">
+      ${de.map(e=>`<div class="epill ${DEPT_CLS[e.dept]||''}" style="margin-bottom:4px;display:block;cursor:pointer">${e.title}</div>`).join('')}
     </div>`;
   });
-  html += `</div>`;
-  c.innerHTML = html;
+  html+=`</div>`;
+  c.innerHTML=html;
 }
 
+// ── LIST VIEW ──
 function renderList(){
-  const c = document.getElementById('listView');
-  const fe = fEvents().sort((a, b) => a.date.localeCompare(b.date));
-  if(!fe.length){ c.innerHTML = '<div class="empty" style="margin-top:60px"><i class="ti ti-calendar-off" style="font-size:40px"></i><p>No events found.</p></div>'; return; }
-  
-  const grp = {};
-  fe.forEach(e => { const k = e.date.slice(0, 7); (grp[k] = grp[k] || []).push(e); });
-  
-  c.innerHTML = Object.keys(grp).sort().map(mk => {
-    const [y, m] = mk.split('-');
-    return `<div class="lmg"><div class="lmt">${MONTHS[+m - 1]} ${y}</div>${grp[mk].map(e => {
-      const d = new Date(e.date + 'T00:00:00');
-      const bc = e.priority === 'urgent' ? 'bu' : e.priority === 'high' ? 'bh' : 'bn';
-      const pl = e.priority === 'urgent' ? 'Urgent' : e.priority === 'high' ? 'High' : 'Normal';
-      const kpiSum = e.kpis && e.kpis.length ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:5px">${e.kpis.map(k => {
-        const pct = k.target > 0 ? Math.min(100, Math.round(k.actual / k.target * 100)) : 0;
-        return `<span style="font-size:11px;background:var(--s0);border:1px solid var(--border);border-radius:4px;padding:2px 7px;color:var(--t2)">${k.name}: <strong>${k.actual}/${k.target}</strong> <span style="color:${pct >= 80 ? '#059669' : '#DC2626'}">(${pct}%)</span></span>`;
-      }).join('')}</div>` : '';
-      
-      return `<div class="lrow"><div class="ldc"><div class="ldn">${d.getDate()}</div><div class="ldw">${DAYS[d.getDay()]}</div></div>
+  const c=document.getElementById('listView');
+  const fe=fEvents().sort((a,b)=>a.date.localeCompare(b.date));
+  if(!fe.length){c.innerHTML='<div class="empty" style="margin-top:60px"><i class="ti ti-calendar-off" style="font-size:40px"></i><p>No events found.</p></div>';return}
+  const grp={};
+  fe.forEach(e=>{const k=e.date.slice(0,7);(grp[k]=grp[k]||[]).push(e)});
+  c.innerHTML=Object.keys(grp).sort().map(mk=>{
+    const[y,m]=mk.split('-');
+    return`<div class="lmg"><div class="lmt">${MONTHS[+m-1]} ${y}</div>${grp[mk].map(e=>{
+      const d=new Date(e.date+'T00:00:00');
+      const bc=e.priority==='urgent'?'bu':e.priority==='high'?'bh':'bn';
+      const pl=e.priority==='urgent'?'Urgent':e.priority==='high'?'High':'Normal';
+      const kpiSum=e.kpis&&e.kpis.length?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${e.kpis.map(k=>{
+        const pct=k.target>0?Math.min(100,Math.round(k.actual/k.target*100)):0;
+        return`<span style="font-size:11px;background:var(--s0);border:1px solid var(--border);border-radius:5px;padding:2px 8px;color:var(--t2)">${k.name}: <strong>${k.actual}/${k.target}</strong> <span style="color:${pct>=80?'#059669':'#DC2626'}">(${pct}%)</span></span>`;
+      }).join('')}</div>`:'';
+      return`<div class="lrow"><div class="ldc"><div class="ldn">${d.getDate()}</div><div class="ldw">${DAYS[d.getDay()]}</div></div>
         <div class="ldiv"></div>
         <div class="linfo"><div class="ltitle">${e.title}</div>
           <div class="lmeta">
-            <div class="uav" style="background:${DEPT_COLORS[e.dept] || '#1D5FA8'};width:18px;height:18px;font-size:9px">${initials(e.userName)}</div>
+            <div class="uav" style="background:${DEPT_COLORS[e.dept]||'#1B3A6B'};width:18px;height:18px;font-size:9px">${initials(e.userName)}</div>
             <span style="font-size:12px;color:var(--t2)">${e.userName}</span>
-            <span style="font-size:11px;color:var(--tm)">${DEPT_LABELS[e.dept] || e.dept}</span>
+            <span style="font-size:11px;color:var(--tm)">${DEPT_LABELS[e.dept]||e.dept}</span>
             <span class="badge ${bc}">${pl}</span>
           </div>
-          ${e.notes ? `<div style="font-size:11px;color:var(--tm);margin-top:4px">${e.notes}</div>` : ''}
+          ${e.notes?`<div style="font-size:11px;color:var(--tm);margin-top:4px">${e.notes}</div>`:''}
           ${kpiSum}
         </div>
         <button class="ldel" onclick="removeEvent('${e.id}')"><i class="ti ti-trash"></i></button>
@@ -870,64 +1101,56 @@ function renderList(){
   }).join('');
 }
 
-function prevMonth(){ if(curMonth === 0){ curMonth = 11; curYear--; } else curMonth--; renderCal(); if(curView === 'list') renderList(); }
-function nextMonth(){ if(curMonth === 11){ curMonth = 0; curYear++; } else curMonth++; renderCal(); if(curView === 'list') renderList(); }
-function goToday(){ const t = new Date(); curYear = t.getFullYear(); curMonth = t.getMonth(); renderCal(); if(curView === 'week') renderWeek(); if(curView === 'list') renderList(); }
+function prevMonth(){if(curMonth===0){curMonth=11;curYear--}else curMonth--;renderCal();if(curView==='list')renderList()}
+function nextMonth(){if(curMonth===11){curMonth=0;curYear++}else curMonth++;renderCal();if(curView==='list')renderList()}
+function goToday(){const t=new Date();curYear=t.getFullYear();curMonth=t.getMonth();renderCal();if(curView==='week')renderWeek();if(curView==='list')renderList()}
 
-// ═══════════════════════
-// EVENT MODAL & KPIs
-// ═══════════════════════
+// ── EVENT MODAL ──
 function onDeptChange(){
-  const d = document.getElementById('eDept').value;
-  const users = allUsers.filter(u => u.dept === d);
-  const s = document.getElementById('eUser');
-  s.innerHTML = `<option value="">— select team member —</option>` + users.map(u => `<option value="${u.email}">${u.name}</option>`).join('');
-  if(CU && CU.dept === d) s.value = CU.email;
+  const d=document.getElementById('eDept').value;
+  const users=allUsers.filter(u=>u.dept===d);
+  const s=document.getElementById('eUser');
+  s.innerHTML=`<option value="">— select team member —</option>`+users.map(u=>`<option value="${u.email}">${u.name}</option>`).join('');
+  if(CU&&CU.dept===d)s.value=CU.email;
 }
-
 function openModal(){
-  pendingKpis = []; renderKpiList();
+  pendingKpis=[];renderKpiList();
   document.getElementById('modalBg').classList.add('open');
-  if(!document.getElementById('eDate').value) document.getElementById('eDate').value = new Date().toISOString().slice(0, 10);
-  document.getElementById('eDept').value = CU.dept;
+  if(!document.getElementById('eDate').value)document.getElementById('eDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('eDept').value=CU.dept;
   onDeptChange();
-  document.getElementById('eUser').value = CU.email;
+  document.getElementById('eUser').value=CU.email;
 }
-
 function closeModal(){
   document.getElementById('modalBg').classList.remove('open');
-  document.getElementById('eTitle').value = '';
-  document.getElementById('eNotes').value = '';
-  document.getElementById('kpiName').value = '';
-  document.getElementById('kpiActual').value = '';
-  document.getElementById('kpiTarget').value = '';
-  pendingKpis = []; renderKpiList();
+  ['eTitle','eNotes','kpiName','kpiActual','kpiTarget'].forEach(id=>document.getElementById(id).value='');
+  pendingKpis=[];renderKpiList();
 }
-
 function addKpi(){
-  const name = document.getElementById('kpiName').value.trim();
-  const actual = parseFloat(document.getElementById('kpiActual').value) || 0;
-  const target = parseFloat(document.getElementById('kpiTarget').value) || 0;
-  if(!name){ showToast('Please enter a KPI name.'); return; }
-  pendingKpis.push({name, actual, target});
-  document.getElementById('kpiName').value = ''; document.getElementById('kpiActual').value = ''; document.getElementById('kpiTarget').value = '';
+  const name=document.getElementById('kpiName').value.trim();
+  const actual=parseFloat(document.getElementById('kpiActual').value)||0;
+  const target=parseFloat(document.getElementById('kpiTarget').value)||0;
+  if(!name){showToast('Please enter a KPI name.');return}
+  pendingKpis.push({name,actual,target});
+  ['kpiName','kpiActual','kpiTarget'].forEach(id=>document.getElementById(id).value='');
   renderKpiList();
 }
-function removeKpi(i){ pendingKpis.splice(i, 1); renderKpiList(); }
-
+function removeKpi(i){pendingKpis.splice(i,1);renderKpiList()}
 function renderKpiList(){
-  document.getElementById('kpiList').innerHTML = pendingKpis.length ? pendingKpis.map((k, i) => {
-    const pct = k.target > 0 ? Math.min(100, Math.round(k.actual / k.target * 100)) : 0;
-    return `<div class="kpi-entry"><span class="kn">${k.name}</span><span class="kv">${k.actual}</span><span class="kt">/${k.target}</span><span style="font-size:11px;color:${pct >= 80 ? '#059669' : '#DC2626'}">${pct}%</span><button class="kpi-del-btn" onclick="removeKpi(${i})"><i class="ti ti-x"></i></button></div>`;
-  }).join('') : '<div style="font-size:12px;color:var(--tm);margin-bottom:10px;padding:8px 0">No KPIs added yet. Fill in the fields below and click Add.</div>';
+  document.getElementById('kpiList').innerHTML=pendingKpis.length?pendingKpis.map((k,i)=>{
+    const pct=k.target>0?Math.min(100,Math.round(k.actual/k.target*100)):0;
+    return`<div class="kpi-entry"><span class="kn">${k.name}</span><span class="kv">${k.actual}</span><span class="kt">/${k.target}</span><span style="font-size:11px;color:${pct>=80?'#059669':'#DC2626'}">${pct}%</span><button class="kpi-del-btn" onclick="removeKpi(${i})"><i class="ti ti-x"></i></button></div>`;
+  }).join(''):'<div style="font-size:12px;color:var(--tm);margin-bottom:10px;padding:8px 0">No KPIs added yet. Fill in the fields below and click Add.</div>';
 }
 
-function showToast(msg){ const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2800); }
+function showToast(msg){
+  document.getElementById('toastMsg').textContent=msg;
+  const t=document.getElementById('toast');t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
 
-// ═══════════════════════
-// INIT
-// ═══════════════════════
-document.getElementById('lEmail').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('lPw').focus(); });
+// ── INIT ──
+document.getElementById('lEmail').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lPw').focus()});
 checkSession();
 </script>
 </body>
