@@ -514,10 +514,15 @@ function seedEvents(){
 // AUTH TABS
 // ═══════════════════════
 function switchTab(t){
-  ['login','register'].forEach(tab=>{
-    document.getElementById(tab+'Panel').classList.toggle('on',tab===t);
-    document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='register')));
+  document.getElementById('loginPanel').classList.toggle('on', t==='login');
+  document.getElementById('regPanel').classList.toggle('on', t==='register');
+  document.querySelectorAll('.auth-tab').forEach((el,i)=>{
+    el.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='register'));
   });
+  // clear errors
+  document.getElementById('lErr').classList.remove('on');
+  document.getElementById('rErr').classList.remove('on');
+  document.getElementById('rOk').classList.remove('on');
 }
 
 // ═══════════════════════
@@ -528,11 +533,20 @@ function doLogin(){
   const pw=document.getElementById('lPw').value;
   const err=document.getElementById('lErr');
   err.classList.remove('on');
-  if(!email.endsWith('@eipico.net')){err.textContent='Please use your @eipico.net email.';err.classList.add('on');return;}
+  if(!email||!pw){
+    err.textContent='Please enter your email and password.';
+    err.classList.add('on'); return;
+  }
   const users=getUsers();
   const u=users.find(u=>u.email===email);
-  if(!u){err.textContent='No account found. Please register first or contact admin.';err.classList.add('on');return;}
-  if(u.pw!==pw){err.textContent='Incorrect password. Default is 1356.';err.classList.add('on');return;}
+  if(!u){
+    err.textContent='No account found with this email. Please register first.';
+    err.classList.add('on'); return;
+  }
+  if(u.pw!==pw){
+    err.textContent='Incorrect password. Default password is 1356.';
+    err.classList.add('on'); return;
+  }
   CU=u;
   sessionStorage.setItem('eipico_sess',email);
   startApp();
@@ -544,25 +558,51 @@ function doLogin(){
 function doRegister(){
   const first=document.getElementById('rFirst').value.trim();
   const last=document.getElementById('rLast').value.trim();
-  const email=document.getElementById('rEmail').value.trim().toLowerCase();
+  const emailRaw=document.getElementById('rEmail').value.trim().toLowerCase();
   const dept=document.getElementById('rDept').value;
   const pw=document.getElementById('rPw').value;
   const pw2=document.getElementById('rPw2').value;
   const err=document.getElementById('rErr');
   const ok=document.getElementById('rOk');
-  err.classList.remove('on');ok.classList.remove('on');
-  if(!first||!last){err.textContent='Please enter your full name.';err.classList.add('on');return;}
-  if(!email.endsWith('@eipico.net')){err.textContent='Email must end with @eipico.net';err.classList.add('on');return;}
-  if(!dept){err.textContent='Please select your department.';err.classList.add('on');return;}
-  if(pw.length<4){err.textContent='Password must be at least 4 characters.';err.classList.add('on');return;}
-  if(pw!==pw2){err.textContent='Passwords do not match.';err.classList.add('on');return;}
+  err.classList.remove('on'); ok.classList.remove('on');
+
+  if(!first || !last){
+    err.textContent='Please enter your first and last name.';
+    err.classList.add('on'); return;
+  }
+  if(!emailRaw || !emailRaw.includes('@')){
+    err.textContent='Please enter a valid email address.';
+    err.classList.add('on'); return;
+  }
+  // Auto-append @eipico.net if user forgot it
+  const email = emailRaw.includes('@') ? emailRaw : emailRaw+'@eipico.net';
+  if(!dept){
+    err.textContent='Please select your department.';
+    err.classList.add('on'); return;
+  }
+  if(pw.length<4){
+    err.textContent='Password must be at least 4 characters.';
+    err.classList.add('on'); return;
+  }
+  if(pw!==pw2){
+    err.textContent='Passwords do not match. Please try again.';
+    err.classList.add('on'); return;
+  }
   const users=getUsers();
-  if(users.find(u=>u.email===email)){err.textContent='This email is already registered. Please sign in.';err.classList.add('on');return;}
-  users.push({email,name:`${first} ${last}`,dept,pw});
+  if(users.find(u=>u.email===email)){
+    err.textContent='This email is already registered. Go to Sign in tab.';
+    err.classList.add('on'); return;
+  }
+  users.push({email, name:`${first} ${last}`, dept, pw});
   saveUsers(users);
-  ok.textContent=`Account created for ${first} ${last}! You can now sign in.`;
+  ok.textContent=`✅ Account created for ${first} ${last}! Switching to sign in…`;
   ok.classList.add('on');
-  setTimeout(()=>switchTab('login'),1800);
+  // clear fields
+  ['rFirst','rLast','rEmail','rPw','rPw2'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rDept').value='';
+  // pre-fill login email
+  document.getElementById('lEmail').value=email;
+  setTimeout(()=>switchTab('login'), 2000);
 }
 
 // ═══════════════════════
