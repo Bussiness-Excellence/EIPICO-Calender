@@ -440,7 +440,19 @@ select.mi{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=
 
 <div id="toast"></div>
 
+<!-- 1. Add the Supabase library right ABOVE your existing script tag -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
+// ═══════════════════════
+// SUPABASE INIT
+// ═══════════════════════
+const { createClient } = supabase;
+
+// 2. Paste your URL and Anon Key inside these quotes:
+const supabaseUrl = 'https://xxbfwvlqixnmonxytdxq.supabase.co'; 
+const supabaseKey = 'sb_publishable_EmW0iOc7qMdpEtGdKbjRgQ_-ETHGD2m';
+const _supabase = createClient(supabaseUrl, supabaseKey);
 // ═══════════════════════
 // CONSTANTS
 // ═══════════════════════
@@ -910,6 +922,7 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 // ═══════════════════════
 checkSession();
 document.getElementById('lEmail').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lPw').focus();});
+
 </script>
 </body>
 </html>
