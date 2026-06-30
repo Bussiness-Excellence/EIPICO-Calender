@@ -809,10 +809,15 @@ async function doRegister(){
   if(pw.length<6){showErr('rErr','Password must be at least 6 characters.');return}
   if(pw!==pw2){showErr('rErr','Passwords do not match.');return}
 
-  const{data,error}=await _supabase.auth.signUp({email,password:pw});
+  // full_name + department go in user metadata; the handle_new_user DB
+  // trigger reads this and auto-creates the user_profiles row.
+  const full_name=`${first} ${last}`;
+  const{data,error}=await _supabase.auth.signUp({
+    email,password:pw,
+    options:{data:{full_name,department:dept,is_default_password:false}}
+  });
   if(error){showErr('rErr',error.message);return}
   if(data.user){
-    await _supabase.from('profiles').insert([{id:data.user.id,email,first_name:first,last_name:last,department:dept}]);
     showOk('rOk','Account created! Redirecting to sign in...');
     ['rFirst','rLast','rEmail','rPw','rPw2'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('rDept').value='';
@@ -842,9 +847,9 @@ async function doLogout(){
 async function checkSession(){
   const{data:{session}}=await _supabase.auth.getSession();
   if(session){
-    const{data:profile}=await _supabase.from('profiles').select('*').eq('id',session.user.id).single();
+    const{data:profile}=await _supabase.from('user_profiles').select('*').eq('id',session.user.id).single();
     if(profile){
-      CU={email:profile.email,name:profile.first_name+' '+profile.last_name,dept:profile.department};
+      CU={email:profile.email,name:profile.full_name,dept:profile.department};
       await startApp();
     }
   }
@@ -864,18 +869,19 @@ async function startApp(){
 }
 
 async function loadUsersDB(){
-  const{data}=await _supabase.from('profiles').select('*');
-  if(data)allUsers=data.map(p=>({email:p.email,name:p.first_name+' '+p.last_name,dept:p.department}));
+  const{data}=await _supabase.from('user_profiles').select('*');
+  if(data)allUsers=data.map(p=>({email:p.email,name:p.full_name,dept:p.department}));
 }
 
 async function loadEventsDB(){
-  const{data,error}=await _supabase.from('events').select(`*, profiles(first_name, last_name)`);
-  if(error){showToast('Failed to load events');return}
+  const{data,error}=await _supabase.from('assignments').select(`*, user_profiles!assigned_to(email, full_name), kpis(*)`);
+  if(error){showToast('Failed to load events');console.error(error);return}
   events=data.map(e=>({
     id:e.id,date:e.date,title:e.title,
-    email:e.profiles?e.profiles.email:null,
-    userName:e.profiles?`${e.profiles.first_name} ${e.profiles.last_name}`:'Unknown',
-    dept:e.department,priority:e.priority,notes:e.notes,kpis:e.kpis||[]
+    email:e.user_profiles?e.user_profiles.email:null,
+    userName:e.user_profiles?e.user_profiles.full_name:'Unassigned',
+    dept:e.department,priority:e.priority,notes:e.notes,
+    kpis:(e.kpis||[]).map(k=>({id:k.id,name:k.name,actual:k.actual,target:k.target}))
   }));
   renderCal();if(curView==='list')renderList();
 }
@@ -888,15 +894,29 @@ async function saveEvent(){
   const pri=document.getElementById('ePri').value;
   const notes=document.getElementById('eNotes').value.trim();
   if(!date||!title||!assignedEmail){showToast('Please fill in date, title, and team member.');return}
-  const{data:profileData}=await _supabase.from('profiles').select('id').eq('email',assignedEmail).single();
+
+  const{data:profileData}=await _supabase.from('user_profiles').select('id').eq('email',assignedEmail).single();
   if(!profileData){showToast('Selected user not found.');return}
-  const{error}=await _supabase.from('events').insert([{user_id:profileData.id,date,title,department:dept,priority:pri,notes,kpis:pendingKpis}]);
+
+  const{data:{session}}=await _supabase.auth.getSession();
+
+  const{data:inserted,error}=await _supabase.from('assignments').insert([{
+    date,title,assigned_to:profileData.id,department:dept,priority:pri,notes,
+    created_by:session?.user?.id||null
+  }]).select().single();
   if(error){showToast('Error saving: '+error.message);return}
+
+  if(pendingKpis.length){
+    const kpiRows=pendingKpis.map(k=>({assignment_id:inserted.id,name:k.name,actual:k.actual,target:k.target}));
+    const{error:kpiErr}=await _supabase.from('kpis').insert(kpiRows);
+    if(kpiErr){showToast('Event saved, but KPIs failed: '+kpiErr.message)}
+  }
+
   closeModal();await loadEventsDB();selectDay(date);showToast('Event added successfully');
 }
 
 async function removeEvent(id){
-  const{error}=await _supabase.from('events').delete().eq('id',id);
+  const{error}=await _supabase.from('assignments').delete().eq('id',id);
   if(error){showToast('Error removing event.');return}
   events=events.filter(e=>String(e.id)!==String(id));
   if(selectedDay)updatePanel(selectedDay);renderCal();showToast('Event removed');
