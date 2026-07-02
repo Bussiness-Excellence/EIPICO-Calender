@@ -9,7 +9,8 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bd:#E2E8F0;--bd2:#CBD5E1;--s0:#F5F7FA;--s1:#fff;--s2:#F5F0EE;
+  --bd:#E2E8F0;--bd2:#CBD5E1;--s0:#F5F7FA;--s1:#fff;
+  --offwhite:#F8F7F5;--sidebar-bg:#F8F7F5;
   --t1:#1A2332;--t2:#475569;--tm:#94A3B8;
   --r:8px;--rl:14px;
   --sh1:0 1px 3px rgba(0,0,0,.08);
@@ -33,7 +34,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--s0);color:var(--t
 .auth-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:22px}
 .auth-logo{height:56px;width:auto;object-fit:contain}
 .auth-brand-name{font-size:19px;font-weight:800;color:#0C3D7A;letter-spacing:-.5px;line-height:1.1}
-.auth-brand-be{font-size:9px;font-weight:600;color:var(--tm);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.auth-brand-be{font-size:8px;font-weight:600;color:var(--tm);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
 .auth-tabs{display:flex;border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
 .auth-tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;cursor:pointer;background:var(--s0);color:var(--t2);transition:all .15s}
 .auth-tab.on{background:#1D5FA8;color:#fff}
@@ -62,7 +63,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .tb-logo{height:38px;width:auto;object-fit:contain;flex-shrink:0}
 .tb-div{width:1px;height:28px;background:var(--bd);flex-shrink:0}
 .tb-texts{display:flex;flex-direction:column;justify-content:center;line-height:1.2}
-.tb-title{font-size:14px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
+.tb-title{font-size:16px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
 .tb-sub{font-size:8px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;margin-top:1px}
 .dept-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--dl);color:var(--da);letter-spacing:.03em;text-transform:uppercase;flex-shrink:0;white-space:nowrap;border:1px solid currentColor}
 .tb-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
@@ -81,12 +82,12 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .drawer-ov.show{display:block}
 
 /* ── SIDEBAR ── */
-.sidebar{width:210px;background:#fff;border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:160;transition:transform .25s}
+.sidebar{width:210px;background:var(--sidebar-bg);border-right:2px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:160;transition:transform .25s}
 .sl{font-size:9px;font-weight:800;color:var(--tm);text-transform:uppercase;letter-spacing:.12em;padding:0 14px;margin:14px 0 5px}
-.ni{display:flex;align-items:center;gap:8px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--t2);transition:all .12s;border-left:3px solid transparent;white-space:nowrap;overflow:hidden}
-.ni:hover{background:var(--s0);color:var(--t1)}
+.ni{display:flex;align-items:center;gap:8px;padding:9px 14px;font-size:14px;cursor:pointer;color:var(--t2);transition:all .12s;border-left:3px solid transparent;white-space:nowrap;overflow:hidden;font-weight:500}
+.ni:hover{background:rgba(29,95,168,.08);color:var(--t1)}
 .ni.active{background:var(--dl);color:var(--da);border-left-color:var(--da);font-weight:700}
-.ni i{font-size:15px;flex-shrink:0}
+.ni i{font-size:16px;flex-shrink:0}
 /* dept color dot */
 .ndot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-left:auto;border:2px solid rgba(255,255,255,.6)}
 .sidebar-foot{padding:12px 14px;border-top:1px solid var(--bd);font-size:10px;color:var(--tm);margin-top:auto}
@@ -97,224 +98,194 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 /* CAL HEADER */
 .cal-hdr{background:#fff;border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px;flex-wrap:wrap}
 .mnav{display:flex;align-items:center;gap:6px}
-.mtitle{font-size:15px;font-weight:800;min-width:148px;text-align:center;letter-spacing:-.3px}
-.nbtn{background:none;border:1px solid var(--bd);padding:5px 8px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:13px;display:flex;align-items:center;transition:all .12s}
+.mtitle{font-size:18px;font-weight:800;min-width:148px;text-align:center;letter-spacing:-.3px}
+.nbtn{background:none;border:1px solid var(--bd);padding:6px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;display:flex;align-items:center;transition:all .12s;font-weight:600}
 .nbtn:hover{background:var(--s0);border-color:var(--da)}
-.today-b{font-size:11px;font-weight:700;padding:5px 12px}
+.today-b{font-size:12px;font-weight:700;padding:6px 14px}
 .cal-tools{display:flex;gap:7px;align-items:center}
 .vtog{display:flex;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;background:var(--s0)}
-.vbtn{padding:5px 10px;font-size:12px;cursor:pointer;background:none;border:none;color:var(--tm);font-family:inherit;font-weight:600;transition:all .12s}
+.vbtn{padding:6px 12px;font-size:13px;cursor:pointer;background:none;border:none;color:var(--tm);font-family:inherit;font-weight:600;transition:all .12s}
 .vbtn.active{background:#fff;color:var(--t1);box-shadow:var(--sh1)}
-.pri-btn{background:var(--da);color:#fff;border:none;padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;transition:opacity .15s;white-space:nowrap}
+.pri-btn{background:var(--da);color:#fff;border:none;padding:7px 16px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;transition:opacity .15s;white-space:nowrap}
 .pri-btn:hover{opacity:.88}
-.admin-btn{background:#FEF3C7;color:#D97706;border:1px solid #FDE68A;padding:7px 14px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;transition:opacity .15s}
-.admin-btn:hover{opacity:.88}
-.admin-btn.hidden{display:none}
-.panel-tog{display:none;background:none;border:1px solid var(--bd);padding:5px 8px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;align-items:center}
+.panel-tog{display:none;background:none;border:1px solid var(--bd);padding:6px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;align-items:center;font-weight:600}
 
 /* FILTER BAR */
 .fbar{display:flex;gap:6px;padding:8px 16px;background:#fff;border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;scrollbar-width:none}
 .fbar::-webkit-scrollbar{display:none}
-.fpill{font-size:11px;font-weight:600;padding:4px 11px;border-radius:20px;cursor:pointer;border:1px solid var(--bd);color:var(--t2);background:var(--s0);white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:5px}
+.fpill{font-size:12px;font-weight:600;padding:5px 13px;border-radius:20px;cursor:pointer;border:1px solid var(--bd);color:var(--t2);background:var(--s0);white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:5px}
 .fpill.active{background:var(--dl);color:var(--da);border-color:var(--da)}
 .fp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
-/* MONTH GRID */
-.cal-body{flex:1;overflow-y:auto}
-.wdays{display:grid;grid-template-columns:repeat(7,1fr);background:#fff;border-bottom:1px solid var(--bd)}
-.wday{padding:7px 2px;text-align:center;font-size:11px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.07em}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
-.dc{min-height:96px;border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:6px;cursor:pointer;transition:background .1s;background:#fff;overflow:hidden}
-.dc:hover{background:#F8FAFC}
-.dc.om{background:var(--s0)}.dc.om .dnum{color:var(--tm)}
-.dc.today .dnum{background:var(--da);color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center}
-.dc.sel{background:var(--dl)}
-.dnum{font-size:13px;font-weight:700;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin-bottom:3px}
-.epill{font-size:10px;padding:3px 6px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;display:flex;align-items:center;gap:3px;border-left:3px solid transparent}
-.epill-lock{font-size:8px;opacity:.7;flex-shrink:0}
-.more-lbl{font-size:10px;color:var(--tm);padding:0 3px}
+/* CALENDAR GRID */
+.calendar-wrap{flex:1;overflow:auto;position:relative}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:auto;width:100%;background:#fff}
+.dow{display:flex;align-items:center;justify-content:center;padding:12px 4px;font-size:12px;font-weight:700;color:var(--tm);background:#fff;border-bottom:1px solid var(--bd);text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;z-index:10}
+.cal-day{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:8px 4px;min-height:100px;background:#fff;cursor:pointer;transition:background .12s;position:relative;overflow:hidden}
+.cal-day:hover{background:var(--s0)}
+.cal-day.today{background:var(--dl)}
+.cal-day.other-m{opacity:.4;background:#fafafa}
+.cal-day-num{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:4px;line-height:1}
+.cal-day-events{display:flex;flex-direction:column;gap:3px}
+.cal-evt{font-size:11px;padding:3px 6px;border-radius:4px;background:var(--dl);color:var(--da);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:all .12s;font-weight:600}
+.cal-evt:hover{transform:translateX(2px)}
 
-/* pill colors */
-.ec-marketing{background:#F3F0FF;color:#6D28D9;border-left-color:#7C3AED}
-.ec-fieldforce{background:#ECFDF5;color:#065F46;border-left-color:#059669}
-.ec-be{background:#ECFEFF;color:#155E75;border-left-color:#0891B2}
-.ec-medical{background:#FFF1F2;color:#9F1239;border-left-color:#DC2626}
-.ec-crm{background:#FFFBEB;color:#92400E;border-left-color:#D97706}
-.ec-ffmanagers{background:#EFF6FF;color:#1E3A8A;border-left-color:#1D5FA8}
+/* CALENDAR LIST VIEW */
+.list-wrap{flex:1;overflow:auto;background:#fff}
+.list-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .12s}
+.list-item:hover{background:var(--s0)}
+.list-info{flex:1}
+.list-date{font-size:12px;color:var(--tm);font-weight:600;margin-bottom:2px}
+.list-title{font-size:15px;font-weight:700;color:var(--t1)}
+.list-meta{font-size:11px;color:var(--tm);margin-top:2px}
+.list-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap;background:var(--dl);color:var(--da)}
 
-/* LIST */
-.list-view{padding:18px;overflow-y:auto;flex:1}
-.lmg{margin-bottom:24px}
-.lmt{font-size:11px;font-weight:800;color:var(--tm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
-.lrow{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:11px 14px;margin-bottom:7px;display:flex;align-items:flex-start;gap:10px;transition:box-shadow .12s;border-left:4px solid var(--da)}
-.lrow:hover{box-shadow:var(--sh1)}
-.ldc{min-width:42px;text-align:center}
-.lday{font-size:20px;font-weight:800;color:var(--da);line-height:1}
-.ldname{font-size:9px;color:var(--tm);text-transform:uppercase}
-.ldiv{width:1px;background:var(--bd);align-self:stretch;margin:0 4px}
-.linfo{flex:1;min-width:0}
-.ltitle{font-size:13px;font-weight:700;margin-bottom:4px}
-.lmeta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.lkpis{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
-.kpi-mini{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600;border:1px solid currentColor;opacity:.8}
-.lact{display:flex;align-items:center;gap:4px;flex-shrink:0}
-.act-btn{background:none;border:none;cursor:pointer;padding:5px;border-radius:5px;display:flex;align-items:center;font-size:14px;transition:all .12s;color:var(--tm)}
-.act-btn:hover.edit{color:#1D5FA8;background:#EBF3FB}
-.act-btn:hover.del{color:#DC2626;background:#FEF2F2}
+/* ── PANELS ── */
+.side-pnl{width:280px;background:var(--sidebar-bg);border-left:2px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;z-index:160;transition:transform .25s;padding:12px}
+.pnl-h{font-size:12px;font-weight:800;color:var(--tm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;padding:0 6px}
+.pnl-section{margin-bottom:16px}
 
-/* WEEK */
-.wv-wrap{flex:1;overflow:auto;display:flex;flex-direction:column}
-.wv-head{display:grid;grid-template-columns:44px repeat(7,1fr);background:#fff;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
-.wvhc{padding:8px 6px;text-align:center;border-right:1px solid var(--bd)}
-.wvhd{font-size:9px;font-weight:700;color:var(--tm);text-transform:uppercase;letter-spacing:.06em}
-.wvhn{font-size:16px;font-weight:800;margin-top:1px}
-.wv-body{display:grid;grid-template-columns:44px repeat(7,1fr);flex:1}
-.wv-tcol{border-right:1px solid var(--bd)}
-.wv-ts{height:50px;border-bottom:1px solid var(--bd);display:flex;align-items:flex-start;justify-content:flex-end;padding:2px 5px 0}
-.wv-tl{font-size:9px;color:var(--tm)}
-.wv-dc{border-right:1px solid var(--bd);padding:4px;min-height:350px}
-.wv-today{background:var(--dl)}
+/* EVENT MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(3px);padding:16px}
+.modal-bg.open{display:flex}
+.modal-card{background:#fff;border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--sh3)}
 
-/* SIDE PANEL */
-.sp{width:280px;border-left:1px solid var(--bd);background:var(--s2);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;transition:transform .25s;z-index:160}
-.sp-head{padding:12px 14px 10px;border-bottom:1px solid var(--bd);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;background:#fff}
-.sp-close{display:none;background:none;border:none;cursor:pointer;color:var(--tm);font-size:18px;margin-left:auto;padding:2px}
-.sp-dl{font-size:11px;color:var(--tm);padding:7px 14px;background:#fff;border-bottom:1px solid var(--bd)}
-.sp-scroll{flex:1;overflow-y:auto}
-.sp-sec{padding:12px 14px;border-bottom:1px solid var(--bd)}
-.sp-st{font-size:9px;font-weight:800;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;margin-bottom:9px}
-.kpi-dash{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.kpi-card{background:var(--dl);border-radius:var(--r);padding:8px;text-align:center}
-.kpi-val{font-size:20px;font-weight:800;color:var(--da);line-height:1}
-.kpi-lbl{font-size:9px;color:var(--t2);margin-top:2px;font-weight:600}
-.mtask{background:#fff;border:1px solid var(--bd);border-radius:var(--r);padding:9px 11px;margin-bottom:7px;border-left:3px solid var(--da)}
-.mtask-title{font-size:12px;font-weight:700;margin-bottom:5px}
-.mtask-meta{font-size:11px;color:var(--tm);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:700}
-.bu{background:#FEE2E2;color:#DC2626}.bh{background:#EBF3FB;color:#1D5FA8}.bn{background:#F0FDF4;color:#059669}
-.kpi-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
-.kpi-tag{font-size:9px;padding:2px 6px;border-radius:10px;font-weight:700;border:1px solid;background:transparent}
-.urow{display:flex;align-items:center;gap:8px;margin-bottom:5px;cursor:pointer;padding:5px 6px;border-radius:6px;transition:background .1s}
-.urow:hover{background:#fff}
-.uav{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0;position:relative}
-.u-odot{position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;border:2px solid #fff}
-.uname{font-size:12px;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.u-status{font-size:10px;flex-shrink:0}
+.modal-hdr{padding:20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:18px;font-weight:800}
+.close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--t2);padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .12s}
+.close-btn:hover{background:var(--s0);color:var(--t1)}
 
-/* MODALS */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
-.modal-bg.show{display:flex}
-.modal-card{background:#fff;border-radius:12px;box-shadow:var(--sh3);max-height:90vh;overflow-y:auto;width:90%;max-width:600px}
-.modal-head{padding:16px 20px;border-bottom:1px solid var(--bd);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:space-between}
-.modal-close{background:none;border:none;font-size:20px;cursor:pointer;color:var(--t2)}
-.modal-close:hover{color:var(--t1)}
-.modal-body{padding:20px}
-.modal-foot{padding:16px 20px;border-top:1px solid var(--bd);display:flex;gap:8px;justify-content:flex-end}
+.modal-body{padding:20px;display:flex;flex-direction:column;gap:16px}
+.mfield{display:flex;flex-direction:column;gap:6px}
+.mfield label{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.03em}
+.mfield input,.mfield select,.mfield textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--t1)}
+.mfield input:focus,.mfield select:focus,.mfield textarea:focus{outline:none;border-color:var(--da)}
 
-/* ADMIN */
-.admin-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--bd);background:#fff;margin-bottom:6px;border-radius:var(--r)}
-.admin-row:hover{background:var(--s0)}
-.admin-info{flex:1}
-.admin-name{font-size:12px;font-weight:600;color:var(--t1);cursor:pointer}
-.admin-dept{font-size:10px;color:var(--tm)}
-.admin-btns{display:flex;gap:8px}
-.admin-btn-sm{background:var(--dl);color:var(--da);border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;transition:all .12s}
-.admin-btn-sm:hover{background:var(--da);color:#fff}
-.tog-wrap{position:relative;display:inline-block;width:44px;height:24px}
-.tog-wrap input{opacity:0;width:0;height:0}
-.tog-sl{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;transition:.3s;border-radius:24px}
-.tog-wrap input:checked+.tog-sl{background:var(--da)}
+.modal-actions{display:flex;gap:10px;padding:16px 20px;border-top:1px solid var(--bd)}
+.btn-pri{background:var(--da);color:#fff;padding:10px 20px;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s;flex:1}
+.btn-pri:hover{opacity:.88}
+.btn-sec{background:var(--s0);color:var(--t2);padding:10px 20px;border:1px solid var(--bd);border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;flex:1}
+.btn-sec:hover{border-color:var(--da);color:var(--da)}
+
+/* ADMIN PANEL */
+.admin-row{display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s0);border-radius:8px;margin-bottom:8px}
+.uav{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.tog-wrap{position:relative;display:inline-block;width:40px;height:24px}
+.tog-wrap input{display:none}
+.tog-sl{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#cbd5e1;transition:.3s;border-radius:24px}
 .tog-sl:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:#fff;transition:.3s;border-radius:50%}
-.tog-wrap input:checked+.tog-sl:before{transform:translateX(20px)}
+.tog-wrap input:checked+.tog-sl{background:var(--da)}
+.tog-wrap input:checked+.tog-sl:before{transform:translateX(16px)}
+
+.cluster-group{margin-bottom:16px}
+.cluster-group-title{font-size:12px;font-weight:800;padding:8px 12px;border-left:4px solid;margin-bottom:8px;color:var(--t1)}
+.empty{padding:32px 16px;text-align:center;color:var(--tm)}
+
+/* SEARCH RESULTS */
+.search-result{padding:10px;background:var(--s0);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all .12s}
+.search-result:hover{background:var(--dl);color:var(--da)}
+.search-result-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px}
+.search-result-dept{font-size:11px;color:var(--tm)}
+.search-result-events{font-size:11px;color:var(--tm);margin-top:6px;padding-top:6px;border-top:1px solid var(--bd)}
+.event-chip{display:inline-block;font-size:10px;background:var(--dl);color:var(--da);padding:2px 6px;border-radius:4px;margin-right:4px;margin-top:4px;font-weight:600}
 
 /* TOAST */
-.toast{position:fixed;bottom:20px;right:20px;background:var(--t1);color:#fff;padding:12px 16px;border-radius:var(--r);font-size:13px;z-index:999;opacity:0;pointer-events:none;transition:opacity .3s}
-.toast.show{opacity:1;pointer-events:all}
+#toast{position:fixed;bottom:20px;left:20px;background:var(--t1);color:#fff;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:600;display:none;z-index:10000;animation:slideIn .3s}
+#toast.show{display:block}
+@keyframes slideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
-/* RESPONSIVE */
-@media(max-width:768px){
-  .sidebar{width:60px}
-  .sl,.ni{padding:6px}
-  .ni span{display:none}
-  .ni i{margin:0}
-  .sp{transform:translateX(100%)}
-  .sp.show{transform:translateX(0)}
-  .sp-close{display:block}
-  .wday{font-size:9px;padding:4px}
-  .dnum{font-size:11px}
-  .epill{font-size:8px}
+/* DESKTOP LAYOUT */
+@media (min-width:1024px){
+  .body-wrap{gap:0}
+  .side-pnl{display:flex}
+  .sidebar{display:flex}
+}
+
+/* MOBILE LAYOUT */
+@media (max-width:1023px){
   .ham-btn{display:flex}
+  .sidebar{position:fixed;left:0;height:100%;transform:translateX(-100%);top:54px;max-width:250px}
+  .sidebar.open{transform:translateX(0)}
+  .side-pnl{position:fixed;right:0;height:100%;transform:translateX(100%);top:54px;max-width:280px}
+  .side-pnl.open{transform:translateX(0)}
+  .panel-tog{display:flex}
 }
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div id="auth" class="auth-bg">
+<!-- AUTH SCREEN -->
+<div class="auth-bg" id="authBg">
   <div class="auth-card">
     <div class="auth-logo-row">
-      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1D5FA8,#3B82C4);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px">E</div>
       <div>
         <div class="auth-brand-name">EIPICO</div>
         <div class="auth-brand-be">Calendar System</div>
       </div>
     </div>
+    
     <div class="auth-tabs">
-      <div class="auth-tab on" onclick="switchAuth('login')">Login</div>
-      <div class="auth-tab" onclick="switchAuth('register')">Register</div>
+      <div class="auth-tab on" onclick="switchTab('login')">Login</div>
+      <div class="auth-tab" onclick="switchTab('signup')">Sign Up</div>
     </div>
-    <div id="loginForm">
+
+    <!-- LOGIN -->
+    <div id="loginTab">
       <div class="field">
         <label>Email</label>
-        <input type="email" class="inp" id="liEm" placeholder="your@email.com">
+        <input type="email" class="inp" id="liEm" placeholder="name@company.com">
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" class="inp" id="liPw" placeholder="Password">
+        <input type="password" class="inp" id="liPw" placeholder="••••••">
       </div>
       <button class="auth-btn" onclick="doLogin()">Login</button>
       <div class="auth-err" id="liErr"></div>
     </div>
-    <div id="registerForm" style="display:none">
+
+    <!-- SIGNUP -->
+    <div id="signupTab" style="display:none">
       <div class="f2">
         <div class="field">
           <label>First Name</label>
-          <input type="text" class="inp" id="rgFn" placeholder="First">
+          <input type="text" class="inp" id="suFn" placeholder="John">
         </div>
         <div class="field">
           <label>Last Name</label>
-          <input type="text" class="inp" id="rgLn" placeholder="Last">
+          <input type="text" class="inp" id="suLn" placeholder="Doe">
         </div>
       </div>
       <div class="field">
         <label>Email</label>
-        <input type="email" class="inp" id="rgEm" placeholder="your@email.com">
+        <input type="email" class="inp" id="suEm" placeholder="john.doe@company.com">
       </div>
       <div class="field">
         <label>Department</label>
-        <select class="inp" id="rgDp">
-          <option>Select Department</option>
-          <option value="be">Business Excellence Dept</option>
+        <select class="inp" id="suDept">
           <option value="marketing">Marketing</option>
           <option value="fieldforce">Field Force</option>
-          <option value="ffmanagers">Field Force Managers</option>
+          <option value="be">Business Excellence</option>
           <option value="medical">Medical</option>
           <option value="crm">CRM</option>
+          <option value="ffmanagers">Field Force Managers</option>
         </select>
       </div>
       <div class="field">
-        <label>Cluster/Sub-Department</label>
-        <input type="text" class="inp" id="rgCl" placeholder="e.g., Cairo, Alexandria">
+        <label>Cluster/Section</label>
+        <select class="inp" id="suCluster">
+          <option value="">Select Cluster</option>
+        </select>
       </div>
       <div class="field">
-        <label>Password (min 6 chars)</label>
-        <input type="password" class="inp" id="rgPw" placeholder="Password">
+        <label>Password</label>
+        <input type="password" class="inp" id="suPw" placeholder="••••••">
       </div>
-      <button class="auth-btn" onclick="doRegister()">Create Account</button>
-      <div class="auth-err" id="rgErr"></div>
-      <div class="auth-ok" id="rgOk"></div>
+      <button class="auth-btn" onclick="doSignup()">Create Account</button>
+      <div class="auth-err" id="suErr"></div>
+      <div class="auth-ok" id="suOk"></div>
     </div>
-    <div class="auth-hint">Demo: Use any email / password 'test'</div>
+    
+    <div class="auth-hint">Demo Account: demo@eipico.com / demo123</div>
   </div>
 </div>
 
@@ -323,22 +294,21 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="tb-l">
-      <button class="ham-btn" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40'%3E%3Crect width='100' height='40' fill='%231D5FA8'/%3E%3Ctext x='50' y='28' font-size='24' font-weight='bold' fill='%23fff' text-anchor='middle'%3EEIPICO%3C/text%3E%3C/svg%3E" class="tb-logo" alt="Logo">
+      <button class="ham-btn" id="hamBtn" onclick="toggleNav()">☰</button>
+      <div style="font-size:20px">📅</div>
       <div class="tb-div"></div>
       <div class="tb-texts">
         <div class="tb-title">EIPICO Calendar</div>
-        <div class="tb-sub" id="tbSub">Dashboard</div>
+        <div class="tb-sub">Team Schedule & Events</div>
       </div>
     </div>
     <div class="tb-r">
-      <span class="dept-badge" id="deptBadge">Dept</span>
-      <span class="admin-badge" id="adminBadge" style="display:none">Admin</span>
-      <div class="user-chip" onclick="toggleUserMenu()">
-        <div class="ua" id="ua">U</div>
-        <div class="chip-name" id="chipName">User</div>
+      <div id="adminBadgeTop" class="admin-badge" style="display:none">ADMIN</div>
+      <div class="user-chip" onclick="openUserMenu()">
+        <div class="ua" id="uaTop">A</div>
+        <div class="chip-name" id="chipNameTop">User</div>
       </div>
-      <button class="out-btn" onclick="doLogout()"><i class="ti ti-logout"></i>Logout</button>
+      <button class="out-btn" onclick="doLogout()">Logout</button>
     </div>
   </div>
 
@@ -347,552 +317,780 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
       <div class="sl">Navigation</div>
-      <div class="ni active" onclick="switchView('month')"><i class="ti ti-calendar"></i><span>Month</span></div>
-      <div class="ni" onclick="switchView('week')"><i class="ti ti-calendar-week"></i><span>Week</span></div>
-      <div class="ni" onclick="switchView('list')"><i class="ti ti-list"></i><span>List</span></div>
-      <div class="sl">Teams</div>
-      <div class="ni" onclick="filterByDept('be')"><i class="ti ti-circle-filled" style="color:#0891B2;font-size:10px"></i><span>Business Excellence</span></div>
-      <div class="ni" onclick="filterByDept('marketing')"><i class="ti ti-circle-filled" style="color:#7C3AED;font-size:10px"></i><span>Marketing</span></div>
-      <div class="ni" onclick="filterByDept('fieldforce')"><i class="ti ti-circle-filled" style="color:#059669;font-size:10px"></i><span>Field Force</span></div>
-      <div class="ni" onclick="filterByDept('ffmanagers')"><i class="ti ti-circle-filled" style="color:#0C3D7A;font-size:10px"></i><span>FF Managers</span></div>
-      <div class="ni" onclick="filterByDept('medical')"><i class="ti ti-circle-filled" style="color:#DC2626;font-size:10px"></i><span>Medical</span></div>
-      <div class="ni" onclick="filterByDept('crm')"><i class="ti ti-circle-filled" style="color:#D97706;font-size:10px"></i><span>CRM</span></div>
-      <div class="sidebar-foot">EIPICO © 2024</div>
+      <div class="ni active" onclick="setView('month')"><i class="ti ti-calendar"></i> Calendar</div>
+      <div class="ni" onclick="setView('list')"><i class="ti ti-list"></i> Events List</div>
+      <div class="ni" onclick="openSearchPanel()"><i class="ti ti-search"></i> Find Users</div>
+      <div id="adminNavItem" class="ni" onclick="openAdminPanel()" style="display:none;border-top:1px solid var(--bd);margin-top:10px;padding-top:15px"><i class="ti ti-settings"></i> Admin Panel</div>
+      
+      <div class="sl" style="margin-top:16px">Department</div>
+      <div id="deptList"></div>
     </div>
 
     <!-- MAIN -->
     <div class="main">
-      <!-- CAL HEADER -->
+      <!-- CALENDAR HEADER -->
       <div class="cal-hdr">
         <div class="mnav">
-          <button class="nbtn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
-          <div class="mtitle" id="monthTitle">January 2024</div>
-          <button class="nbtn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
+          <button class="nbtn" onclick="prevMonth()">← Prev</button>
+          <div class="mtitle" id="mTitle">January 2024</div>
+          <button class="nbtn" onclick="nextMonth()">Next →</button>
         </div>
+        <button class="today-b nbtn" onclick="goToday()">Today</button>
         <div class="cal-tools">
-          <button class="today-b nbtn" onclick="goToday()">Today</button>
           <div class="vtog">
-            <button class="vbtn active" onclick="switchView('month')">Month</button>
-            <button class="vbtn" onclick="switchView('week')">Week</button>
-            <button class="vbtn" onclick="switchView('list')">List</button>
+            <button class="vbtn active" onclick="setView('month')">Month</button>
+            <button class="vbtn" onclick="setView('week')">Week</button>
+            <button class="vbtn" onclick="setView('list')">List</button>
           </div>
-          <button class="pri-btn" onclick="openAddEvent()"><i class="ti ti-plus"></i>Add Event</button>
-          <button class="admin-btn" id="adminBtn" onclick="openAdmin()" style="display:none"><i class="ti ti-users"></i>Admin</button>
+          <button class="pri-btn" onclick="openEventModal()"><i class="ti ti-plus"></i> Add Event</button>
+          <button class="panel-tog" onclick="togglePanel()">⊳ Panel</button>
         </div>
       </div>
 
-      <!-- FILTER BAR -->
-      <div class="fbar" id="filterBar"></div>
-
-      <!-- CALENDAR -->
-      <div class="cal-body" id="calBody"></div>
+      <!-- CALENDAR VIEW -->
+      <div class="calendar-wrap" id="calView">
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+      
+      <!-- LIST VIEW -->
+      <div class="list-wrap" id="listView" style="display:none">
+        <div id="eventList"></div>
+      </div>
     </div>
 
-    <!-- SIDE PANEL -->
-    <div class="sp" id="sp">
-      <div class="sp-head">
-        June 2024
-        <button class="sp-close" onclick="toggleSidePanel()">×</button>
-      </div>
-      <div class="sp-scroll">
-        <div class="sp-sec">
-          <div class="sp-st">Search Users</div>
-          <input type="text" class="inp" placeholder="Search user..." id="userSearchInput" onkeyup="searchUsers()" style="width:100%;margin-bottom:10px">
-          <div id="searchResults" style="max-height:200px;overflow-y:auto"></div>
-        </div>
-        <div class="sp-sec">
-          <div class="sp-st">Selected Date</div>
-          <div class="sp-dl" id="selectedDate">Today</div>
-        </div>
-        <div class="sp-sec">
-          <div class="sp-st">Today's Events</div>
-          <div id="todayEvents"></div>
-        </div>
-      </div>
+    <!-- RIGHT PANEL -->
+    <div class="side-pnl" id="sidePanel">
+      <div class="pnl-h">Coming Events</div>
+      <div id="upcomingEvents" class="pnl-section"></div>
+      
+      <div class="pnl-h">User Search</div>
+      <input type="text" class="inp" id="searchInput" placeholder="Search users..." style="margin-bottom:10px" onkeyup="searchUsers()">
+      <div id="searchResults" class="pnl-section"></div>
     </div>
   </div>
-
-  <!-- DRAWER -->
-  <div class="drawer-ov" id="drawerOv" onclick="closeSidebar()"></div>
 </div>
 
-<!-- MODALS -->
-
-<!-- ADD/EDIT EVENT MODAL -->
-<div class="modal-bg" id="addEventModal">
+<!-- EVENT MODAL -->
+<div class="modal-bg" id="eventModal">
   <div class="modal-card">
-    <div class="modal-head">
-      <span id="addEventTitle">Add Event</span>
-      <button class="modal-close" onclick="closeAddEvent()">×</button>
+    <div class="modal-hdr">
+      <div class="modal-title" id="modalTitle">Add Event</div>
+      <button class="close-btn" onclick="closeEventModal()">×</button>
     </div>
     <div class="modal-body">
-      <div class="field">
+      <div class="mfield">
         <label>Date</label>
-        <input type="date" class="inp" id="evDate">
+        <input type="date" id="evDate">
       </div>
-      <div class="field">
-        <label>Event Title</label>
-        <input type="text" class="inp" id="evTitle" placeholder="Event name">
+      <div class="mfield">
+        <label>Title</label>
+        <input type="text" id="evTitle" placeholder="Event title">
       </div>
-      <div class="field">
+      <div class="mfield">
+        <label>Description</label>
+        <textarea id="evDesc" placeholder="Event description" style="min-height:80px;resize:vertical"></textarea>
+      </div>
+      <div class="mfield">
         <label>Assigned To</label>
-        <input type="email" class="inp" id="evAssigned" placeholder="user@email.com">
+        <input type="email" id="evEmail" placeholder="team.member@company.com">
       </div>
-      <div class="field">
-        <label>Notes</label>
-        <textarea class="inp" id="evNotes" style="resize:vertical;min-height:80px" placeholder="Add notes..."></textarea>
-      </div>
-      <div class="field">
+      <div class="mfield">
         <label>Priority</label>
-        <select class="inp" id="evPrio">
+        <select id="evPrio">
           <option value="low">Low</option>
           <option value="medium" selected>Medium</option>
           <option value="high">High</option>
         </select>
       </div>
     </div>
-    <div class="modal-foot">
-      <button class="out-btn" onclick="closeAddEvent()">Cancel</button>
-      <button class="pri-btn" onclick="saveEvent()">Save Event</button>
+    <div class="modal-actions">
+      <button class="btn-pri" onclick="saveEvent()">Save Event</button>
+      <button class="btn-sec" onclick="closeEventModal()">Cancel</button>
     </div>
   </div>
 </div>
 
 <!-- ADMIN MODAL -->
 <div class="modal-bg" id="adminModal">
-  <div class="modal-card" style="max-width:800px">
-    <div class="modal-head">
-      <span>Admin Panel</span>
-      <button class="modal-close" onclick="closeAdmin()">×</button>
-    </div>
-    <div class="modal-body">
-      <input type="text" class="inp" placeholder="Search users..." id="adminSearch" onkeyup="filterAdminUsers()" style="width:100%;margin-bottom:16px">
-      <div id="adminList"></div>
-    </div>
-  </div>
-</div>
-
-<!-- EDIT USER MODAL -->
-<div class="modal-bg" id="editUserModal">
   <div class="modal-card">
-    <div class="modal-head">
-      <span>Edit User</span>
-      <button class="modal-close" onclick="closeEditUser()">×</button>
+    <div class="modal-hdr">
+      <div class="modal-title">Admin Panel</div>
+      <button class="close-btn" onclick="closeAdminPanel()">×</button>
     </div>
     <div class="modal-body">
-      <div class="field">
-        <label>Full Name</label>
-        <input type="text" class="inp" id="editName">
+      <div style="margin-bottom:16px">
+        <div class="pnl-h">Manage Users</div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <input type="text" id="searchUserAdmin" class="inp" placeholder="Search user..." style="flex:1;margin:0">
+          <button class="pri-btn" onclick="loadAdminUsers()" style="flex:0;padding:6px 12px">Refresh</button>
+        </div>
       </div>
-      <div class="field">
-        <label>Email</label>
-        <input type="email" class="inp" id="editEmail" disabled>
+      <div id="adminUserList" style="max-height:400px;overflow-y:auto"></div>
+      
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--bd)">
+        <div class="pnl-h">Add New User</div>
+        <div class="mfield" style="margin-bottom:10px">
+          <label>Full Name</label>
+          <input type="text" id="newUserName" placeholder="Full Name">
+        </div>
+        <div class="mfield" style="margin-bottom:10px">
+          <label>Email</label>
+          <input type="email" id="newUserEmail" placeholder="email@company.com">
+        </div>
+        <div class="mfield" style="margin-bottom:10px">
+          <label>Department</label>
+          <select id="newUserDept">
+            <option value="marketing">Marketing</option>
+            <option value="fieldforce">Field Force</option>
+            <option value="be">Business Excellence</option>
+            <option value="medical">Medical</option>
+            <option value="crm">CRM</option>
+            <option value="ffmanagers">Field Force Managers</option>
+          </select>
+        </div>
+        <div class="mfield" style="margin-bottom:10px">
+          <label>Cluster/Section</label>
+          <select id="newUserCluster">
+            <option value="">Select Cluster</option>
+          </select>
+        </div>
+        <button class="pri-btn" onclick="addNewUser()" style="width:100%">Add User</button>
       </div>
-      <div class="field">
-        <label>Department</label>
-        <select class="inp" id="editDept">
-          <option value="be">Business Excellence</option>
-          <option value="marketing">Marketing</option>
-          <option value="fieldforce">Field Force</option>
-          <option value="ffmanagers">FF Managers</option>
-          <option value="medical">Medical</option>
-          <option value="crm">CRM</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Cluster</label>
-        <input type="text" class="inp" id="editCluster">
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="out-btn" onclick="closeEditUser()">Cancel</button>
-      <button class="pri-btn" onclick="saveEditUser()">Save</button>
     </div>
   </div>
 </div>
 
 <!-- TOAST -->
-<div id="toast" class="toast"></div>
+<div id="toast"></div>
 
 <script>
-// CONSTANTS
-const DEPTS={
-  be:'Business Excellence Dept',
-  marketing:'Marketing',
-  fieldforce:'Field Force',
-  ffmanagers:'Field Force Managers',
-  medical:'Medical',
-  crm:'CRM'
+// ═════════════════════════════════════════════════
+// ORGANIZATIONAL STRUCTURE
+// ═════════════════════════════════════════════════
+
+const DEPARTMENTS = {
+  marketing: {
+    name: 'Marketing',
+    color: '#7C3AED',
+    sections: ['Digital Marketing', 'Brand & Communications', 'Market Research']
+  },
+  fieldforce: {
+    name: 'Field Force',
+    color: '#059669',
+    sections: ['North Zone', 'South Zone', 'East Zone']
+  },
+  be: {
+    name: 'Business Excellence',
+    color: '#0891B2',
+    sections: []
+  },
+  medical: {
+    name: 'Medical',
+    color: '#DC2626',
+    sections: []
+  },
+  crm: {
+    name: 'CRM',
+    color: '#D97706',
+    sections: []
+  },
+  ffmanagers: {
+    name: 'Field Force Managers',
+    color: '#0C3D7A',
+    sections: ['Region 1', 'Region 2', 'Region 3', 'Region 4', 'Region 5', 'Region 6']
+  }
 };
 
+// ═════════════════════════════════════════════════
 // STATE
-let CU=null,allUsers=[],allEvents=[],curView='month',curDate=new Date();
-let editingUserId=null,editingEventId=null;
+// ═════════════════════════════════════════════════
 
-// ─── AUTH ───
-async function doLogin(){
-  const em=document.getElementById('liEm').value.trim();
-  const pw=document.getElementById('liPw').value;
-  const err=document.getElementById('liErr');err.classList.remove('show');
-  if(!em||!pw){showE(err,'Email and password required.');return;}
-  
-  // Demo mode
-  const isAdmin=em.includes('admin');
-  CU={
-    id:'u_'+Date.now(),
-    email:em,
-    full_name:em.split('@')[0],
-    department:'be',
-    cluster:'Cairo',
-    is_admin:isAdmin
-  };
-  localStorage.setItem('cu',JSON.stringify(CU));
-  showApp();
-}
+let currentUser = null;
+let currentDate = new Date();
+let currentView = 'month';
+let events = [];
+let users = [];
+let isAdmin = false;
 
-function doRegister(){
-  const fn=document.getElementById('rgFn').value.trim();
-  const ln=document.getElementById('rgLn').value.trim();
-  const em=document.getElementById('rgEm').value.trim();
-  const dp=document.getElementById('rgDp').value;
-  const cl=document.getElementById('rgCl').value.trim();
-  const pw=document.getElementById('rgPw').value;
+// ═════════════════════════════════════════════════
+// AUTH
+// ═════════════════════════════════════════════════
+
+async function doLogin() {
+  const email = document.getElementById('liEm').value.trim();
+  const password = document.getElementById('liPw').value;
+  const errEl = document.getElementById('liErr');
+  errEl.classList.remove('show');
   
-  const err=document.getElementById('rgErr');const ok=document.getElementById('rgOk');
-  err.classList.remove('show');ok.classList.remove('show');
-  
-  if(!fn||!ln||!em||dp==='Select Department'||!cl||pw.length<6){
-    showE(err,'All fields required.');return;
+  if (!email || !password) {
+    showE(errEl, 'Please enter email and password.');
+    return;
   }
   
-  const newUser={
-    id:'u_'+Date.now(),
-    email:em,
-    full_name:fn+' '+ln,
-    department:dp,
-    cluster:cl,
-    is_admin:false
-  };
+  // Demo account
+  if (email === 'demo@eipico.com' && password === 'demo123') {
+    currentUser = {
+      id: 'user_1',
+      email: 'demo@eipico.com',
+      full_name: 'Demo Admin',
+      department: 'marketing',
+      is_admin: true
+    };
+    isAdmin = true;
+    showAuthScreen(false);
+    initApp();
+    return;
+  }
   
-  allUsers.push(newUser);
-  localStorage.setItem('users',JSON.stringify(allUsers));
-  ok.textContent='Account created! Login now.';ok.classList.add('show');
-  setTimeout(()=>{switchAuth('login');},2000);
+  showE(errEl, 'Invalid credentials. Try demo@eipico.com / demo123');
 }
 
-function switchAuth(tab){
-  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('on'));
-  document.querySelectorAll('.auth-tab')[tab==='login'?0:1].classList.add('on');
-  document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
-  document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
-}
-
-function checkSession(){
-  const cu=localStorage.getItem('cu');
-  if(cu){CU=JSON.parse(cu);showApp();}
-}
-
-function showApp(){
-  document.getElementById('auth').style.display='none';
-  document.getElementById('app').classList.add('on');
-  document.body.setAttribute('data-dept',CU.department);
+function doSignup() {
+  const fn = document.getElementById('suFn').value.trim();
+  const ln = document.getElementById('suLn').value.trim();
+  const email = document.getElementById('suEm').value.trim();
+  const dept = document.getElementById('suDept').value;
+  const cluster = document.getElementById('suCluster').value;
+  const pw = document.getElementById('suPw').value;
+  const errEl = document.getElementById('suErr');
+  const okEl = document.getElementById('suOk');
   
-  loadData();
-  renderTopbar();
-  renderCal();
-  renderEvents();
+  errEl.classList.remove('show');
+  okEl.classList.remove('show');
   
-  if(CU.is_admin)document.getElementById('adminBtn').style.display='flex';
-}
-
-function loadData(){
-  const u=localStorage.getItem('users');
-  const e=localStorage.getItem('events');
-  allUsers=u?JSON.parse(u):[];
-  allEvents=e?JSON.parse(e):[];
-}
-
-function saveData(){
-  localStorage.setItem('events',JSON.stringify(allEvents));
-  localStorage.setItem('users',JSON.stringify(allUsers));
-}
-
-function renderTopbar(){
-  document.getElementById('ua').textContent=(CU.full_name||'U').slice(0,2).toUpperCase();
-  document.getElementById('chipName').textContent=CU.full_name;
-  document.getElementById('deptBadge').textContent=DEPTS[CU.department]||'Dept';
-  document.getElementById('tbSub').textContent=CU.cluster;
-  if(CU.is_admin)document.getElementById('adminBadge').style.display='inline-block';
-}
-
-// ─── CALENDAR ───
-function renderCal(){
-  if(curView==='month')renderMonth();
-  else if(curView==='week')renderWeek();
-  else if(curView==='list')renderList();
-}
-
-function renderMonth(){
-  const y=curDate.getFullYear(),m=curDate.getMonth();
-  const fd=new Date(y,m,1),ld=new Date(y,m+1,0);
-  const sdate=new Date(fd);sdate.setDate(sdate.getDate()-fd.getDay());
+  if (!fn || !ln || !email || !pw) {
+    showE(errEl, 'Please fill in all fields.');
+    return;
+  }
   
-  let h='<div class="wdays">';
-  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>h+=`<div class="wday">${d}</div>`);
-  h+='</div><div class="cal-grid">';
+  if (pw.length < 6) {
+    showE(errEl, 'Password must be at least 6 characters.');
+    return;
+  }
   
-  for(let i=0;i<35;i++){
-    const d=new Date(sdate);d.setDate(d.getDate()+i);
-    const dstr=d.toISOString().split('T')[0];
-    const isToday=dstr===new Date().toISOString().split('T')[0];
-    const isOther=d.getMonth()!==m;
-    const devs=allEvents.filter(e=>e.date===dstr);
+  okEl.textContent = 'Account created! You can now login.';
+  okEl.classList.add('show');
+  
+  setTimeout(() => {
+    switchTab('login');
+    document.getElementById('suFn').value = '';
+    document.getElementById('suLn').value = '';
+    document.getElementById('suEm').value = '';
+    document.getElementById('suPw').value = '';
+    okEl.classList.remove('show');
+  }, 1500);
+}
+
+function switchTab(tab) {
+  document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signupTab').style.display = tab === 'signup' ? 'block' : 'none';
+  document.querySelectorAll('.auth-tab').forEach((t, i) => {
+    t.classList.toggle('on', (tab === 'login' && i === 0) || (tab === 'signup' && i === 1));
+  });
+}
+
+function showAuthScreen(show) {
+  document.getElementById('authBg').style.display = show ? 'flex' : 'none';
+  document.getElementById('app').classList.toggle('on', !show);
+}
+
+function doLogout() {
+  currentUser = null;
+  isAdmin = false;
+  events = [];
+  users = [];
+  document.getElementById('searchInput').value = '';
+  showAuthScreen(true);
+}
+
+// ═════════════════════════════════════════════════
+// APP INIT
+// ═════════════════════════════════════════════════
+
+function initApp() {
+  renderUI();
+  loadEvents();
+  loadUsers();
+  renderCalendar();
+  updateClusterOptions();
+  
+  document.body.setAttribute('data-dept', currentUser.department);
+  
+  // Show admin badge if admin
+  if (isAdmin) {
+    document.getElementById('adminBadgeTop').style.display = 'block';
+    document.getElementById('adminNavItem').style.display = 'flex';
+  }
+  
+  // Set user info
+  const initials = (currentUser.full_name || currentUser.email).slice(0, 2).toUpperCase();
+  document.getElementById('uaTop').textContent = initials;
+  document.getElementById('chipNameTop').textContent = currentUser.full_name || currentUser.email;
+}
+
+function renderUI() {
+  // Render department list in sidebar
+  let deptHtml = '';
+  Object.entries(DEPARTMENTS).forEach(([key, dept]) => {
+    deptHtml += `<div class="ni" onclick="filterByDept('${key}')" style="font-size:12px">
+      <span style="width:8px;height:8px;border-radius:50%;background:${dept.color};flex-shrink:0"></span>
+      ${dept.name}
+    </div>`;
+  });
+  document.getElementById('deptList').innerHTML = deptHtml;
+}
+
+// ═════════════════════════════════════════════════
+// CALENDAR
+// ═════════════════════════════════════════════════
+
+function renderCalendar() {
+  if (currentView === 'month') renderMonthView();
+  else if (currentView === 'week') renderWeekView();
+  
+  renderUpcomingEvents();
+}
+
+function renderMonthView() {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startingDayOfWeek = firstDay.getDay();
+  
+  document.getElementById('mTitle').textContent = 
+    currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  
+  let grid = '<div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div>' +
+             '<div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>';
+  
+  // Previous month's days
+  const prevMonth = new Date(year, month, 0);
+  const daysInPrevMonth = prevMonth.getDate();
+  for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+    grid += `<div class="cal-day other-m"><div class="cal-day-num">${daysInPrevMonth - i}</div></div>`;
+  }
+  
+  // Current month's days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const isToday = date.toDateString() === new Date().toDateString();
+    const dateStr = date.toISOString().split('T')[0];
+    const dayEvents = events.filter(e => e.date === dateStr);
     
-    h+=`<div class="dc${isToday?' today':''}${isOther?' om':''}" onclick="selectDate('${dstr}')">
-      <div class="dnum">${d.getDate()}</div>`;
+    let html = `<div class="cal-day ${isToday ? 'today' : ''}" onclick="selD('${dateStr}')">
+      <div class="cal-day-num">${day}</div>
+      <div class="cal-day-events">`;
     
-    devs.slice(0,3).forEach(e=>{
-      h+=`<div class="epill ec-${e.dept}" title="${e.title}">${e.title.slice(0,12)}</div>`;
+    dayEvents.slice(0, 3).forEach(ev => {
+      html += `<div class="cal-evt" title="${ev.title}">${ev.title}</div>`;
     });
-    if(devs.length>3)h+=`<div class="more-lbl">+${devs.length-3}</div>`;
-    h+=`</div>`;
+    
+    if (dayEvents.length > 3) {
+      html += `<div class="cal-evt">+${dayEvents.length - 3} more</div>`;
+    }
+    
+    html += `</div></div>`;
+    grid += html;
   }
-  h+='</div>';
   
-  document.getElementById('calBody').innerHTML=h;
-  document.getElementById('monthTitle').textContent=fd.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  // Next month's days
+  let nextDay = 1;
+  const totalCells = grid.split('<div class="cal-day').length - 1;
+  const remaining = 42 - totalCells;
+  for (let i = 0; i < remaining; i++) {
+    grid += `<div class="cal-day other-m"><div class="cal-day-num">${nextDay++}</div></div>`;
+  }
+  
+  document.getElementById('calGrid').innerHTML = grid;
 }
 
-function renderWeek(){
-  showToast('Week view coming soon');
+function renderWeekView() {
+  // Simplified week view
+  document.getElementById('mTitle').textContent = 'Week View - ' + 
+    currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  document.getElementById('calGrid').innerHTML = '<div class="empty"><p>Week view coming soon</p></div>';
 }
 
-function renderList(){
-  const sorted=allEvents.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  let h='<div class="list-view">';
-  if(sorted.length===0)h+='<div style="padding:20px;text-align:center;color:var(--tm)">No events</div>';
-  else{
-    sorted.forEach(e=>{
-      const d=new Date(e.date);
-      h+=`<div class="lrow" onclick="editEvent('${e.id}')">
-        <div class="ldc">
-          <div class="lday">${d.getDate()}</div>
-          <div class="ldname">${d.toLocaleDateString('en-US',{month:'short'})}</div>
-        </div>
-        <div class="ldiv"></div>
-        <div class="linfo">
-          <div class="ltitle">${e.title}</div>
-          <div class="lmeta">
-            <span style="font-size:11px;color:var(--tm)">${e.assigned_to}</span>
-            <span class="badge${e.prio==='high'?' bu':e.prio==='low'?' bn':' bh'}">${e.prio}</span>
-          </div>
-        </div>
+function renderList() {
+  if (currentView !== 'list') return;
+  
+  const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  let html = '';
+  sortedEvents.forEach(ev => {
+    const date = new Date(ev.date);
+    html += `<div class="list-item" onclick="openEventModal('${ev.id}')">
+      <div class="list-info">
+        <div class="list-date">${date.toLocaleDateString('en-US', { 
+          weekday: 'short', month: 'short', day: 'numeric' 
+        })}</div>
+        <div class="list-title">${ev.title}</div>
+        <div class="list-meta">${ev.assigned_to_name || 'Unassigned'}</div>
+      </div>
+      <div class="list-badge">${ev.visibility || 'Team'}</div>
+    </div>`;
+  });
+  
+  document.getElementById('eventList').innerHTML = html || '<div class="empty"><p>No events</p></div>';
+}
+
+function renderUpcomingEvents() {
+  const today = new Date();
+  const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+  
+  const upcoming = events
+    .filter(e => {
+      const eDate = new Date(e.date);
+      return eDate >= today && eDate <= nextWeek;
+    })
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .slice(0, 5);
+  
+  let html = '';
+  if (upcoming.length === 0) {
+    html = '<div class="empty" style="font-size:12px;padding:16px">No upcoming events</div>';
+  } else {
+    upcoming.forEach(ev => {
+      const date = new Date(ev.date);
+      html += `<div style="padding:10px;background:var(--s0);border-radius:8px;margin-bottom:8px;cursor:pointer" onclick="selD('${ev.date}')">
+        <div style="font-size:11px;color:var(--tm);font-weight:600">${date.toLocaleDateString('en-US', { 
+          month: 'short', day: 'numeric' 
+        })}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--t1);margin-top:2px">${ev.title}</div>
       </div>`;
     });
   }
-  h+='</div>';
-  document.getElementById('calBody').innerHTML=h;
-}
-
-function switchView(v){
-  curView=v;
-  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('active'));
-  const idx=['month','week','list'].indexOf(v);
-  document.querySelectorAll('.vbtn')[idx].classList.add('active');
-  renderCal();
-}
-
-function prevMonth(){curDate.setMonth(curDate.getMonth()-1);renderCal();}
-function nextMonth(){curDate.setMonth(curDate.getMonth()+1);renderCal();}
-function goToday(){curDate=new Date();renderCal();}
-
-function selectDate(d){
-  document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));
-  event.target.closest('.dc').classList.add('sel');
-  document.getElementById('selectedDate').textContent=new Date(d).toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
-  const devs=allEvents.filter(e=>e.date===d);
-  let h='';
-  if(devs.length===0)h='<div style="font-size:11px;color:var(--tm)">No events</div>';
-  else devs.forEach(e=>h+=`<div class="mtask"><div class="mtask-title">${e.title}</div><div class="mtask-meta">${e.assigned_to}</div></div>`);
-  document.getElementById('todayEvents').innerHTML=h;
-}
-
-function renderEvents(){
-  const today=new Date().toISOString().split('T')[0];
-  const todayEvents=allEvents.filter(e=>e.date===today);
-  let h='';
-  todayEvents.forEach(e=>h+=`<div class="mtask"><div class="mtask-title">${e.title}</div><div class="mtask-meta">${e.assigned_to}</div></div>`);
-  document.getElementById('todayEvents').innerHTML=h||'<div style="font-size:11px;color:var(--tm)">No events today</div>';
-}
-
-// ─── EVENTS ───
-function openAddEvent(){
-  editingEventId=null;
-  document.getElementById('addEventTitle').textContent='Add Event';
-  const today=new Date().toISOString().split('T')[0];
-  document.getElementById('evDate').value=today;
-  document.getElementById('evTitle').value='';
-  document.getElementById('evAssigned').value='';
-  document.getElementById('evNotes').value='';
-  document.getElementById('addEventModal').classList.add('show');
-}
-
-function closeAddEvent(){
-  document.getElementById('addEventModal').classList.remove('show');
-}
-
-function editEvent(id){
-  const ev=allEvents.find(e=>e.id===id);
-  if(!ev)return;
-  editingEventId=id;
-  document.getElementById('addEventTitle').textContent='Edit Event';
-  document.getElementById('evDate').value=ev.date;
-  document.getElementById('evTitle').value=ev.title;
-  document.getElementById('evAssigned').value=ev.assigned_to;
-  document.getElementById('evNotes').value=ev.notes||'';
-  document.getElementById('evPrio').value=ev.prio;
-  document.getElementById('addEventModal').classList.add('show');
-}
-
-function saveEvent(){
-  const date=document.getElementById('evDate').value;
-  const title=document.getElementById('evTitle').value.trim();
-  const assigned=document.getElementById('evAssigned').value.trim();
   
-  if(!date||!title||!assigned){showToast('Please fill all fields');return;}
+  document.getElementById('upcomingEvents').innerHTML = html;
+}
+
+// ═════════════════════════════════════════════════
+// EVENTS
+// ═════════════════════════════════════════════════
+
+function loadEvents() {
+  // Demo events
+  events = [
+    { id: '1', date: '2024-01-15', title: 'Team Meeting', assigned_to_name: 'John Doe', visibility: 'Team' },
+    { id: '2', date: '2024-01-18', title: 'Project Review', assigned_to_name: 'Jane Smith', visibility: 'Private' },
+    { id: '3', date: '2024-01-22', title: 'Board Presentation', assigned_to_name: 'Bob Johnson', visibility: 'Company' }
+  ];
+}
+
+function loadUsers() {
+  // Demo users
+  users = [
+    { id: 'u1', full_name: 'John Doe', email: 'john@company.com', department: 'marketing', cluster: 'Digital Marketing', is_admin: false },
+    { id: 'u2', full_name: 'Jane Smith', email: 'jane@company.com', department: 'marketing', cluster: 'Brand & Communications', is_admin: false },
+    { id: 'u3', full_name: 'Bob Johnson', email: 'bob@company.com', department: 'fieldforce', cluster: 'North Zone', is_admin: false },
+    { id: 'u4', full_name: 'Alice Brown', email: 'alice@company.com', department: 'ffmanagers', cluster: 'Region 1', is_admin: true }
+  ];
+}
+
+function openEventModal(id) {
+  if (!isAdmin) return;
   
-  const payload={date,title,assigned_to:assigned,dept:CU.department,notes:document.getElementById('evNotes').value,prio:document.getElementById('evPrio').value};
+  document.getElementById('modalTitle').textContent = id ? 'Edit Event' : 'Add Event';
+  document.getElementById('eventModal').classList.add('open');
   
-  if(editingEventId){
-    const idx=allEvents.findIndex(e=>e.id===editingEventId);
-    if(idx>=0)allEvents[idx]={...allEvents[idx],...payload};
-    showToast('Event updated ✓');
-  }else{
-    payload.id='ev_'+Date.now();
-    allEvents.push(payload);
-    showToast('Event added ✓');
+  if (id) {
+    const ev = events.find(e => e.id === id);
+    if (ev) {
+      document.getElementById('evDate').value = ev.date;
+      document.getElementById('evTitle').value = ev.title;
+      document.getElementById('evDesc').value = ev.description || '';
+      document.getElementById('evEmail').value = ev.assigned_to_email || '';
+      document.getElementById('evPrio').value = ev.priority || 'medium';
+    }
+  } else {
+    document.getElementById('evDate').value = currentDate.toISOString().split('T')[0];
+    document.getElementById('evTitle').value = '';
+    document.getElementById('evDesc').value = '';
+    document.getElementById('evEmail').value = '';
+    document.getElementById('evPrio').value = 'medium';
+  }
+}
+
+function closeEventModal() {
+  document.getElementById('eventModal').classList.remove('open');
+}
+
+function saveEvent() {
+  const date = document.getElementById('evDate').value;
+  const title = document.getElementById('evTitle').value;
+  const desc = document.getElementById('evDesc').value;
+  const email = document.getElementById('evEmail').value;
+  const prio = document.getElementById('evPrio').value;
+  
+  if (!date || !title || !email) {
+    showToast('Please fill in date, title, and email.');
+    return;
   }
   
-  saveData();closeAddEvent();renderCal();renderEvents();
+  const user = users.find(u => u.email === email);
+  const newEvent = {
+    id: 'ev_' + Date.now(),
+    date,
+    title,
+    description: desc,
+    priority: prio,
+    assigned_to_name: user?.full_name || email,
+    assigned_to_email: email,
+    visibility: 'Team'
+  };
+  
+  events.push(newEvent);
+  closeEventModal();
+  renderCalendar();
+  renderList();
+  showToast('Event added ✓');
 }
 
-// ─── ADMIN ───
-function openAdmin(){
-  if(!CU.is_admin){showToast('Admin only');return;}
-  loadData();
-  renderAdminList();
-  document.getElementById('adminModal').classList.add('show');
-}
+// ═════════════════════════════════════════════════
+// SEARCH & FILTER
+// ═════════════════════════════════════════════════
 
-function closeAdmin(){
-  document.getElementById('adminModal').classList.remove('show');
-}
-
-function renderAdminList(){
-  let h='';
-  allUsers.forEach(u=>{
-    h+=`<div class="admin-row">
-      <div class="admin-info">
-        <div class="admin-name" onclick="editUserOpen('${u.id}')">${u.full_name}</div>
-        <div class="admin-dept">${DEPTS[u.department]} · ${u.cluster}</div>
-      </div>
-      <div class="admin-btns">
-        <button class="admin-btn-sm" onclick="editUserOpen('${u.id}')">Edit</button>
-      </div>
+function searchUsers() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  if (!query) {
+    document.getElementById('searchResults').innerHTML = '';
+    return;
+  }
+  
+  const results = users.filter(u =>
+    u.full_name.toLowerCase().includes(query) ||
+    u.email.toLowerCase().includes(query)
+  );
+  
+  let html = '';
+  results.forEach(u => {
+    const userEvents = events.filter(e => e.assigned_to_email === u.email);
+    html += `<div class="search-result">
+      <div class="search-result-name">${u.full_name}</div>
+      <div class="search-result-dept">${DEPARTMENTS[u.department]?.name} · ${u.cluster}</div>
+      ${userEvents.length > 0 ? `<div class="search-result-events">
+        ${userEvents.map(e => `<span class="event-chip">${e.title}</span>`).join('')}
+      </div>` : ''}
     </div>`;
   });
-  document.getElementById('adminList').innerHTML=h||'<div style="padding:20px;color:var(--tm)">No users</div>';
+  
+  document.getElementById('searchResults').innerHTML = html || '<div class="empty" style="font-size:12px">No users found</div>';
 }
 
-function filterAdminUsers(){
-  const q=document.getElementById('adminSearch').value.toLowerCase();
-  const rows=document.querySelectorAll('.admin-row');
-  rows.forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'flex':'none';});
+function openSearchPanel() {
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('searchInput').focus();
 }
 
-function editUserOpen(id){
-  editingUserId=id;
-  const u=allUsers.find(usr=>usr.id===id);
-  if(u){
-    document.getElementById('editName').value=u.full_name;
-    document.getElementById('editEmail').value=u.email;
-    document.getElementById('editDept').value=u.department;
-    document.getElementById('editCluster').value=u.cluster;
-    document.getElementById('editUserModal').classList.add('show');
+function filterByDept(dept) {
+  // Filter events by department
+  const filtered = events.filter(e => e.department === dept);
+  showToast(`Showing ${filtered.length} events from ${DEPARTMENTS[dept].name}`);
+}
+
+// ═════════════════════════════════════════════════
+// ADMIN
+// ═════════════════════════════════════════════════
+
+async function openAdminPanel() {
+  if (!isAdmin) {
+    showToast('Admin access only.');
+    return;
   }
+  
+  await loadAdminUsers();
+  document.getElementById('adminModal').classList.add('open');
 }
 
-function closeEditUser(){
-  document.getElementById('editUserModal').classList.remove('show');
+function closeAdminPanel() {
+  document.getElementById('adminModal').classList.remove('open');
 }
 
-function saveEditUser(){
-  const u=allUsers.find(usr=>usr.id===editingUserId);
-  if(u){
-    u.full_name=document.getElementById('editName').value;
-    u.department=document.getElementById('editDept').value;
-    u.cluster=document.getElementById('editCluster').value;
-    saveData();
+async function loadAdminUsers() {
+  let html = '';
+  const byDept = {};
+  
+  users.forEach(u => {
+    const dept = u.department;
+    if (!byDept[dept]) byDept[dept] = [];
+    byDept[dept].push(u);
+  });
+  
+  Object.entries(DEPARTMENTS).forEach(([key, dept]) => {
+    if (!byDept[key]) return;
+    
+    html += `<div class="cluster-group">
+      <div class="cluster-group-title" style="border-left-color:${dept.color}">${dept.name}</div>`;
+    
+    byDept[key].forEach(u => {
+      const init = u.full_name.slice(0, 2).toUpperCase();
+      html += `<div class="admin-row">
+        <div>
+          <div class="uav" style="background:${dept.color};width:30px;height:30px;font-size:11px">${init}</div>
+        </div>
+        <div style="flex:1;margin-left:10px">
+          <input type="text" value="${u.full_name}" class="inp" style="margin-bottom:4px;font-size:12px" onchange="updateUser('${u.id}', 'name', this.value)">
+          <div style="font-size:11px;color:var(--tm)">${u.email}</div>
+          <div style="font-size:10px;color:var(--tm);margin-top:2px">${u.cluster}</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-sec" style="padding:4px 8px;font-size:11px" onclick="editUser('${u.id}')">Edit</button>
+          <button class="btn-sec" style="padding:4px 8px;font-size:11px" onclick="deleteUser('${u.id}')">Delete</button>
+        </div>
+      </div>`;
+    });
+    
+    html += `</div>`;
+  });
+  
+  document.getElementById('adminUserList').innerHTML = html;
+}
+
+function updateUser(id, field, value) {
+  const user = users.find(u => u.id === id);
+  if (user) {
+    if (field === 'name') user.full_name = value;
     showToast('User updated ✓');
-    closeEditUser();
-    renderAdminList();
   }
 }
 
-// ─── SEARCH ───
-function searchUsers(){
-  const q=document.getElementById('userSearchInput').value.toLowerCase();
-  if(q.length<2){document.getElementById('searchResults').innerHTML='';return;}
+function editUser(id) {
+  // Open edit modal
+  const user = users.find(u => u.id === id);
+  if (user) {
+    document.getElementById('newUserName').value = user.full_name;
+    document.getElementById('newUserEmail').value = user.email;
+    document.getElementById('newUserDept').value = user.department;
+    updateClusterOptions(user.department);
+    document.getElementById('newUserCluster').value = user.cluster;
+  }
+}
+
+function deleteUser(id) {
+  if (confirm('Are you sure?')) {
+    users = users.filter(u => u.id !== id);
+    loadAdminUsers();
+    showToast('User deleted ✓');
+  }
+}
+
+function addNewUser() {
+  const name = document.getElementById('newUserName').value;
+  const email = document.getElementById('newUserEmail').value;
+  const dept = document.getElementById('newUserDept').value;
+  const cluster = document.getElementById('newUserCluster').value;
   
-  const found=allUsers.filter(u=>u.full_name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q)).slice(0,5);
-  let h='';
-  found.forEach(u=>{
-    const ue=allEvents.filter(e=>e.assigned_to===u.email).slice(0,2);
-    h+=`<div class="urow">
-      <div class="uav" style="background:var(--da)">${u.full_name.slice(0,2).toUpperCase()}</div>
-      <div style="flex:1">
-        <div style="font-size:12px;font-weight:600">${u.full_name}</div>
-        <div style="font-size:10px;color:var(--tm)">${ue.length} upcoming</div>
-      </div>
-    </div>`;
+  if (!name || !email || !cluster) {
+    showToast('Please fill in all fields.');
+    return;
+  }
+  
+  users.push({
+    id: 'u_' + Date.now(),
+    full_name: name,
+    email,
+    department: dept,
+    cluster,
+    is_admin: false
   });
-  document.getElementById('searchResults').innerHTML=h;
+  
+  document.getElementById('newUserName').value = '';
+  document.getElementById('newUserEmail').value = '';
+  document.getElementById('newUserCluster').value = '';
+  
+  loadAdminUsers();
+  showToast('User added ✓');
 }
 
-// ─── UI ───
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('show');
-  document.getElementById('drawerOv').classList.toggle('show');
+function updateClusterOptions(dept) {
+  const deptKey = dept || document.getElementById('suDept').value || document.getElementById('newUserDept').value;
+  const clusters = DEPARTMENTS[deptKey]?.sections || [];
+  
+  const select = document.getElementById('suCluster') || document.getElementById('newUserCluster');
+  if (select) {
+    select.innerHTML = clusters.map(c => `<option value="${c}">${c}</option>`).join('');
+  }
 }
 
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('show');
-  document.getElementById('drawerOv').classList.remove('show');
+// ═════════════════════════════════════════════════
+// NAVIGATION
+// ═════════════════════════════════════════════════
+
+function setView(view) {
+  currentView = view;
+  
+  document.querySelectorAll('.vbtn').forEach((b, i) => {
+    b.classList.toggle('active', 
+      (view === 'month' && i === 0) ||
+      (view === 'week' && i === 1) ||
+      (view === 'list' && i === 2)
+    );
+  });
+  
+  document.getElementById('calView').style.display = view !== 'list' ? 'block' : 'none';
+  document.getElementById('listView').style.display = view === 'list' ? 'block' : 'none';
+  
+  if (view !== 'list') {
+    renderCalendar();
+  } else {
+    renderList();
+  }
 }
 
-function toggleSidePanel(){
-  document.getElementById('sp').classList.toggle('show');
+function prevMonth() {
+  currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1);
+  renderCalendar();
 }
 
-function toggleUserMenu(){
-  showToast('Profile menu');
+function nextMonth() {
+  currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
+  renderCalendar();
 }
 
-function filterByDept(dept){
-  showToast('Filter: '+DEPTS[dept]);
+function goToday() {
+  currentDate = new Date();
+  renderCalendar();
 }
 
-function doLogout(){
-  localStorage.removeItem('cu');
-  location.reload();
+function selD(date) {
+  // Select date (future feature)
 }
 
-function showE(el,msg){el.textContent=msg;el.classList.add('show');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function toggleNav() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
 
-// ─── INIT ───
-document.getElementById('liPw').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-checkSession();
+function togglePanel() {
+  document.getElementById('sidePanel').classList.toggle('open');
+}
+
+// ═════════════════════════════════════════════════
+// UTILS
+// ═════════════════════════════════════════════════
+
+function showE(el, msg) {
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+function openUserMenu() {
+  // Future: open user menu
+}
+
+// Initialize
+showAuthScreen(true);
+document.getElementById('suDept').addEventListener('change', () => updateClusterOptions());
+document.getElementById('newUserDept').addEventListener('change', () => updateClusterOptions());
 </script>
 </body>
 </html>
