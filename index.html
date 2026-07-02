@@ -836,7 +836,7 @@ async function handleSignup() {
   const deptSlug = document.getElementById('suDept').value;
   const clusterId = document.getElementById('suCluster').value;
 
-  if (!firstName || !email || !password || !deptSlug || !clusterId) {
+  if (!firstName || !email || !password || !deptSlug) {
     showE(document.getElementById('signupErr'), 'Please fill in all fields.');
     return;
   }
@@ -1385,10 +1385,12 @@ function updateUserSubdepts() {
   const dept = departments[deptId];
   const select = document.getElementById('userSubdept');
   
-  if (dept && dept.subdepts) {
+  if (dept && dept.subdepts && dept.subdepts.length > 0) {
     select.innerHTML = dept.subdepts.map(sub => 
       `<option value="${sub.id}">${sub.name}</option>`
     ).join('');
+  } else {
+    select.innerHTML = '<option value="">No sections set up yet</option>';
   }
 }
 
@@ -1403,7 +1405,7 @@ async function saveUser() {
   const subdept = document.getElementById('userSubdept').value;
   const role = document.getElementById('userRole').value;
 
-  if (!name || !dept || !subdept) {
+  if (!name || !dept) {
     showToast('Please fill in all fields');
     return;
   }
@@ -1658,8 +1660,12 @@ function updateSignupClusters() {
   const deptId = document.getElementById('suDept').value;
   const dept = departments[deptId];
   const select = document.getElementById('suCluster');
-  select.innerHTML = '<option value="">Select Section</option>' +
-    (dept?.subdepts || []).map(sub => `<option value="${sub.id}">${sub.name}</option>`).join('');
+  if (dept && dept.subdepts && dept.subdepts.length > 0) {
+    select.innerHTML = '<option value="">Select Section</option>' +
+      dept.subdepts.map(sub => `<option value="${sub.id}">${sub.name}</option>`).join('');
+  } else {
+    select.innerHTML = '<option value="">No sections set up yet</option>';
+  }
 }
 
 // Initialize: load lookup data, wire selectors, then restore session if one exists
