@@ -633,8 +633,9 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
           <label>Role</label>
           <select id="userRole" class="inp">
             <option value="user">User</option>
+            <option value="cluster_admin">Section Admin</option>
             <option value="dept_admin">Department Admin</option>
-            <option value="subdept_admin">Section Admin</option>
+            <option value="super_admin">App Admin (Super Admin)</option>
           </select>
         </div>
       </div>
@@ -1331,7 +1332,7 @@ function loadUsersList() {
       <td>${departments[u.department]?.name || 'N/A'}</td>
       <td>
         <span class="admin-badge ${u.is_super_admin ? 'super' : (u.role === 'dept_admin' ? 'admin' : 'dept')}">
-          ${u.is_super_admin ? 'Super Admin' : (u.role === 'dept_admin' ? 'Dept Admin' : (u.role === 'subdept_admin' ? 'Section Admin' : 'User'))}
+          ${u.is_super_admin ? 'App Admin' : (u.role === 'dept_admin' ? 'Dept Admin' : (u.role === 'cluster_admin' ? 'Section Admin' : 'User'))}
         </span>
       </td>
       <td>
@@ -1418,7 +1419,8 @@ async function saveUser() {
     cluster_name: clusterObj?.name || null,
     role,
     is_dept_admin: role === 'dept_admin',
-    is_cluster_admin: role === 'subdept_admin'
+    is_cluster_admin: role === 'cluster_admin',
+    is_app_admin: role === 'super_admin'
   }).eq('id', currentEditId);
 
   if (error) { showToast('Error updating user: ' + error.message); return; }
