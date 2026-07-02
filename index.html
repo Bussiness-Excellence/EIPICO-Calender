@@ -6,6 +6,7 @@
 <title>EIPICO Calendar - Admin Control</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -372,14 +373,8 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       </div>
       <div class="field">
         <label>Department</label>
-        <select id="suDept" class="inp">
+        <select id="suDept" class="inp" onchange="updateSignupClusters()">
           <option value="">Select Department</option>
-          <option value="marketing">Marketing</option>
-          <option value="fieldforce">Field Force</option>
-          <option value="be">Business Excellence</option>
-          <option value="medical">Medical</option>
-          <option value="crm">CRM</option>
-          <option value="ffmanagers">Field Managers</option>
         </select>
       </div>
       <div class="field">
@@ -393,7 +388,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       <div class="auth-ok" id="signupOk"></div>
     </div>
     
-    <div class="auth-hint">Demo: Use any email to sign in</div>
+    <div class="auth-hint">Don't have an account? Use the Sign Up tab.</div>
   </div>
 </div>
 
@@ -695,95 +690,13 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 
 const SUPER_ADMIN_EMAIL = 'ahmed.hamdoon@eipico.net';
 
-let departments = {
-  marketing: {
-    id: 'marketing',
-    name: 'Marketing',
-    color: '#7C3AED',
-    subdepts: [
-      { id: 'mkt_digital', name: 'Digital' },
-      { id: 'mkt_creative', name: 'Creative' },
-      { id: 'mkt_content', name: 'Content' }
-    ],
-    admin: null
-  },
-  fieldforce: {
-    id: 'fieldforce',
-    name: 'Field Force',
-    color: '#059669',
-    subdepts: [
-      { id: 'ff_a', name: 'Region A' },
-      { id: 'ff_b', name: 'Region B' },
-      { id: 'ff_c', name: 'Region C' }
-    ],
-    admin: null
-  },
-  be: {
-    id: 'be',
-    name: 'Business Excellence',
-    color: '#0891B2',
-    subdepts: [
-      { id: 'be_quality', name: 'Quality' },
-      { id: 'be_process', name: 'Process' },
-      { id: 'be_training', name: 'Training' }
-    ],
-    admin: null
-  },
-  medical: {
-    id: 'medical',
-    name: 'Medical',
-    color: '#DC2626',
-    subdepts: [
-      { id: 'med_products', name: 'Products' },
-      { id: 'med_affairs', name: 'Affairs' },
-      { id: 'med_relations', name: 'Relations' }
-    ],
-    admin: null
-  },
-  crm: {
-    id: 'crm',
-    name: 'CRM',
-    color: '#D97706',
-    subdepts: [
-      { id: 'crm_sales', name: 'Sales' },
-      { id: 'crm_support', name: 'Support' },
-      { id: 'crm_analytics', name: 'Analytics' }
-    ],
-    admin: null
-  },
-  area_managers: {
-    id: 'area_managers',
-    name: 'Area Managers',
-    color: '#0C3D7A',
-    subdepts: [
-      { id: 'am_north', name: 'Northern' },
-      { id: 'am_south', name: 'Southern' },
-      { id: 'am_central', name: 'Central' }
-    ],
-    admin: null
-  },
-  business_unit_managers: {
-    id: 'business_unit_managers',
-    name: 'Business Unit Managers',
-    color: '#7C2D12',
-    subdepts: [
-      { id: 'bum_unit1', name: 'Unit 1' },
-      { id: 'bum_unit2', name: 'Unit 2' },
-      { id: 'bum_unit3', name: 'Unit 3' }
-    ],
-    admin: null
-  },
-  others: {
-    id: 'others',
-    name: 'Others',
-    color: '#64748B',
-    subdepts: [
-      { id: 'oth_general', name: 'General' }
-    ],
-    admin: null
-  }
-};
+// ── Supabase connection ──
+const SUPABASE_URL = 'https://xxbfwvlqixnmonxytdxq.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_EmW0iOc7qMdpEtGdKbjRgQ_-ETHGD2m';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// departments/clusters are now loaded from the DB at runtime — see loadDepartments()
+let departments = {};
 let users = [];
 let events = [];
 let currentUser = null;
@@ -793,79 +706,202 @@ let currentEditId = null;
 let currentEditType = null;
 
 // ═════════════════════════════════════════════════
+// DATA LOADING (Supabase)
+// ═════════════════════════════════════════════════
+
+// Loads public.departments + public.clusters and rebuilds the `departments`
+// object using each department's `slug` as the key (so the rest of the app's
+// code, which expects text keys like 'marketing', keeps working unchanged).
+async function loadDepartments() {
+  const { data: depts, error: deptErr } = await sb
+    .from('departments')
+    .select('id, name, slug, color, sort_order')
+    .order('sort_order');
+
+  if (deptErr) {
+    console.error(deptErr);
+    showToast('Failed to load departments: ' + deptErr.message);
+    return;
+  }
+
+  const { data: clusters, error: clusterErr } = await sb
+    .from('clusters')
+    .select('id, name, department_id, sort_order')
+    .order('sort_order');
+
+  if (clusterErr) {
+    console.error(clusterErr);
+    showToast('Failed to load sections: ' + clusterErr.message);
+    return;
+  }
+
+  const next = {};
+  (depts || []).forEach(d => {
+    const key = d.slug || d.id;
+    next[key] = {
+      id: key,               // slug — used everywhere in the UI/routing
+      uuid: d.id,             // real uuid PK — used for FK writes
+      name: d.name,
+      color: d.color,
+      subdepts: (clusters || [])
+        .filter(c => c.department_id === d.id)
+        .map(c => ({ id: c.id, name: c.name })),
+      admin: null
+    };
+  });
+  departments = next;
+}
+
+async function loadAssignments() {
+  const { data, error } = await sb
+    .from('assignments')
+    .select('*')
+    .order('date');
+
+  if (error) {
+    console.error(error);
+    showToast('Failed to load events: ' + error.message);
+    events = [];
+    return;
+  }
+
+  events = (data || []).map(a => ({
+    id: a.id,
+    title: a.title,
+    date: a.date,
+    department: a.department,
+    department_id: a.department_id,
+    description: a.notes || ''
+  }));
+}
+
+async function loadUsersFromDB() {
+  const { data, error } = await sb.from('user_profiles').select('*');
+  if (error) {
+    console.error(error);
+    showToast('Failed to load users: ' + error.message);
+    users = [];
+    return;
+  }
+  users = (data || []).map(u => ({
+    id: u.id,
+    full_name: u.full_name,
+    email: u.email,
+    department: u.department,
+    role: u.role,
+    is_super_admin: !!u.is_app_admin
+  }));
+}
+
+// ═════════════════════════════════════════════════
 // AUTHENTICATION
 // ═════════════════════════════════════════════════
 
-function handleLogin() {
-  const email = document.getElementById('loginEmail').value;
+async function handleLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
-  
+
   if (!email || !password) {
     showE(document.getElementById('loginErr'), 'Please fill in all fields.');
     return;
   }
-  
-  let user = users.find(u => u.email === email);
-  
-  if (!user) {
-    user = {
-      id: 'u_' + Date.now(),
-      full_name: email.split('@')[0],
-      email,
-      department: 'marketing',
-      cluster: 'Digital',
-      is_admin: false,
-      is_super_admin: email === SUPER_ADMIN_EMAIL
-    };
-    users.push(user);
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    showE(document.getElementById('loginErr'), error.message);
+    return;
   }
-  
-  currentUser = user;
-  document.getElementById('loginOk').textContent = 'Welcome back!';
+
+  const ok = await loadCurrentUserProfile(data.user.id);
+  if (!ok) {
+    showE(document.getElementById('loginErr'), 'Signed in, but no profile was found for this account. Contact an admin.');
+    await sb.auth.signOut();
+    return;
+  }
+
   showE(document.getElementById('loginOk'), 'Welcome back!');
-  
-  setTimeout(() => {
+  setTimeout(async () => {
     showAuthScreen(false);
-    loadApp();
-  }, 800);
+    await loadApp();
+  }, 500);
 }
 
-function handleSignup() {
-  const firstName = document.getElementById('suFirstName').value;
-  const lastName = document.getElementById('suLastName').value;
-  const email = document.getElementById('suEmail').value;
-  const dept = document.getElementById('suDept').value;
-  const cluster = document.getElementById('suCluster').value;
-  
-  if (!firstName || !email || !dept || !cluster) {
+async function handleSignup() {
+  const firstName = document.getElementById('suFirstName').value.trim();
+  const lastName = document.getElementById('suLastName').value.trim();
+  const email = document.getElementById('suEmail').value.trim();
+  const password = document.getElementById('suPassword').value;
+  const deptSlug = document.getElementById('suDept').value;
+  const clusterId = document.getElementById('suCluster').value;
+
+  if (!firstName || !email || !password || !deptSlug || !clusterId) {
     showE(document.getElementById('signupErr'), 'Please fill in all fields.');
     return;
   }
-  
-  if (users.find(u => u.email === email)) {
-    showE(document.getElementById('signupErr'), 'Email already exists.');
+
+  const { data, error } = await sb.auth.signUp({ email, password });
+
+  if (error) {
+    showE(document.getElementById('signupErr'), error.message);
     return;
   }
-  
-  currentUser = {
-    id: 'u_' + Date.now(),
-    full_name: firstName + ' ' + lastName,
+
+  // If email confirmation is required, there's no session/user yet to attach a profile to.
+  if (!data.session || !data.user) {
+    showE(document.getElementById('signupOk'), 'Account created! Check your email to confirm, then sign in.');
+    return;
+  }
+
+  const deptObj = departments[deptSlug];
+  const clusterObj = deptObj?.subdepts.find(s => s.id === clusterId);
+
+  const { error: profileErr } = await sb.from('user_profiles').insert({
+    id: data.user.id,
     email,
-    department: dept,
-    cluster,
-    is_admin: false,
-    is_super_admin: email === SUPER_ADMIN_EMAIL
-  };
-  
-  users.push(currentUser);
-  
-  document.getElementById('signupOk').textContent = 'Account created! Welcome!';
+    full_name: firstName + (lastName ? ' ' + lastName : ''),
+    department: deptSlug,
+    department_id: deptObj?.uuid || null,
+    cluster_id: clusterObj?.id || null,
+    cluster_name: clusterObj?.name || null,
+    role: 'user',
+    is_dept_admin: false,
+    is_app_admin: email === SUPER_ADMIN_EMAIL,
+    initials: (firstName[0] + (lastName ? lastName[0] : '')).toUpperCase()
+  });
+
+  if (profileErr) {
+    showE(document.getElementById('signupErr'), 'Account created but profile setup failed: ' + profileErr.message);
+    return;
+  }
+
+  await loadCurrentUserProfile(data.user.id);
   showE(document.getElementById('signupOk'), 'Account created! Welcome!');
-  
-  setTimeout(() => {
+  setTimeout(async () => {
     showAuthScreen(false);
-    loadApp();
-  }, 800);
+    await loadApp();
+  }, 500);
+}
+
+// Fetches the user_profiles row for a logged-in auth user and sets currentUser.
+// Returns true on success, false if no profile row exists.
+async function loadCurrentUserProfile(userId) {
+  const { data, error } = await sb.from('user_profiles').select('*').eq('id', userId).single();
+  if (error || !data) return false;
+
+  currentUser = {
+    id: data.id,
+    full_name: data.full_name,
+    email: data.email,
+    department: data.department,
+    department_id: data.department_id,
+    cluster_id: data.cluster_id,
+    cluster: data.cluster_name,
+    role: data.role,
+    is_admin: !!data.is_dept_admin,
+    is_super_admin: !!data.is_app_admin
+  };
+  return true;
 }
 
 function showTab(tab) {
@@ -882,7 +918,8 @@ function showAuthScreen(show) {
   document.getElementById('app').classList.toggle('on', !show);
 }
 
-function logout() {
+async function logout() {
+  await sb.auth.signOut();
   currentUser = null;
   showAuthScreen(true);
   document.getElementById('loginEmail').value = '';
@@ -893,7 +930,7 @@ function logout() {
 // APP INITIALIZATION
 // ═════════════════════════════════════════════════
 
-function loadApp() {
+async function loadApp() {
   body.setAttribute('data-dept', currentUser.department);
   document.getElementById('userName').textContent = currentUser.full_name;
   const deptObj = departments[currentUser.department];
@@ -913,8 +950,8 @@ function loadApp() {
   
   loadDeptNav();
   loadFilters();
+  await loadAssignments();
   renderCalendar();
-  addSampleEvents();
 }
 
 function loadDeptNav() {
@@ -1073,24 +1110,33 @@ function closeEventModal() {
   document.getElementById('eventTitle').value = '';
 }
 
-function saveCalendarEvent() {
-  const title = document.getElementById('eventTitle').value;
+async function saveCalendarEvent() {
+  const title = document.getElementById('eventTitle').value.trim();
   const date = document.getElementById('eventDate').value;
   const dept = document.getElementById('eventDept').value || currentUser.department;
-  
+
   if (!title || !date) {
     showToast('Please fill in all fields');
     return;
   }
-  
-  events.push({
-    id: 'e_' + Date.now(),
+
+  const deptObj = departments[dept];
+  const { data, error } = await sb.from('assignments').insert({
     title,
     date,
     department: dept,
-    description: ''
-  });
-  
+    department_id: deptObj?.uuid || null,
+    created_by: currentUser.id,
+    notes: ''
+  }).select().single();
+
+  if (error) {
+    showToast('Error adding event: ' + error.message);
+    return;
+  }
+
+  events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '' });
+
   closeEventModal();
   renderCalendar();
   showToast('Event added ✓');
@@ -1110,14 +1156,15 @@ function loadFilters() {
 // ADMIN FUNCTIONS
 // ═════════════════════════════════════════════════
 
-function loadAdmin() {
+async function loadAdmin() {
   if (!currentUser.is_super_admin) {
     showToast('Admin access denied');
     return;
   }
-  
+
   document.getElementById('adminModal').classList.add('open');
   loadDeptList();
+  await loadUsersFromDB();
   loadUsersList();
   loadEventsList();
 }
@@ -1300,18 +1347,11 @@ function loadUsersList() {
 }
 
 function openAddUserModal() {
-  currentEditId = null;
-  currentEditType = 'user';
-  document.getElementById('editUserTitle').textContent = 'Add User';
-  document.getElementById('userName').value = '';
-  document.getElementById('userEmail').value = '';
-  document.getElementById('userRole').value = 'user';
-  
-  updateUserDeptSelect();
-  document.getElementById('userDept').value = Object.keys(departments)[0];
-  updateUserSubdepts();
-  
-  document.getElementById('editUserModal').classList.add('open');
+  // Creating a brand-new login account requires Supabase's admin API (service-role
+  // key), which must never run in client-side code. New accounts are created by
+  // the person signing up themselves on the Sign Up screen; admins can edit their
+  // department/role/section here afterward.
+  showToast('New accounts are created via Sign Up. Ask the person to sign up, then edit their role here.');
 }
 
 function openEditUserModal(userId) {
@@ -1351,42 +1391,40 @@ function updateUserSubdepts() {
   }
 }
 
-function saveUser() {
+async function saveUser() {
+  if (!currentEditId) {
+    showToast('New accounts are created via Sign Up, not here.');
+    return;
+  }
+
   const name = document.getElementById('userName').value.trim();
-  const email = document.getElementById('userEmail').value.trim();
   const dept = document.getElementById('userDept').value;
   const subdept = document.getElementById('userSubdept').value;
   const role = document.getElementById('userRole').value;
-  
-  if (!name || !email || !dept || !subdept) {
+
+  if (!name || !dept || !subdept) {
     showToast('Please fill in all fields');
     return;
   }
-  
-  if (currentEditId) {
-    // Edit existing
-    const user = users.find(u => u.id === currentEditId);
-    user.full_name = name;
-    user.email = email;
-    user.department = dept;
-    user.subdept = subdept;
-    user.role = role;
-    showToast('User updated ✓');
-  } else {
-    // Create new
-    users.push({
-      id: 'u_' + Date.now(),
-      full_name: name,
-      email,
-      department: dept,
-      subdept,
-      role,
-      is_admin: role === 'dept_admin',
-      is_super_admin: false
-    });
-    showToast('User added ✓');
-  }
-  
+
+  const deptObj = departments[dept];
+  const clusterObj = deptObj?.subdepts.find(s => s.id === subdept);
+
+  const { error } = await sb.from('user_profiles').update({
+    full_name: name,
+    department: dept,
+    department_id: deptObj?.uuid || null,
+    cluster_id: clusterObj?.id || null,
+    cluster_name: clusterObj?.name || null,
+    role,
+    is_dept_admin: role === 'dept_admin',
+    is_cluster_admin: role === 'subdept_admin'
+  }).eq('id', currentEditId);
+
+  if (error) { showToast('Error updating user: ' + error.message); return; }
+
+  await loadUsersFromDB();
+  showToast('User updated ✓');
   closeEditUserModal();
   loadUsersList();
 }
@@ -1396,17 +1434,20 @@ function closeEditUserModal() {
   currentEditId = null;
 }
 
-function deleteUser(userId) {
+async function deleteUser(userId) {
   if (userId === currentUser.id) {
     showToast('Cannot delete yourself');
     return;
   }
-  
-  if (confirm('Delete this user?')) {
-    users = users.filter(u => u.id !== userId);
-    loadUsersList();
-    showToast('User deleted ✓');
-  }
+
+  if (!confirm('Remove this user\'s profile? (Their login account itself can only be fully deleted from the Supabase dashboard.)')) return;
+
+  const { error } = await sb.from('user_profiles').delete().eq('id', userId);
+  if (error) { showToast('Error deleting user: ' + error.message); return; }
+
+  users = users.filter(u => u.id !== userId);
+  loadUsersList();
+  showToast('User profile deleted ✓');
 }
 
 // ═════════════════════════════════════════════════
@@ -1474,37 +1515,43 @@ function updateDeptSelects() {
   updateEventDeptSelect();
 }
 
-function saveEvent() {
+async function saveEvent() {
   const title = document.getElementById('eventTitle').value.trim();
   const date = document.getElementById('eventDate').value;
   const dept = document.getElementById('eventDept').value;
   const desc = document.getElementById('eventDesc').value.trim();
-  
+
   if (!title || !date || !dept) {
     showToast('Please fill in all fields');
     return;
   }
-  
+
+  const deptObj = departments[dept];
+
   if (currentEditId) {
     // Edit existing
+    const { error } = await sb.from('assignments').update({
+      title, date, department: dept, department_id: deptObj?.uuid || null, notes: desc
+    }).eq('id', currentEditId);
+
+    if (error) { showToast('Error updating event: ' + error.message); return; }
+
     const event = events.find(e => e.id === currentEditId);
-    event.title = title;
-    event.date = date;
-    event.department = dept;
-    event.description = desc;
+    if (event) { event.title = title; event.date = date; event.department = dept; event.description = desc; }
     showToast('Event updated ✓');
   } else {
     // Create new
-    events.push({
-      id: 'e_' + Date.now(),
-      title,
-      date,
-      department: dept,
-      description: desc
-    });
+    const { data, error } = await sb.from('assignments').insert({
+      title, date, department: dept, department_id: deptObj?.uuid || null,
+      created_by: currentUser.id, notes: desc
+    }).select().single();
+
+    if (error) { showToast('Error adding event: ' + error.message); return; }
+
+    events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '' });
     showToast('Event added ✓');
   }
-  
+
   closeEditEventModal();
   loadEventsList();
   renderCalendar();
@@ -1515,22 +1562,16 @@ function closeEditEventModal() {
   currentEditId = null;
 }
 
-function deleteEvent(eventId) {
-  if (confirm('Delete this event?')) {
-    events = events.filter(e => e.id !== eventId);
-    loadEventsList();
-    renderCalendar();
-    showToast('Event deleted ✓');
-  }
-}
+async function deleteEvent(eventId) {
+  if (!confirm('Delete this event?')) return;
 
-function addSampleEvents() {
-  const today = new Date();
-  events = [
-    { id: 'e1', title: 'Team Meeting', date: today.toISOString().split('T')[0], department: 'marketing', description: 'Weekly team sync' },
-    { id: 'e2', title: 'Product Launch', date: new Date(today.getTime() + 5*24*60*60*1000).toISOString().split('T')[0], department: 'be', description: 'New product release' }
-  ];
+  const { error } = await sb.from('assignments').delete().eq('id', eventId);
+  if (error) { showToast('Error deleting event: ' + error.message); return; }
+
+  events = events.filter(e => e.id !== eventId);
+  loadEventsList();
   renderCalendar();
+  showToast('Event deleted ✓');
 }
 
 // ═════════════════════════════════════════════════
@@ -1605,28 +1646,46 @@ function openUserMenu() {
 
 const body = document.body;
 
-// Initialize - populate department selectors
-document.addEventListener('DOMContentLoaded', () => {
+function updateSignupDeptSelect() {
+  const select = document.getElementById('suDept');
+  select.innerHTML = '<option value="">Select Department</option>' +
+    Object.values(departments).map(dept => `<option value="${dept.id}">${dept.name}</option>`).join('');
+}
+
+function updateSignupClusters() {
+  const deptId = document.getElementById('suDept').value;
+  const dept = departments[deptId];
+  const select = document.getElementById('suCluster');
+  select.innerHTML = '<option value="">Select Section</option>' +
+    (dept?.subdepts || []).map(sub => `<option value="${sub.id}">${sub.name}</option>`).join('');
+}
+
+// Initialize: load lookup data, wire selectors, then restore session if one exists
+document.addEventListener('DOMContentLoaded', async () => {
+  showAuthScreen(true);
+
+  await loadDepartments();
   updateEventDeptSelect();
   updateUserDeptSelect();
-  
-  // Set initial user department
-  if (Object.keys(departments).length > 0) {
-    currentUser = {
-      id: 'u_' + Date.now(),
-      full_name: 'Guest User',
-      email: 'guest@example.com',
-      department: Object.keys(departments)[0],
-      subdept: Object.values(departments)[0].subdepts[0]?.id,
-      role: 'user',
-      is_admin: false,
-      is_super_admin: false
-    };
+  updateSignupDeptSelect();
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    const ok = await loadCurrentUserProfile(session.user.id);
+    if (ok) {
+      showAuthScreen(false);
+      await loadApp();
+    }
   }
 });
 
-// Initialize
-showAuthScreen(true);
+// Keep the app in sync if the session changes in another tab (e.g. logout elsewhere)
+sb.auth.onAuthStateChange((event) => {
+  if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    showAuthScreen(true);
+  }
+});
 </script>
 </body>
 </html>
