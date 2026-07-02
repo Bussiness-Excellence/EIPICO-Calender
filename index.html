@@ -751,14 +751,34 @@ let departments = {
     ],
     admin: null
   },
-  ffmanagers: {
-    id: 'ffmanagers',
-    name: 'Field Managers',
+  area_managers: {
+    id: 'area_managers',
+    name: 'Area Managers',
     color: '#0C3D7A',
     subdepts: [
-      { id: 'ffm_north', name: 'Northern' },
-      { id: 'ffm_south', name: 'Southern' },
-      { id: 'ffm_central', name: 'Central' }
+      { id: 'am_north', name: 'Northern' },
+      { id: 'am_south', name: 'Southern' },
+      { id: 'am_central', name: 'Central' }
+    ],
+    admin: null
+  },
+  business_unit_managers: {
+    id: 'business_unit_managers',
+    name: 'Business Unit Managers',
+    color: '#7C2D12',
+    subdepts: [
+      { id: 'bum_unit1', name: 'Unit 1' },
+      { id: 'bum_unit2', name: 'Unit 2' },
+      { id: 'bum_unit3', name: 'Unit 3' }
+    ],
+    admin: null
+  },
+  others: {
+    id: 'others',
+    name: 'Others',
+    color: '#64748B',
+    subdepts: [
+      { id: 'oth_general', name: 'General' }
     ],
     admin: null
   }
