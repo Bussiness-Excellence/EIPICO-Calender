@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<title>EIPICO Calendar</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
+<title>EIPICO Calendar - Admin Control</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
@@ -18,21 +18,14 @@
   --sh3:0 16px 48px rgba(0,0,0,.18);
   --da:#1D5FA8;--dl:#EBF3FB;
 }
-/* dept themes */
-body[data-dept="marketing"]  {--da:#7C3AED;--dl:#EDE9FE}
-body[data-dept="fieldforce"] {--da:#059669;--dl:#D1FAE5}
-body[data-dept="be"]         {--da:#0891B2;--dl:#CFFAFE}
-body[data-dept="medical"]    {--da:#DC2626;--dl:#FEE2E2}
-body[data-dept="crm"]        {--da:#D97706;--dl:#FEF3C7}
-body[data-dept="ffmanagers"] {--da:#0C3D7A;--dl:#DBEAFE}
 
 body{font-family:'Inter',system-ui,sans-serif;background:var(--s0);color:var(--t1);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden}
 
 /* ── AUTH ── */
 .auth-bg{position:fixed;inset:0;background:linear-gradient(140deg,#071e3d 0%,#1D5FA8 55%,#3B82C4 100%);display:flex;align-items:center;justify-content:center;z-index:1000;overflow-y:auto;padding:16px}
-.auth-card{background:#fff;border-radius:20px;padding:32px 32px 26px;width:100%;max-width:420px;box-shadow:var(--sh3)}
-.auth-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:22px}
-.auth-logo{height:56px;width:auto;object-fit:contain}
+.auth-card{background:#fff;border-radius:20px;padding:32px;width:100%;max-width:420px;box-shadow:var(--sh3)}
+.auth-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.auth-logo{height:56px;width:auto;object-fit:contain;flex-shrink:0}
 .auth-brand-name{font-size:19px;font-weight:800;color:#0C3D7A;letter-spacing:-.5px;line-height:1.1}
 .auth-brand-be{font-size:8px;font-weight:600;color:var(--tm);letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
 .auth-tabs{display:flex;border:1.5px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
@@ -51,28 +44,30 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .auth-ok{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:var(--r);padding:9px 12px;font-size:12px;color:#166534;margin-top:8px;display:none}
 .auth-ok.show{display:block}
 .auth-hint{font-size:11px;color:var(--tm);text-align:center;margin-top:12px}
+.super-admin-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#EC4899;color:#fff;border:1px solid #DB2777;margin-top:8px;text-align:center;display:block}
 
 /* ── APP ── */
 #app{display:none;flex-direction:column;height:100vh;overflow:hidden}
 #app.on{display:flex}
 
 /* ── TOPBAR ── */
-.topbar{background:#fff;border-bottom:1px solid var(--bd);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;box-shadow:var(--sh1);z-index:200;gap:10px}
-.tb-l{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
-.ham-btn{display:none;background:none;border:none;cursor:pointer;color:var(--t2);padding:4px;border-radius:6px;font-size:20px;flex-shrink:0}
+.topbar{background:#fff;border-bottom:1px solid var(--bd);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;flex-shrink:0;box-shadow:var(--sh1);z-index:200;gap:8px;flex-wrap:wrap}
+.tb-l{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.ham-btn{display:none;background:none;border:none;cursor:pointer;color:var(--t2);padding:6px;border-radius:6px;font-size:20px;flex-shrink:0}
 .tb-logo{height:38px;width:auto;object-fit:contain;flex-shrink:0}
 .tb-div{width:1px;height:28px;background:var(--bd);flex-shrink:0}
-.tb-texts{display:flex;flex-direction:column;justify-content:center;line-height:1.2}
+.tb-texts{display:flex;flex-direction:column;justify-content:center;line-height:1.2;min-width:0}
 .tb-title{font-size:16px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
 .tb-sub{font-size:8px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:.1em;margin-top:1px}
 .dept-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--dl);color:var(--da);letter-spacing:.03em;text-transform:uppercase;flex-shrink:0;white-space:nowrap;border:1px solid currentColor}
-.tb-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tb-r{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .admin-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:#FEF3C7;color:#D97706;border:1px solid #FDE68A}
-.user-chip{display:flex;align-items:center;gap:7px;background:var(--s0);border:1px solid var(--bd);border-radius:20px;padding:4px 10px 4px 5px;cursor:pointer;transition:border-color .15s}
+.super-admin-top-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:#EC4899;color:#fff;border:1px solid #DB2777}
+.user-chip{display:flex;align-items:center;gap:7px;background:var(--s0);border:1px solid var(--bd);border-radius:20px;padding:4px 10px 4px 5px;cursor:pointer;transition:border-color .15s;min-width:0}
 .user-chip:hover{border-color:var(--da)}
 .ua{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;background:var(--da);flex-shrink:0;position:relative}
 .online-ring{position:absolute;bottom:-1px;right:-1px;width:9px;height:9px;border-radius:50%;background:#22c55e;border:2px solid #fff}
-.chip-name{font-size:12px;font-weight:600;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip-name{font-size:12px;font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .out-btn{background:none;border:1px solid var(--bd);padding:5px 10px;border-radius:var(--r);font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:all .15s}
 .out-btn:hover{background:var(--s0);color:var(--t1)}
 
@@ -88,7 +83,6 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .ni:hover{background:rgba(29,95,168,.08);color:var(--t1)}
 .ni.active{background:var(--dl);color:var(--da);border-left-color:var(--da);font-weight:700}
 .ni i{font-size:16px;flex-shrink:0}
-/* dept color dot */
 .ndot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-left:auto;border:2px solid rgba(255,255,255,.6)}
 .sidebar-foot{padding:12px 14px;border-top:1px solid var(--bd);font-size:10px;color:var(--tm);margin-top:auto}
 
@@ -96,22 +90,22 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
 /* CAL HEADER */
-.cal-hdr{background:#fff;border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px;flex-wrap:wrap}
+.cal-hdr{background:#fff;border-bottom:1px solid var(--bd);padding:10px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:8px;flex-wrap:wrap}
 .mnav{display:flex;align-items:center;gap:6px}
-.mtitle{font-size:18px;font-weight:800;min-width:148px;text-align:center;letter-spacing:-.3px}
+.mtitle{font-size:18px;font-weight:800;min-width:100px;text-align:center;letter-spacing:-.3px}
 .nbtn{background:none;border:1px solid var(--bd);padding:6px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;display:flex;align-items:center;transition:all .12s;font-weight:600}
 .nbtn:hover{background:var(--s0);border-color:var(--da)}
 .today-b{font-size:12px;font-weight:700;padding:6px 14px}
-.cal-tools{display:flex;gap:7px;align-items:center}
+.cal-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
 .vtog{display:flex;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;background:var(--s0)}
 .vbtn{padding:6px 12px;font-size:13px;cursor:pointer;background:none;border:none;color:var(--tm);font-family:inherit;font-weight:600;transition:all .12s}
 .vbtn.active{background:#fff;color:var(--t1);box-shadow:var(--sh1)}
-.pri-btn{background:var(--da);color:#fff;border:none;padding:7px 16px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;transition:opacity .15s;white-space:nowrap}
+.pri-btn{background:var(--da);color:#fff;border:none;padding:7px 14px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;transition:opacity .15s;white-space:nowrap}
 .pri-btn:hover{opacity:.88}
 .panel-tog{display:none;background:none;border:1px solid var(--bd);padding:6px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;align-items:center;font-weight:600}
 
 /* FILTER BAR */
-.fbar{display:flex;gap:6px;padding:8px 16px;background:#fff;border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.fbar{display:flex;gap:6px;padding:8px 12px;background:#fff;border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;scrollbar-width:none}
 .fbar::-webkit-scrollbar{display:none}
 .fpill{font-size:12px;font-weight:600;padding:5px 13px;border-radius:20px;cursor:pointer;border:1px solid var(--bd);color:var(--t2);background:var(--s0);white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:5px}
 .fpill.active{background:var(--dl);color:var(--da);border-color:var(--da)}
@@ -132,9 +126,9 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 
 /* CALENDAR LIST VIEW */
 .list-wrap{flex:1;overflow:auto;background:#fff}
-.list-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .12s}
+.list-item{display:flex;align-items:center;justify-content:space-between;padding:14px 12px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .12s;flex-wrap:wrap;gap:8px}
 .list-item:hover{background:var(--s0)}
-.list-info{flex:1}
+.list-info{flex:1;min-width:0}
 .list-date{font-size:12px;color:var(--tm);font-weight:600;margin-bottom:2px}
 .list-title{font-size:15px;font-weight:700;color:var(--t1)}
 .list-meta{font-size:11px;color:var(--tm);margin-top:2px}
@@ -149,66 +143,177 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(3px);padding:16px}
 .modal-bg.open{display:flex}
 .modal-card{background:#fff;border-radius:16px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--sh3)}
-
-.modal-hdr{padding:20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-size:18px;font-weight:800}
-.close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--t2);padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .12s}
-.close-btn:hover{background:var(--s0);color:var(--t1)}
-
-.modal-body{padding:20px;display:flex;flex-direction:column;gap:16px}
-.mfield{display:flex;flex-direction:column;gap:6px}
-.mfield label{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.03em}
-.mfield input,.mfield select,.mfield textarea{width:100%;padding:10px 12px;border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--t1)}
-.mfield input:focus,.mfield select:focus,.mfield textarea:focus{outline:none;border-color:var(--da)}
-
-.modal-actions{display:flex;gap:10px;padding:16px 20px;border-top:1px solid var(--bd)}
-.btn-pri{background:var(--da);color:#fff;padding:10px 20px;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:opacity .15s;flex:1}
-.btn-pri:hover{opacity:.88}
-.btn-sec{background:var(--s0);color:var(--t2);padding:10px 20px;border:1px solid var(--bd);border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;flex:1}
-.btn-sec:hover{border-color:var(--da);color:var(--da)}
+.modal-header{padding:20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:800;color:var(--t1)}
+.modal-close{background:none;border:none;font-size:24px;color:var(--tm);cursor:pointer;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{color:var(--t1)}
+.modal-body{padding:20px;display:flex;flex-direction:column;gap:12px}
 
 /* ADMIN PANEL */
-.admin-row{display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--s0);border-radius:8px;margin-bottom:8px}
-.uav{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
-.tog-wrap{position:relative;display:inline-block;width:40px;height:24px}
-.tog-wrap input{display:none}
-.tog-sl{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#cbd5e1;transition:.3s;border-radius:24px}
-.tog-sl:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:#fff;transition:.3s;border-radius:50%}
-.tog-wrap input:checked+.tog-sl{background:var(--da)}
-.tog-wrap input:checked+.tog-sl:before{transform:translateX(16px)}
+.admin-tabs{display:flex;gap:8px;margin-bottom:16px;border-bottom:2px solid var(--bd);overflow-x:auto}
+.admin-tab{padding:12px 16px;font-size:13px;font-weight:700;cursor:pointer;color:var(--t2);border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .12s}
+.admin-tab.active{color:var(--da);border-bottom-color:var(--da)}
+.admin-tab:hover{color:var(--t1)}
 
-.cluster-group{margin-bottom:16px}
-.cluster-group-title{font-size:12px;font-weight:800;padding:8px 12px;border-left:4px solid;margin-bottom:8px;color:var(--t1)}
-.empty{padding:32px 16px;text-align:center;color:var(--tm)}
+.admin-section{background:#fff;border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid var(--bd);display:none}
+.admin-section.active{display:block}
+.admin-title{font-size:14px;font-weight:800;color:var(--t1);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.admin-toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.add-btn{background:var(--da);color:#fff;border:none;padding:8px 14px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;transition:opacity .15s}
+.add-btn:hover{opacity:.88}
+.add-btn.secondary{background:#10B981;margin-left:auto}
 
-/* SEARCH RESULTS */
-.search-result{padding:10px;background:var(--s0);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all .12s}
-.search-result:hover{background:var(--dl);color:var(--da)}
-.search-result-name{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:2px}
-.search-result-dept{font-size:11px;color:var(--tm)}
-.search-result-events{font-size:11px;color:var(--tm);margin-top:6px;padding-top:6px;border-top:1px solid var(--bd)}
-.event-chip{display:inline-block;font-size:10px;background:var(--dl);color:var(--da);padding:2px 6px;border-radius:4px;margin-right:4px;margin-top:4px;font-weight:600}
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{background:var(--s0);padding:10px;text-align:left;font-weight:700;color:var(--t2);border-bottom:2px solid var(--bd)}
+.admin-table td{padding:10px;border-bottom:1px solid var(--bd);color:var(--t1)}
+.admin-table tr:hover{background:var(--s0)}
+.admin-actions{display:flex;gap:4px;flex-wrap:wrap}
+.admin-btn{background:none;border:1px solid var(--bd);padding:5px 10px;border-radius:var(--r);font-size:11px;cursor:pointer;color:var(--t2);font-family:inherit;transition:all .12s;font-weight:600}
+.admin-btn:hover{background:var(--da);color:#fff;border-color:var(--da)}
+.admin-btn.del:hover{background:#DC2626;border-color:#DC2626}
+.admin-btn.edit:hover{background:#3B82F6;border-color:#3B82F6}
+
+.admin-form{background:var(--s0);border-radius:var(--rl);padding:16px;margin-bottom:12px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row.full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column}
+.form-group label{font-size:11px;font-weight:700;color:var(--t2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.form-group input,.form-group select,.form-group textarea{padding:10px;border:1.5px solid var(--bd);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--t1);transition:border-color .15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--da)}
+.form-group textarea{resize:vertical;min-height:80px}
+
+.admin-badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700}
+.admin-badge.dept{background:var(--dl);color:var(--da)}
+.admin-badge.admin{background:#FEF3C7;color:#D97706}
+.admin-badge.super{background:#EC4899;color:#fff}
+
+.modal-card{background:#fff;border-radius:16px;max-width:900px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--sh3)}
 
 /* TOAST */
-#toast{position:fixed;bottom:20px;left:20px;background:var(--t1);color:#fff;padding:12px 16px;border-radius:8px;font-size:13px;font-weight:600;display:none;z-index:10000;animation:slideIn .3s}
-#toast.show{display:block}
-@keyframes slideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+#toast{position:fixed;bottom:20px;right:20px;background:var(--t1);color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;display:none;box-shadow:var(--sh3);max-width:300px}
+#toast.show{display:block;animation:slideIn .3s ease-out}
+@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
 
-/* DESKTOP LAYOUT */
-@media (min-width:1024px){
-  .body-wrap{gap:0}
-  .side-pnl{display:flex}
-  .sidebar{display:flex}
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){
+  .side-pnl{width:240px}
+  .mtitle{min-width:80px;font-size:16px}
 }
 
-/* MOBILE LAYOUT */
-@media (max-width:1023px){
+@media(max-width:768px){
+  .topbar{height:auto;min-height:50px;padding:8px;gap:6px}
+  .tb-title{font-size:14px}
+  .tb-sub{font-size:7px}
+  .dept-badge{font-size:9px;padding:2px 8px}
   .ham-btn{display:flex}
-  .sidebar{position:fixed;left:0;height:100%;transform:translateX(-100%);top:54px;max-width:250px}
+  .sidebar{position:fixed;left:0;top:54px;height:calc(100vh - 54px);border-radius:0;transform:translateX(-100%);transition:transform .25s}
   .sidebar.open{transform:translateX(0)}
-  .side-pnl{position:fixed;right:0;height:100%;transform:translateX(100%);top:54px;max-width:280px}
-  .side-pnl.open{transform:translateX(0)}
   .panel-tog{display:flex}
+  .side-pnl{position:fixed;right:0;top:54px;height:calc(100vh - 54px);border-radius:0;border:none;transform:translateX(100%);transition:transform .25s;width:100%;max-width:280px}
+  .side-pnl.open{transform:translateX(0)}
+  
+  .cal-hdr{padding:8px}
+  .mtitle{min-width:60px;font-size:14px}
+  .nbtn{padding:5px 8px;font-size:12px}
+  .today-b{padding:5px 10px;font-size:11px}
+  .pri-btn{padding:6px 12px;font-size:13px}
+  .vbtn{padding:4px 10px;font-size:12px}
+  
+  .fbar{padding:6px 8px;gap:4px}
+  .fpill{font-size:11px;padding:4px 10px}
+  
+  .dow{padding:8px 2px;font-size:10px}
+  .cal-day{padding:4px 2px;min-height:80px}
+  .cal-day-num{font-size:14px}
+  .cal-evt{font-size:10px}
+  
+  .list-item{padding:10px 8px}
+  .list-title{font-size:14px}
+  .list-date{font-size:11px}
+  
+  .auth-card{padding:24px;max-width:95vw;max-height:95vh}
+  .auth-logo{height:48px}
+  .auth-brand-name{font-size:17px}
+  .field{margin-bottom:10px}
+  .inp{font-size:14px;padding:10px}
+  .auth-btn{padding:12px}
+  
+  .modal-card{max-width:95vw;max-height:95vh}
+  .modal-header{padding:16px}
+  .modal-body{padding:16px}
+  
+  .admin-table{font-size:12px}
+  .admin-table th,.admin-table td{padding:6px}
+  .admin-btn{font-size:10px;padding:3px 6px}
+  .add-btn{padding:6px 12px;font-size:12px}
+  
+  .chip-name{max-width:80px;font-size:11px}
+  .tb-r{gap:4px}
+}
+
+@media(max-width:480px){
+  .topbar{min-height:48px}
+  .tb-logo{height:32px}
+  .tb-title{font-size:12px}
+  .admin-badge,.super-admin-top-badge{font-size:9px}
+  .user-chip{padding:3px 8px 3px 3px}
+  .ua{width:24px;height:24px;font-size:9px}
+  
+  .cal-hdr{padding:6px}
+  .mtitle{font-size:12px;min-width:50px}
+  .nbtn{padding:4px 6px;font-size:11px}
+  .cal-tools{gap:4px}
+  .vbtn{padding:3px 8px;font-size:11px}
+  .pri-btn{padding:5px 10px;font-size:12px;gap:3px}
+  
+  .fbar{padding:4px 6px;gap:3px}
+  .fpill{font-size:10px;padding:3px 8px}
+  
+  .dow{padding:6px 1px;font-size:9px}
+  .cal-day{padding:3px 2px;min-height:70px}
+  .cal-day-num{font-size:12px}
+  .cal-evt{font-size:9px}
+  
+  .list-item{padding:8px 6px}
+  .list-title{font-size:13px}
+  .list-date{font-size:10px}
+  .list-badge{font-size:9px}
+  
+  .auth-card{padding:20px;border-radius:16px}
+  .auth-logo-row{gap:8px}
+  .auth-logo{height:40px}
+  .auth-brand-name{font-size:15px}
+  .f2{grid-template-columns:1fr}
+  .field{margin-bottom:8px}
+  .inp{font-size:16px;padding:10px}
+  
+  .modal-card{max-width:98vw}
+  .modal-header{padding:14px}
+  .modal-body{padding:14px;gap:10px}
+  
+  .admin-table{font-size:11px}
+  .admin-table th,.admin-table td{padding:4px;font-size:10px}
+  .admin-btn{font-size:9px;padding:2px 4px}
+  .add-btn{padding:5px 10px;font-size:11px}
+  
+  .chip-name{max-width:60px;font-size:10px}
+  .out-btn{font-size:11px;padding:4px 8px}
+  
+  #toast{bottom:16px;right:12px;left:12px;max-width:none;font-size:12px}
+}
+
+/* Safe area support for notched devices */
+@supports (padding: max(0px)) {
+  .topbar {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  .sidebar {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .side-pnl {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 </style>
 </head>
@@ -218,6 +323,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 <div class="auth-bg" id="authBg">
   <div class="auth-card">
     <div class="auth-logo-row">
+      <div style="width:56px;height:56px;background:linear-gradient(135deg,#1D5FA8 0%,#0C3D7A 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:24px;flex-shrink:0">E</div>
       <div>
         <div class="auth-brand-name">EIPICO</div>
         <div class="auth-brand-be">Calendar System</div>
@@ -225,187 +331,181 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
     </div>
     
     <div class="auth-tabs">
-      <div class="auth-tab on" onclick="switchTab('login')">Login</div>
-      <div class="auth-tab" onclick="switchTab('signup')">Sign Up</div>
+      <div class="auth-tab on" onclick="showTab('login')">Login</div>
+      <div class="auth-tab" onclick="showTab('signup')">Sign Up</div>
     </div>
-
-    <!-- LOGIN -->
+    
+    <!-- LOGIN TAB -->
     <div id="loginTab">
       <div class="field">
         <label>Email</label>
-        <input type="email" class="inp" id="liEm" placeholder="name@company.com">
+        <input type="email" id="loginEmail" class="inp" placeholder="your@email.com">
       </div>
       <div class="field">
         <label>Password</label>
-        <input type="password" class="inp" id="liPw" placeholder="••••••">
+        <input type="password" id="loginPassword" class="inp" placeholder="••••••">
       </div>
-      <button class="auth-btn" onclick="doLogin()">Login</button>
-      <div class="auth-err" id="liErr"></div>
+      <button class="auth-btn" onclick="handleLogin()">Sign In</button>
+      <div class="auth-err" id="loginErr"></div>
+      <div class="auth-ok" id="loginOk"></div>
     </div>
-
-    <!-- SIGNUP -->
+    
+    <!-- SIGNUP TAB -->
     <div id="signupTab" style="display:none">
       <div class="f2">
         <div class="field">
           <label>First Name</label>
-          <input type="text" class="inp" id="suFn" placeholder="John">
+          <input type="text" id="suFirstName" class="inp" placeholder="Ahmed">
         </div>
         <div class="field">
           <label>Last Name</label>
-          <input type="text" class="inp" id="suLn" placeholder="Doe">
+          <input type="text" id="suLastName" class="inp" placeholder="Hamdoun">
         </div>
       </div>
       <div class="field">
         <label>Email</label>
-        <input type="email" class="inp" id="suEm" placeholder="john.doe@company.com">
+        <input type="email" id="suEmail" class="inp" placeholder="your@email.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="suPassword" class="inp" placeholder="••••••">
       </div>
       <div class="field">
         <label>Department</label>
-        <select class="inp" id="suDept">
+        <select id="suDept" class="inp">
+          <option value="">Select Department</option>
           <option value="marketing">Marketing</option>
           <option value="fieldforce">Field Force</option>
           <option value="be">Business Excellence</option>
           <option value="medical">Medical</option>
           <option value="crm">CRM</option>
-          <option value="ffmanagers">Field Force Managers</option>
+          <option value="ffmanagers">Field Managers</option>
         </select>
       </div>
       <div class="field">
-        <label>Cluster/Section</label>
-        <select class="inp" id="suCluster">
-          <option value="">Select Cluster</option>
+        <label>Section</label>
+        <select id="suCluster" class="inp">
+          <option value="">Select Section</option>
         </select>
       </div>
-      <div class="field">
-        <label>Password</label>
-        <input type="password" class="inp" id="suPw" placeholder="••••••">
-      </div>
-      <button class="auth-btn" onclick="doSignup()">Create Account</button>
-      <div class="auth-err" id="suErr"></div>
-      <div class="auth-ok" id="suOk"></div>
+      <button class="auth-btn" onclick="handleSignup()">Create Account</button>
+      <div class="auth-err" id="signupErr"></div>
+      <div class="auth-ok" id="signupOk"></div>
     </div>
     
-    <div class="auth-hint">Demo Account: demo@eipico.com / demo123</div>
+    <div class="auth-hint">Demo: Use any email to sign in</div>
   </div>
 </div>
 
-<!-- APP -->
+<!-- MAIN APP -->
 <div id="app">
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="tb-l">
-      <button class="ham-btn" id="hamBtn" onclick="toggleNav()">☰</button>
-      <div style="font-size:20px">📅</div>
+      <button class="ham-btn" onclick="toggleNav()"><i class="ti ti-menu-2"></i></button>
+      <div style="width:38px;height:38px;background:linear-gradient(135deg,#1D5FA8 0%,#0C3D7A 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;flex-shrink:0">E</div>
       <div class="tb-div"></div>
       <div class="tb-texts">
-        <div class="tb-title">EIPICO Calendar</div>
-        <div class="tb-sub">Team Schedule & Events</div>
+        <div class="tb-title" id="topbarTitle">Calendar</div>
+        <div class="tb-sub">EIPICO</div>
       </div>
     </div>
     <div class="tb-r">
-      <div id="adminBadgeTop" class="admin-badge" style="display:none">ADMIN</div>
+      <span class="dept-badge" id="deptBadge">Department</span>
+      <span id="superAdminBadgeTop" class="super-admin-top-badge" style="display:none">Super Admin</span>
       <div class="user-chip" onclick="openUserMenu()">
-        <div class="ua" id="uaTop">A</div>
-        <div class="chip-name" id="chipNameTop">User</div>
+        <div class="ua" id="userAvatar">U</div>
+        <span class="chip-name" id="userName">User</span>
       </div>
-      <button class="out-btn" onclick="doLogout()">Logout</button>
+      <button class="out-btn" onclick="logout()"><i class="ti ti-logout"></i> <span>Out</span></button>
     </div>
   </div>
-
-  <!-- BODY -->
+  
   <div class="body-wrap">
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
       <div class="sl">Navigation</div>
-      <div class="ni active" onclick="setView('month')"><i class="ti ti-calendar"></i> Calendar</div>
-      <div class="ni" onclick="setView('list')"><i class="ti ti-list"></i> Events List</div>
-      <div class="ni" onclick="openSearchPanel()"><i class="ti ti-search"></i> Find Users</div>
-      <div id="adminNavItem" class="ni" onclick="openAdminPanel()" style="display:none;border-top:1px solid var(--bd);margin-top:10px;padding-top:15px"><i class="ti ti-settings"></i> Admin Panel</div>
+      <div class="ni active" onclick="setView('month')"><i class="ti ti-calendar-month"></i> Month</div>
+      <div class="ni" onclick="setView('week')"><i class="ti ti-calendar-week"></i> Week</div>
+      <div class="ni" onclick="setView('list')"><i class="ti ti-list"></i> List</div>
       
-      <div class="sl" style="margin-top:16px">Department</div>
-      <div id="deptList"></div>
+      <div class="sl" style="margin-top:20px">Departments</div>
+      <div id="deptNav"></div>
+      
+      <div id="adminNavSection" style="display:none;margin-top:20px">
+        <div class="sl">Admin</div>
+        <div class="ni" onclick="loadAdmin()"><i class="ti ti-settings"></i> Settings</div>
+      </div>
+      
+      <div class="sidebar-foot">
+        EIPICO Calendar v2.0
+      </div>
     </div>
-
-    <!-- MAIN -->
+    
+    <!-- MAIN CONTENT -->
     <div class="main">
       <!-- CALENDAR HEADER -->
       <div class="cal-hdr">
         <div class="mnav">
-          <button class="nbtn" onclick="prevMonth()">← Prev</button>
-          <div class="mtitle" id="mTitle">January 2024</div>
-          <button class="nbtn" onclick="nextMonth()">Next →</button>
+          <button class="nbtn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
+          <div class="mtitle" id="monthTitle">January 2024</div>
+          <button class="nbtn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
+          <button class="nbtn today-b" onclick="goToday()">Today</button>
         </div>
-        <button class="today-b nbtn" onclick="goToday()">Today</button>
         <div class="cal-tools">
           <div class="vtog">
             <button class="vbtn active" onclick="setView('month')">Month</button>
             <button class="vbtn" onclick="setView('week')">Week</button>
             <button class="vbtn" onclick="setView('list')">List</button>
           </div>
-          <button class="pri-btn" onclick="openEventModal()"><i class="ti ti-plus"></i> Add Event</button>
-          <button class="panel-tog" onclick="togglePanel()">⊳ Panel</button>
+          <button class="panel-tog" onclick="togglePanel()"><i class="ti ti-sidebar-right"></i></button>
+          <button class="pri-btn" onclick="openEventModal()"><i class="ti ti-plus"></i> <span>Event</span></button>
         </div>
       </div>
-
-      <!-- CALENDAR VIEW -->
-      <div class="calendar-wrap" id="calView">
-        <div class="cal-grid" id="calGrid"></div>
-      </div>
       
-      <!-- LIST VIEW -->
-      <div class="list-wrap" id="listView" style="display:none">
-        <div id="eventList"></div>
+      <!-- FILTER BAR -->
+      <div class="fbar" id="filterBar"></div>
+      
+      <!-- CALENDAR VIEW -->
+      <div class="calendar-wrap">
+        <div class="cal-grid" id="calView"></div>
+        <div class="list-wrap" id="listView" style="display:none"></div>
       </div>
     </div>
-
+    
     <!-- RIGHT PANEL -->
     <div class="side-pnl" id="sidePanel">
-      <div class="pnl-h">Coming Events</div>
-      <div id="upcomingEvents" class="pnl-section"></div>
-      
-      <div class="pnl-h">User Search</div>
-      <input type="text" class="inp" id="searchInput" placeholder="Search users..." style="margin-bottom:10px" onkeyup="searchUsers()">
-      <div id="searchResults" class="pnl-section"></div>
+      <div class="pnl-h">Details</div>
+      <div class="pnl-section" id="panelContent">
+        <p style="font-size:12px;color:var(--tm)">Select an event to view details</p>
+      </div>
     </div>
   </div>
+  
+  <div class="drawer-ov" id="drawerOv" onclick="toggleNav(); togglePanel()"></div>
 </div>
 
 <!-- EVENT MODAL -->
 <div class="modal-bg" id="eventModal">
   <div class="modal-card">
-    <div class="modal-hdr">
-      <div class="modal-title" id="modalTitle">Add Event</div>
-      <button class="close-btn" onclick="closeEventModal()">×</button>
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">New Event</div>
+      <button class="modal-close" onclick="closeEventModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="mfield">
-        <label>Date</label>
-        <input type="date" id="evDate">
-      </div>
-      <div class="mfield">
+      <div class="field">
         <label>Title</label>
-        <input type="text" id="evTitle" placeholder="Event title">
+        <input type="text" id="eventTitle" class="inp" placeholder="Event title">
       </div>
-      <div class="mfield">
-        <label>Description</label>
-        <textarea id="evDesc" placeholder="Event description" style="min-height:80px;resize:vertical"></textarea>
+      <div class="field">
+        <label>Date</label>
+        <input type="date" id="eventDate" class="inp">
       </div>
-      <div class="mfield">
-        <label>Assigned To</label>
-        <input type="email" id="evEmail" placeholder="team.member@company.com">
+      <div class="field">
+        <label>Department</label>
+        <select id="eventDept" class="inp"></select>
       </div>
-      <div class="mfield">
-        <label>Priority</label>
-        <select id="evPrio">
-          <option value="low">Low</option>
-          <option value="medium" selected>Medium</option>
-          <option value="high">High</option>
-        </select>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-pri" onclick="saveEvent()">Save Event</button>
-      <button class="btn-sec" onclick="closeEventModal()">Cancel</button>
+      <button class="auth-btn" onclick="saveCalendarEvent()">Save Event</button>
     </div>
   </div>
 </div>
@@ -413,48 +513,173 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 <!-- ADMIN MODAL -->
 <div class="modal-bg" id="adminModal">
   <div class="modal-card">
-    <div class="modal-hdr">
-      <div class="modal-title">Admin Panel</div>
-      <button class="close-btn" onclick="closeAdminPanel()">×</button>
+    <div class="modal-header">
+      <div class="modal-title"><i class="ti ti-settings"></i> Admin Control Panel</div>
+      <button class="modal-close" onclick="closeAdminModal()">✕</button>
     </div>
-    <div class="modal-body">
-      <div style="margin-bottom:16px">
-        <div class="pnl-h">Manage Users</div>
-        <div style="display:flex;gap:8px;margin-bottom:12px">
-          <input type="text" id="searchUserAdmin" class="inp" placeholder="Search user..." style="flex:1;margin:0">
-          <button class="pri-btn" onclick="loadAdminUsers()" style="flex:0;padding:6px 12px">Refresh</button>
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto;padding:0">
+      
+      <!-- ADMIN TABS -->
+      <div style="padding:16px;border-bottom:1px solid var(--bd)">
+        <div class="admin-tabs" id="adminTabsContainer">
+          <div class="admin-tab active" onclick="switchAdminTab('departments')"><i class="ti ti-building"></i> Departments</div>
+          <div class="admin-tab" onclick="switchAdminTab('users')"><i class="ti ti-users"></i> Users</div>
+          <div class="admin-tab" onclick="switchAdminTab('events')"><i class="ti ti-calendar-event"></i> Events</div>
         </div>
       </div>
-      <div id="adminUserList" style="max-height:400px;overflow-y:auto"></div>
-      
-      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--bd)">
-        <div class="pnl-h">Add New User</div>
-        <div class="mfield" style="margin-bottom:10px">
+
+      <div style="padding:16px">
+        <!-- DEPARTMENTS TAB -->
+        <div class="admin-section active" id="adminDepartments">
+          <div class="admin-toolbar">
+            <button class="add-btn" onclick="openAddDeptModal()"><i class="ti ti-plus"></i> Add Department</button>
+          </div>
+          <div id="deptList"></div>
+        </div>
+
+        <!-- USERS TAB -->
+        <div class="admin-section" id="adminUsers">
+          <div class="admin-toolbar">
+            <button class="add-btn" onclick="openAddUserModal()"><i class="ti ti-plus"></i> Add User</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr></thead>
+            <tbody id="usersList"></tbody>
+          </table>
+        </div>
+
+        <!-- EVENTS TAB -->
+        <div class="admin-section" id="adminEvents">
+          <div class="admin-toolbar">
+            <button class="add-btn" onclick="openAddEventModal()"><i class="ti ti-plus"></i> Add Event</button>
+          </div>
+          <table class="admin-table">
+            <thead><tr>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Department</th>
+              <th>Actions</th>
+            </tr></thead>
+            <tbody id="eventsList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT DEPARTMENT MODAL -->
+<div class="modal-bg" id="editDeptModal">
+  <div class="modal-card" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title" id="editDeptTitle">Add Department</div>
+      <button class="modal-close" onclick="closeEditDeptModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Department Name</label>
+        <input type="text" id="deptName" class="inp" placeholder="e.g., Marketing">
+      </div>
+      <div class="form-group">
+        <label>Color Code</label>
+        <input type="color" id="deptColor" class="inp" style="height:40px;cursor:pointer">
+      </div>
+      <div id="subdeptsList" style="margin-top:16px">
+        <div style="font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+          <span>Sections/Sub-Departments</span>
+          <button class="add-btn" style="margin:0;padding:4px 10px;font-size:12px" onclick="addSubdeptInput()"><i class="ti ti-plus"></i></button>
+        </div>
+        <div id="subdeptInputs"></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="auth-btn" style="flex:1" onclick="saveDept()">Save Department</button>
+        <button class="out-btn" style="flex:1" onclick="closeEditDeptModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT USER MODAL -->
+<div class="modal-bg" id="editUserModal">
+  <div class="modal-card" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title" id="editUserTitle">Add User</div>
+      <button class="modal-close" onclick="closeEditUserModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
           <label>Full Name</label>
-          <input type="text" id="newUserName" placeholder="Full Name">
+          <input type="text" id="userName" class="inp" placeholder="John Doe">
         </div>
-        <div class="mfield" style="margin-bottom:10px">
+        <div class="form-group">
           <label>Email</label>
-          <input type="email" id="newUserEmail" placeholder="email@company.com">
+          <input type="email" id="userEmail" class="inp" placeholder="john@example.com">
         </div>
-        <div class="mfield" style="margin-bottom:10px">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label>Department</label>
-          <select id="newUserDept">
-            <option value="marketing">Marketing</option>
-            <option value="fieldforce">Field Force</option>
-            <option value="be">Business Excellence</option>
-            <option value="medical">Medical</option>
-            <option value="crm">CRM</option>
-            <option value="ffmanagers">Field Force Managers</option>
+          <select id="userDept" class="inp" onchange="updateUserSubdepts()"></select>
+        </div>
+        <div class="form-group">
+          <label>Section</label>
+          <select id="userSubdept" class="inp"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Role</label>
+          <select id="userRole" class="inp">
+            <option value="user">User</option>
+            <option value="dept_admin">Department Admin</option>
+            <option value="subdept_admin">Section Admin</option>
           </select>
         </div>
-        <div class="mfield" style="margin-bottom:10px">
-          <label>Cluster/Section</label>
-          <select id="newUserCluster">
-            <option value="">Select Cluster</option>
-          </select>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="auth-btn" style="flex:1" onclick="saveUser()">Save User</button>
+        <button class="out-btn" style="flex:1" onclick="closeEditUserModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT EVENT MODAL -->
+<div class="modal-bg" id="editEventModal">
+  <div class="modal-card" style="max-width:600px">
+    <div class="modal-header">
+      <div class="modal-title" id="editEventTitle">Add Event</div>
+      <button class="modal-close" onclick="closeEditEventModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Event Title</label>
+        <input type="text" id="eventTitle" class="inp" placeholder="Meeting, Launch, etc...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="eventDate" class="inp">
         </div>
-        <button class="pri-btn" onclick="addNewUser()" style="width:100%">Add User</button>
+        <div class="form-group">
+          <label>Department</label>
+          <select id="eventDept" class="inp"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="eventDesc" class="inp" placeholder="Event description..."></textarea>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="auth-btn" style="flex:1" onclick="saveEvent()">Save Event</button>
+        <button class="out-btn" style="flex:1" onclick="closeEditEventModal()">Cancel</button>
       </div>
     </div>
   </div>
@@ -465,128 +690,171 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 
 <script>
 // ═════════════════════════════════════════════════
-// ORGANIZATIONAL STRUCTURE
+// STATE & CONFIG
 // ═════════════════════════════════════════════════
 
-const DEPARTMENTS = {
+const SUPER_ADMIN_EMAIL = 'ahmed.hamdoon@eipico.net';
+
+let departments = {
   marketing: {
+    id: 'marketing',
     name: 'Marketing',
     color: '#7C3AED',
-    sections: ['Digital Marketing', 'Brand & Communications', 'Market Research']
+    subdepts: [
+      { id: 'mkt_digital', name: 'Digital' },
+      { id: 'mkt_creative', name: 'Creative' },
+      { id: 'mkt_content', name: 'Content' }
+    ],
+    admin: null
   },
   fieldforce: {
+    id: 'fieldforce',
     name: 'Field Force',
     color: '#059669',
-    sections: ['North Zone', 'South Zone', 'East Zone']
+    subdepts: [
+      { id: 'ff_a', name: 'Region A' },
+      { id: 'ff_b', name: 'Region B' },
+      { id: 'ff_c', name: 'Region C' }
+    ],
+    admin: null
   },
   be: {
+    id: 'be',
     name: 'Business Excellence',
     color: '#0891B2',
-    sections: []
+    subdepts: [
+      { id: 'be_quality', name: 'Quality' },
+      { id: 'be_process', name: 'Process' },
+      { id: 'be_training', name: 'Training' }
+    ],
+    admin: null
   },
   medical: {
+    id: 'medical',
     name: 'Medical',
     color: '#DC2626',
-    sections: []
+    subdepts: [
+      { id: 'med_products', name: 'Products' },
+      { id: 'med_affairs', name: 'Affairs' },
+      { id: 'med_relations', name: 'Relations' }
+    ],
+    admin: null
   },
   crm: {
+    id: 'crm',
     name: 'CRM',
     color: '#D97706',
-    sections: []
+    subdepts: [
+      { id: 'crm_sales', name: 'Sales' },
+      { id: 'crm_support', name: 'Support' },
+      { id: 'crm_analytics', name: 'Analytics' }
+    ],
+    admin: null
   },
   ffmanagers: {
-    name: 'Field Force Managers',
+    id: 'ffmanagers',
+    name: 'Field Managers',
     color: '#0C3D7A',
-    sections: ['Region 1', 'Region 2', 'Region 3', 'Region 4', 'Region 5', 'Region 6']
+    subdepts: [
+      { id: 'ffm_north', name: 'Northern' },
+      { id: 'ffm_south', name: 'Southern' },
+      { id: 'ffm_central', name: 'Central' }
+    ],
+    admin: null
   }
 };
 
-// ═════════════════════════════════════════════════
-// STATE
-// ═════════════════════════════════════════════════
-
+let users = [];
+let events = [];
 let currentUser = null;
 let currentDate = new Date();
 let currentView = 'month';
-let events = [];
-let users = [];
-let isAdmin = false;
+let currentEditId = null;
+let currentEditType = null;
 
 // ═════════════════════════════════════════════════
-// AUTH
+// AUTHENTICATION
 // ═════════════════════════════════════════════════
 
-async function doLogin() {
-  const email = document.getElementById('liEm').value.trim();
-  const password = document.getElementById('liPw').value;
-  const errEl = document.getElementById('liErr');
-  errEl.classList.remove('show');
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
   
   if (!email || !password) {
-    showE(errEl, 'Please enter email and password.');
+    showE(document.getElementById('loginErr'), 'Please fill in all fields.');
     return;
   }
   
-  // Demo account
-  if (email === 'demo@eipico.com' && password === 'demo123') {
-    currentUser = {
-      id: 'user_1',
-      email: 'demo@eipico.com',
-      full_name: 'Demo Admin',
+  let user = users.find(u => u.email === email);
+  
+  if (!user) {
+    user = {
+      id: 'u_' + Date.now(),
+      full_name: email.split('@')[0],
+      email,
       department: 'marketing',
-      is_admin: true
+      cluster: 'Digital',
+      is_admin: false,
+      is_super_admin: email === SUPER_ADMIN_EMAIL
     };
-    isAdmin = true;
-    showAuthScreen(false);
-    initApp();
-    return;
+    users.push(user);
   }
   
-  showE(errEl, 'Invalid credentials. Try demo@eipico.com / demo123');
-}
-
-function doSignup() {
-  const fn = document.getElementById('suFn').value.trim();
-  const ln = document.getElementById('suLn').value.trim();
-  const email = document.getElementById('suEm').value.trim();
-  const dept = document.getElementById('suDept').value;
-  const cluster = document.getElementById('suCluster').value;
-  const pw = document.getElementById('suPw').value;
-  const errEl = document.getElementById('suErr');
-  const okEl = document.getElementById('suOk');
-  
-  errEl.classList.remove('show');
-  okEl.classList.remove('show');
-  
-  if (!fn || !ln || !email || !pw) {
-    showE(errEl, 'Please fill in all fields.');
-    return;
-  }
-  
-  if (pw.length < 6) {
-    showE(errEl, 'Password must be at least 6 characters.');
-    return;
-  }
-  
-  okEl.textContent = 'Account created! You can now login.';
-  okEl.classList.add('show');
+  currentUser = user;
+  document.getElementById('loginOk').textContent = 'Welcome back!';
+  showE(document.getElementById('loginOk'), 'Welcome back!');
   
   setTimeout(() => {
-    switchTab('login');
-    document.getElementById('suFn').value = '';
-    document.getElementById('suLn').value = '';
-    document.getElementById('suEm').value = '';
-    document.getElementById('suPw').value = '';
-    okEl.classList.remove('show');
-  }, 1500);
+    showAuthScreen(false);
+    loadApp();
+  }, 800);
 }
 
-function switchTab(tab) {
-  document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('signupTab').style.display = tab === 'signup' ? 'block' : 'none';
+function handleSignup() {
+  const firstName = document.getElementById('suFirstName').value;
+  const lastName = document.getElementById('suLastName').value;
+  const email = document.getElementById('suEmail').value;
+  const dept = document.getElementById('suDept').value;
+  const cluster = document.getElementById('suCluster').value;
+  
+  if (!firstName || !email || !dept || !cluster) {
+    showE(document.getElementById('signupErr'), 'Please fill in all fields.');
+    return;
+  }
+  
+  if (users.find(u => u.email === email)) {
+    showE(document.getElementById('signupErr'), 'Email already exists.');
+    return;
+  }
+  
+  currentUser = {
+    id: 'u_' + Date.now(),
+    full_name: firstName + ' ' + lastName,
+    email,
+    department: dept,
+    cluster,
+    is_admin: false,
+    is_super_admin: email === SUPER_ADMIN_EMAIL
+  };
+  
+  users.push(currentUser);
+  
+  document.getElementById('signupOk').textContent = 'Account created! Welcome!';
+  showE(document.getElementById('signupOk'), 'Account created! Welcome!');
+  
+  setTimeout(() => {
+    showAuthScreen(false);
+    loadApp();
+  }, 800);
+}
+
+function showTab(tab) {
   document.querySelectorAll('.auth-tab').forEach((t, i) => {
     t.classList.toggle('on', (tab === 'login' && i === 0) || (tab === 'signup' && i === 1));
   });
+  
+  document.getElementById('loginTab').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signupTab').style.display = tab === 'signup' ? 'block' : 'none';
 }
 
 function showAuthScreen(show) {
@@ -594,425 +862,655 @@ function showAuthScreen(show) {
   document.getElementById('app').classList.toggle('on', !show);
 }
 
-function doLogout() {
+function logout() {
   currentUser = null;
-  isAdmin = false;
-  events = [];
-  users = [];
-  document.getElementById('searchInput').value = '';
   showAuthScreen(true);
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
 }
 
 // ═════════════════════════════════════════════════
-// APP INIT
+// APP INITIALIZATION
 // ═════════════════════════════════════════════════
 
-function initApp() {
-  renderUI();
-  loadEvents();
-  loadUsers();
-  renderCalendar();
-  updateClusterOptions();
+function loadApp() {
+  body.setAttribute('data-dept', currentUser.department);
+  document.getElementById('userName').textContent = currentUser.full_name;
+  const deptObj = departments[currentUser.department];
+  if (deptObj) {
+    document.getElementById('deptBadge').textContent = deptObj.name;
+    // Apply department color theme
+    const lightColor = adjustBrightness(deptObj.color, 0.95);
+    document.documentElement.style.setProperty('--da', deptObj.color);
+    document.documentElement.style.setProperty('--dl', lightColor);
+  }
+  document.getElementById('userAvatar').textContent = currentUser.full_name.charAt(0).toUpperCase();
   
-  document.body.setAttribute('data-dept', currentUser.department);
-  
-  // Show admin badge if admin
-  if (isAdmin) {
-    document.getElementById('adminBadgeTop').style.display = 'block';
-    document.getElementById('adminNavItem').style.display = 'flex';
+  if (currentUser.is_super_admin) {
+    document.getElementById('superAdminBadgeTop').style.display = 'inline-block';
+    document.getElementById('adminNavSection').style.display = 'block';
   }
   
-  // Set user info
-  const initials = (currentUser.full_name || currentUser.email).slice(0, 2).toUpperCase();
-  document.getElementById('uaTop').textContent = initials;
-  document.getElementById('chipNameTop').textContent = currentUser.full_name || currentUser.email;
+  loadDeptNav();
+  loadFilters();
+  renderCalendar();
+  addSampleEvents();
 }
 
-function renderUI() {
-  // Render department list in sidebar
-  let deptHtml = '';
-  Object.entries(DEPARTMENTS).forEach(([key, dept]) => {
-    deptHtml += `<div class="ni" onclick="filterByDept('${key}')" style="font-size:12px">
-      <span style="width:8px;height:8px;border-radius:50%;background:${dept.color};flex-shrink:0"></span>
+function loadDeptNav() {
+  const nav = document.getElementById('deptNav');
+  nav.innerHTML = Object.values(departments).map((dept) => `
+    <div class="ni" onclick="setDept('${dept.id}')">
+      <i class="ti ti-circle-filled" style="color:${dept.color};font-size:8px"></i>
       ${dept.name}
-    </div>`;
-  });
-  document.getElementById('deptList').innerHTML = deptHtml;
+    </div>
+  `).join('');
+}
+
+function setDept(deptId) {
+  currentUser.department = deptId;
+  document.body.setAttribute('data-dept', deptId);
+  const deptObj = departments[deptId];
+  if (deptObj) {
+    document.getElementById('deptBadge').textContent = deptObj.name;
+    // Apply department color theme using CSS variables
+    const lightColor = adjustBrightness(deptObj.color, 0.95);
+    document.documentElement.style.setProperty('--da', deptObj.color);
+    document.documentElement.style.setProperty('--dl', lightColor);
+  }
+  loadFilters();
+  renderCalendar();
+}
+
+function adjustBrightness(color, amount) {
+  const hex = color.replace(/^#/, '');
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  
+  const newR = Math.min(255, Math.round(r + (255 - r) * (1 - amount)));
+  const newG = Math.min(255, Math.round(g + (255 - g) * (1 - amount)));
+  const newB = Math.min(255, Math.round(b + (255 - b) * (1 - amount)));
+  
+  return `rgb(${newR}, ${newG}, ${newB})`;
 }
 
 // ═════════════════════════════════════════════════
-// CALENDAR
+// CALENDAR RENDERING
 // ═════════════════════════════════════════════════
 
 function renderCalendar() {
-  if (currentView === 'month') renderMonthView();
-  else if (currentView === 'week') renderWeekView();
-  
-  renderUpcomingEvents();
-}
-
-function renderMonthView() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
-  const daysInMonth = lastDay.getDate();
-  const startingDayOfWeek = firstDay.getDay();
+  const prevLastDay = new Date(year, month, 0).getDate();
+  const nextDays = 7 - lastDay.getDay() - 1;
   
-  document.getElementById('mTitle').textContent = 
-    currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const grid = document.getElementById('calView');
+  grid.innerHTML = '';
   
-  let grid = '<div class="dow">Sun</div><div class="dow">Mon</div><div class="dow">Tue</div>' +
-             '<div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div>';
+  const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  days.forEach(d => {
+    const dow = document.createElement('div');
+    dow.className = 'dow';
+    dow.textContent = d;
+    grid.appendChild(dow);
+  });
   
-  // Previous month's days
-  const prevMonth = new Date(year, month, 0);
-  const daysInPrevMonth = prevMonth.getDate();
-  for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-    grid += `<div class="cal-day other-m"><div class="cal-day-num">${daysInPrevMonth - i}</div></div>`;
+  for (let i = prevLastDay - firstDay.getDay() + 1; i <= prevLastDay; i++) {
+    const day = createDayElement(new Date(year, month - 1, i), true);
+    grid.appendChild(day);
   }
   
-  // Current month's days
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    const isToday = date.toDateString() === new Date().toDateString();
-    const dateStr = date.toISOString().split('T')[0];
-    const dayEvents = events.filter(e => e.date === dateStr);
-    
-    let html = `<div class="cal-day ${isToday ? 'today' : ''}" onclick="selD('${dateStr}')">
-      <div class="cal-day-num">${day}</div>
-      <div class="cal-day-events">`;
-    
-    dayEvents.slice(0, 3).forEach(ev => {
-      html += `<div class="cal-evt" title="${ev.title}">${ev.title}</div>`;
-    });
-    
-    if (dayEvents.length > 3) {
-      html += `<div class="cal-evt">+${dayEvents.length - 3} more</div>`;
-    }
-    
-    html += `</div></div>`;
-    grid += html;
+  for (let i = 1; i <= lastDay.getDate(); i++) {
+    const day = createDayElement(new Date(year, month, i), false);
+    grid.appendChild(day);
   }
   
-  // Next month's days
-  let nextDay = 1;
-  const totalCells = grid.split('<div class="cal-day').length - 1;
-  const remaining = 42 - totalCells;
-  for (let i = 0; i < remaining; i++) {
-    grid += `<div class="cal-day other-m"><div class="cal-day-num">${nextDay++}</div></div>`;
+  for (let i = 1; i <= nextDays; i++) {
+    const day = createDayElement(new Date(year, month + 1, i), true);
+    grid.appendChild(day);
   }
   
-  document.getElementById('calGrid').innerHTML = grid;
+  document.getElementById('monthTitle').textContent = 
+    firstDay.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 }
 
-function renderWeekView() {
-  // Simplified week view
-  document.getElementById('mTitle').textContent = 'Week View - ' + 
-    currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  document.getElementById('calGrid').innerHTML = '<div class="empty"><p>Week view coming soon</p></div>';
+function createDayElement(date, otherMonth) {
+  const day = document.createElement('div');
+  day.className = 'cal-day' + (otherMonth ? ' other-m' : '');
+  
+  const today = new Date();
+  if (date.toDateString() === today.toDateString()) {
+    day.classList.add('today');
+  }
+  
+  const dayNum = document.createElement('div');
+  dayNum.className = 'cal-day-num';
+  dayNum.textContent = date.getDate();
+  day.appendChild(dayNum);
+  
+  const eventsDiv = document.createElement('div');
+  eventsDiv.className = 'cal-day-events';
+  
+  const dayEvents = events.filter(e => new Date(e.date).toDateString() === date.toDateString());
+  dayEvents.slice(0, 2).forEach(evt => {
+    const e = document.createElement('div');
+    e.className = 'cal-evt';
+    e.textContent = evt.title;
+    const deptColor = departments[evt.department]?.color || '#1D5FA8';
+    e.style.background = deptColor;
+    e.style.color = '#fff';
+    eventsDiv.appendChild(e);
+  });
+  
+  if (dayEvents.length > 2) {
+    const more = document.createElement('div');
+    more.className = 'cal-evt';
+    more.textContent = `+${dayEvents.length - 2} more`;
+    more.style.fontSize = '10px';
+    eventsDiv.appendChild(more);
+  }
+  
+  day.appendChild(eventsDiv);
+  day.onclick = () => openEventModal(date);
+  
+  return day;
 }
 
 function renderList() {
-  if (currentView !== 'list') return;
+  const listView = document.getElementById('listView');
+  const sorted = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
   
-  const sortedEvents = [...events].sort((a, b) => new Date(a.date) - new Date(b.date));
-  
-  let html = '';
-  sortedEvents.forEach(ev => {
-    const date = new Date(ev.date);
-    html += `<div class="list-item" onclick="openEventModal('${ev.id}')">
+  listView.innerHTML = sorted.map(evt => `
+    <div class="list-item">
       <div class="list-info">
-        <div class="list-date">${date.toLocaleDateString('en-US', { 
-          weekday: 'short', month: 'short', day: 'numeric' 
-        })}</div>
-        <div class="list-title">${ev.title}</div>
-        <div class="list-meta">${ev.assigned_to_name || 'Unassigned'}</div>
+        <div class="list-date">${new Date(evt.date).toLocaleDateString()}</div>
+        <div class="list-title">${evt.title}</div>
+        <div class="list-meta">${departments[evt.department]?.name || 'Unknown'}</div>
       </div>
-      <div class="list-badge">${ev.visibility || 'Team'}</div>
-    </div>`;
-  });
-  
-  document.getElementById('eventList').innerHTML = html || '<div class="empty"><p>No events</p></div>';
-}
-
-function renderUpcomingEvents() {
-  const today = new Date();
-  const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-  
-  const upcoming = events
-    .filter(e => {
-      const eDate = new Date(e.date);
-      return eDate >= today && eDate <= nextWeek;
-    })
-    .sort((a, b) => new Date(a.date) - new Date(b.date))
-    .slice(0, 5);
-  
-  let html = '';
-  if (upcoming.length === 0) {
-    html = '<div class="empty" style="font-size:12px;padding:16px">No upcoming events</div>';
-  } else {
-    upcoming.forEach(ev => {
-      const date = new Date(ev.date);
-      html += `<div style="padding:10px;background:var(--s0);border-radius:8px;margin-bottom:8px;cursor:pointer" onclick="selD('${ev.date}')">
-        <div style="font-size:11px;color:var(--tm);font-weight:600">${date.toLocaleDateString('en-US', { 
-          month: 'short', day: 'numeric' 
-        })}</div>
-        <div style="font-size:12px;font-weight:700;color:var(--t1);margin-top:2px">${ev.title}</div>
-      </div>`;
-    });
-  }
-  
-  document.getElementById('upcomingEvents').innerHTML = html;
+      <span class="list-badge" style="background:${departments[evt.department]?.color};color:#fff">${evt.department.toUpperCase()}</span>
+    </div>
+  `).join('');
 }
 
 // ═════════════════════════════════════════════════
 // EVENTS
 // ═════════════════════════════════════════════════
 
-function loadEvents() {
-  // Demo events
-  events = [
-    { id: '1', date: '2024-01-15', title: 'Team Meeting', assigned_to_name: 'John Doe', visibility: 'Team' },
-    { id: '2', date: '2024-01-18', title: 'Project Review', assigned_to_name: 'Jane Smith', visibility: 'Private' },
-    { id: '3', date: '2024-01-22', title: 'Board Presentation', assigned_to_name: 'Bob Johnson', visibility: 'Company' }
-  ];
-}
-
-function loadUsers() {
-  // Demo users
-  users = [
-    { id: 'u1', full_name: 'John Doe', email: 'john@company.com', department: 'marketing', cluster: 'Digital Marketing', is_admin: false },
-    { id: 'u2', full_name: 'Jane Smith', email: 'jane@company.com', department: 'marketing', cluster: 'Brand & Communications', is_admin: false },
-    { id: 'u3', full_name: 'Bob Johnson', email: 'bob@company.com', department: 'fieldforce', cluster: 'North Zone', is_admin: false },
-    { id: 'u4', full_name: 'Alice Brown', email: 'alice@company.com', department: 'ffmanagers', cluster: 'Region 1', is_admin: true }
-  ];
-}
-
-function openEventModal(id) {
-  if (!isAdmin) return;
-  
-  document.getElementById('modalTitle').textContent = id ? 'Edit Event' : 'Add Event';
-  document.getElementById('eventModal').classList.add('open');
-  
-  if (id) {
-    const ev = events.find(e => e.id === id);
-    if (ev) {
-      document.getElementById('evDate').value = ev.date;
-      document.getElementById('evTitle').value = ev.title;
-      document.getElementById('evDesc').value = ev.description || '';
-      document.getElementById('evEmail').value = ev.assigned_to_email || '';
-      document.getElementById('evPrio').value = ev.priority || 'medium';
-    }
-  } else {
-    document.getElementById('evDate').value = currentDate.toISOString().split('T')[0];
-    document.getElementById('evTitle').value = '';
-    document.getElementById('evDesc').value = '';
-    document.getElementById('evEmail').value = '';
-    document.getElementById('evPrio').value = 'medium';
+function openEventModal(date = null) {
+  if (date) {
+    document.getElementById('eventDate').value = date.toISOString().split('T')[0];
   }
+  updateEventDeptSelect();
+  document.getElementById('eventDept').value = currentUser.department;
+  document.getElementById('eventModal').classList.add('open');
 }
 
 function closeEventModal() {
   document.getElementById('eventModal').classList.remove('open');
+  document.getElementById('eventTitle').value = '';
 }
 
-function saveEvent() {
-  const date = document.getElementById('evDate').value;
-  const title = document.getElementById('evTitle').value;
-  const desc = document.getElementById('evDesc').value;
-  const email = document.getElementById('evEmail').value;
-  const prio = document.getElementById('evPrio').value;
+function saveCalendarEvent() {
+  const title = document.getElementById('eventTitle').value;
+  const date = document.getElementById('eventDate').value;
+  const dept = document.getElementById('eventDept').value || currentUser.department;
   
-  if (!date || !title || !email) {
-    showToast('Please fill in date, title, and email.');
+  if (!title || !date) {
+    showToast('Please fill in all fields');
     return;
   }
   
-  const user = users.find(u => u.email === email);
-  const newEvent = {
-    id: 'ev_' + Date.now(),
-    date,
+  events.push({
+    id: 'e_' + Date.now(),
     title,
-    description: desc,
-    priority: prio,
-    assigned_to_name: user?.full_name || email,
-    assigned_to_email: email,
-    visibility: 'Team'
-  };
+    date,
+    department: dept,
+    description: ''
+  });
   
-  events.push(newEvent);
   closeEventModal();
   renderCalendar();
-  renderList();
   showToast('Event added ✓');
 }
 
+function loadFilters() {
+  const fbar = document.getElementById('filterBar');
+  fbar.innerHTML = Object.values(departments).map((dept) => `
+    <div class="fpill${dept.id === currentUser.department ? ' active' : ''}" onclick="setDept('${dept.id}')">
+      <div class="fp-dot" style="background:${dept.color}"></div>
+      ${dept.name}
+    </div>
+  `).join('');
+}
+
 // ═════════════════════════════════════════════════
-// SEARCH & FILTER
+// ADMIN FUNCTIONS
 // ═════════════════════════════════════════════════
 
-function searchUsers() {
-  const query = document.getElementById('searchInput').value.toLowerCase();
-  if (!query) {
-    document.getElementById('searchResults').innerHTML = '';
+function loadAdmin() {
+  if (!currentUser.is_super_admin) {
+    showToast('Admin access denied');
     return;
   }
   
-  const results = users.filter(u =>
-    u.full_name.toLowerCase().includes(query) ||
-    u.email.toLowerCase().includes(query)
-  );
-  
-  let html = '';
-  results.forEach(u => {
-    const userEvents = events.filter(e => e.assigned_to_email === u.email);
-    html += `<div class="search-result">
-      <div class="search-result-name">${u.full_name}</div>
-      <div class="search-result-dept">${DEPARTMENTS[u.department]?.name} · ${u.cluster}</div>
-      ${userEvents.length > 0 ? `<div class="search-result-events">
-        ${userEvents.map(e => `<span class="event-chip">${e.title}</span>`).join('')}
-      </div>` : ''}
-    </div>`;
-  });
-  
-  document.getElementById('searchResults').innerHTML = html || '<div class="empty" style="font-size:12px">No users found</div>';
-}
-
-function openSearchPanel() {
-  document.getElementById('sidePanel').classList.add('open');
-  document.getElementById('searchInput').focus();
-}
-
-function filterByDept(dept) {
-  // Filter events by department
-  const filtered = events.filter(e => e.department === dept);
-  showToast(`Showing ${filtered.length} events from ${DEPARTMENTS[dept].name}`);
-}
-
-// ═════════════════════════════════════════════════
-// ADMIN
-// ═════════════════════════════════════════════════
-
-async function openAdminPanel() {
-  if (!isAdmin) {
-    showToast('Admin access only.');
-    return;
-  }
-  
-  await loadAdminUsers();
   document.getElementById('adminModal').classList.add('open');
+  loadDeptList();
+  loadUsersList();
+  loadEventsList();
 }
 
-function closeAdminPanel() {
+function closeAdminModal() {
   document.getElementById('adminModal').classList.remove('open');
+  currentEditId = null;
+  currentEditType = null;
 }
 
-async function loadAdminUsers() {
-  let html = '';
-  const byDept = {};
+function switchAdminTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
   
-  users.forEach(u => {
-    const dept = u.department;
-    if (!byDept[dept]) byDept[dept] = [];
-    byDept[dept].push(u);
-  });
-  
-  Object.entries(DEPARTMENTS).forEach(([key, dept]) => {
-    if (!byDept[key]) return;
-    
-    html += `<div class="cluster-group">
-      <div class="cluster-group-title" style="border-left-color:${dept.color}">${dept.name}</div>`;
-    
-    byDept[key].forEach(u => {
-      const init = u.full_name.slice(0, 2).toUpperCase();
-      html += `<div class="admin-row">
+  event.target.closest('.admin-tab').classList.add('active');
+  document.getElementById('admin' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+}
+
+// ═════════════════════════════════════════════════
+// DEPARTMENT MANAGEMENT
+// ═════════════════════════════════════════════════
+
+function loadDeptList() {
+  const html = Object.values(departments).map(dept => `
+    <div class="admin-section active" style="display:block;margin-bottom:16px;padding:16px;background:#fff;border:1px solid var(--bd);border-radius:12px">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
         <div>
-          <div class="uav" style="background:${dept.color};width:30px;height:30px;font-size:11px">${init}</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <div style="width:16px;height:16px;background:${dept.color};border-radius:4px"></div>
+            <strong style="font-size:14px">${dept.name}</strong>
+          </div>
+          <div style="font-size:12px;color:var(--tm)">Admin: ${dept.admin ? (users.find(u => u.id === dept.admin)?.full_name || 'Unknown') : 'Not assigned'}</div>
         </div>
-        <div style="flex:1;margin-left:10px">
-          <input type="text" value="${u.full_name}" class="inp" style="margin-bottom:4px;font-size:12px" onchange="updateUser('${u.id}', 'name', this.value)">
-          <div style="font-size:11px;color:var(--tm)">${u.email}</div>
-          <div style="font-size:10px;color:var(--tm);margin-top:2px">${u.cluster}</div>
+        <div class="admin-actions">
+          <button class="admin-btn edit" onclick="openEditDeptModal('${dept.id}')">Edit</button>
+          <button class="admin-btn del" onclick="deleteDept('${dept.id}')">Delete</button>
         </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-sec" style="padding:4px 8px;font-size:11px" onclick="editUser('${u.id}')">Edit</button>
-          <button class="btn-sec" style="padding:4px 8px;font-size:11px" onclick="deleteUser('${u.id}')">Delete</button>
+      </div>
+      <div style="margin-top:8px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px">Sections:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${dept.subdepts.map(sub => `
+            <span style="background:var(--s0);padding:4px 8px;border-radius:6px;font-size:11px;display:flex;align-items:center;gap:4px">
+              ${sub.name}
+              <button style="background:none;border:none;cursor:pointer;color:var(--tm);font-size:12px;padding:0" onclick="deleteSubdept('${dept.id}','${sub.id}')" title="Delete">✕</button>
+            </span>
+          `).join('')}
         </div>
-      </div>`;
-    });
-    
-    html += `</div>`;
-  });
+      </div>
+    </div>
+  `).join('');
   
-  document.getElementById('adminUserList').innerHTML = html;
+  document.getElementById('deptList').innerHTML = html;
 }
 
-function updateUser(id, field, value) {
-  const user = users.find(u => u.id === id);
-  if (user) {
-    if (field === 'name') user.full_name = value;
+function openAddDeptModal() {
+  currentEditId = null;
+  currentEditType = 'department';
+  document.getElementById('editDeptTitle').textContent = 'Add Department';
+  document.getElementById('deptName').value = '';
+  document.getElementById('deptColor').value = '#7C3AED';
+  document.getElementById('subdeptInputs').innerHTML = '<div class="subdept-input-row" style="display:flex;gap:8px;margin-bottom:6px"><input type="text" class="inp subdept-input" placeholder="Section name" style="flex:1"><button style="background:none;border:1px solid var(--bd);padding:5px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2)" onclick="this.parentElement.remove()">Remove</button></div>';
+  document.getElementById('editDeptModal').classList.add('open');
+}
+
+function openEditDeptModal(deptId) {
+  const dept = departments[deptId];
+  if (!dept) return;
+  
+  currentEditId = deptId;
+  currentEditType = 'department';
+  document.getElementById('editDeptTitle').textContent = 'Edit Department';
+  document.getElementById('deptName').value = dept.name;
+  document.getElementById('deptColor').value = dept.color;
+  
+  let html = dept.subdepts.map(sub => `
+    <div class="subdept-input-row" style="display:flex;gap:8px;margin-bottom:6px">
+      <input type="text" class="inp subdept-input" value="${sub.name}" style="flex:1">
+      <button style="background:none;border:1px solid var(--bd);padding:5px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2)" onclick="this.parentElement.remove()">Remove</button>
+    </div>
+  `).join('');
+  
+  document.getElementById('subdeptInputs').innerHTML = html;
+  document.getElementById('editDeptModal').classList.add('open');
+}
+
+function saveDept() {
+  const name = document.getElementById('deptName').value.trim();
+  const color = document.getElementById('deptColor').value;
+  const subdeptInputs = document.querySelectorAll('.subdept-input');
+  const subdepts = Array.from(subdeptInputs).map((inp, i) => ({
+    id: 'sub_' + Date.now() + '_' + i,
+    name: inp.value.trim()
+  })).filter(s => s.name);
+  
+  if (!name || subdepts.length === 0) {
+    showToast('Please fill in all fields');
+    return;
+  }
+  
+  if (currentEditId) {
+    // Edit existing
+    departments[currentEditId].name = name;
+    departments[currentEditId].color = color;
+    departments[currentEditId].subdepts = subdepts;
+    showToast('Department updated ✓');
+  } else {
+    // Create new
+    const newId = 'dept_' + Date.now();
+    departments[newId] = {
+      id: newId,
+      name,
+      color,
+      subdepts,
+      admin: null
+    };
+    showToast('Department added ✓');
+  }
+  
+  closeEditDeptModal();
+  loadDeptList();
+  updateDeptSelects();
+}
+
+function closeEditDeptModal() {
+  document.getElementById('editDeptModal').classList.remove('open');
+  currentEditId = null;
+}
+
+function addSubdeptInput() {
+  const container = document.getElementById('subdeptInputs');
+  const row = document.createElement('div');
+  row.className = 'subdept-input-row';
+  row.style.cssText = 'display:flex;gap:8px;margin-bottom:6px';
+  row.innerHTML = '<input type="text" class="inp subdept-input" placeholder="Section name" style="flex:1"><button style="background:none;border:1px solid var(--bd);padding:5px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2)" onclick="this.parentElement.remove()">Remove</button>';
+  container.appendChild(row);
+}
+
+function deleteDept(deptId) {
+  if (confirm(`Delete "${departments[deptId].name}" and all its sections?`)) {
+    delete departments[deptId];
+    loadDeptList();
+    showToast('Department deleted ✓');
+  }
+}
+
+function deleteSubdept(deptId, subdeptId) {
+  if (confirm('Delete this section?')) {
+    departments[deptId].subdepts = departments[deptId].subdepts.filter(s => s.id !== subdeptId);
+    loadDeptList();
+    showToast('Section deleted ✓');
+  }
+}
+
+// ═════════════════════════════════════════════════
+// USER MANAGEMENT
+// ═════════════════════════════════════════════════
+
+function loadUsersList() {
+  const html = users.map(u => `
+    <tr>
+      <td>${u.full_name}</td>
+      <td style="font-size:11px">${u.email}</td>
+      <td>${departments[u.department]?.name || 'N/A'}</td>
+      <td>
+        <span class="admin-badge ${u.is_super_admin ? 'super' : (u.role === 'dept_admin' ? 'admin' : 'dept')}">
+          ${u.is_super_admin ? 'Super Admin' : (u.role === 'dept_admin' ? 'Dept Admin' : (u.role === 'subdept_admin' ? 'Section Admin' : 'User'))}
+        </span>
+      </td>
+      <td>
+        <div class="admin-actions">
+          <button class="admin-btn edit" onclick="openEditUserModal('${u.id}')">Edit</button>
+          <button class="admin-btn del" onclick="deleteUser('${u.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+  
+  document.getElementById('usersList').innerHTML = html;
+}
+
+function openAddUserModal() {
+  currentEditId = null;
+  currentEditType = 'user';
+  document.getElementById('editUserTitle').textContent = 'Add User';
+  document.getElementById('userName').value = '';
+  document.getElementById('userEmail').value = '';
+  document.getElementById('userRole').value = 'user';
+  
+  updateUserDeptSelect();
+  document.getElementById('userDept').value = Object.keys(departments)[0];
+  updateUserSubdepts();
+  
+  document.getElementById('editUserModal').classList.add('open');
+}
+
+function openEditUserModal(userId) {
+  const user = users.find(u => u.id === userId);
+  if (!user) return;
+  
+  currentEditId = userId;
+  currentEditType = 'user';
+  document.getElementById('editUserTitle').textContent = 'Edit User';
+  document.getElementById('userName').value = user.full_name;
+  document.getElementById('userEmail').value = user.email;
+  document.getElementById('userRole').value = user.role || 'user';
+  
+  updateUserDeptSelect();
+  document.getElementById('userDept').value = user.department;
+  updateUserSubdepts();
+  
+  document.getElementById('editUserModal').classList.add('open');
+}
+
+function updateUserDeptSelect() {
+  const select = document.getElementById('userDept');
+  select.innerHTML = Object.values(departments).map(dept => 
+    `<option value="${dept.id}">${dept.name}</option>`
+  ).join('');
+}
+
+function updateUserSubdepts() {
+  const deptId = document.getElementById('userDept').value;
+  const dept = departments[deptId];
+  const select = document.getElementById('userSubdept');
+  
+  if (dept && dept.subdepts) {
+    select.innerHTML = dept.subdepts.map(sub => 
+      `<option value="${sub.id}">${sub.name}</option>`
+    ).join('');
+  }
+}
+
+function saveUser() {
+  const name = document.getElementById('userName').value.trim();
+  const email = document.getElementById('userEmail').value.trim();
+  const dept = document.getElementById('userDept').value;
+  const subdept = document.getElementById('userSubdept').value;
+  const role = document.getElementById('userRole').value;
+  
+  if (!name || !email || !dept || !subdept) {
+    showToast('Please fill in all fields');
+    return;
+  }
+  
+  if (currentEditId) {
+    // Edit existing
+    const user = users.find(u => u.id === currentEditId);
+    user.full_name = name;
+    user.email = email;
+    user.department = dept;
+    user.subdept = subdept;
+    user.role = role;
     showToast('User updated ✓');
+  } else {
+    // Create new
+    users.push({
+      id: 'u_' + Date.now(),
+      full_name: name,
+      email,
+      department: dept,
+      subdept,
+      role,
+      is_admin: role === 'dept_admin',
+      is_super_admin: false
+    });
+    showToast('User added ✓');
   }
+  
+  closeEditUserModal();
+  loadUsersList();
 }
 
-function editUser(id) {
-  // Open edit modal
-  const user = users.find(u => u.id === id);
-  if (user) {
-    document.getElementById('newUserName').value = user.full_name;
-    document.getElementById('newUserEmail').value = user.email;
-    document.getElementById('newUserDept').value = user.department;
-    updateClusterOptions(user.department);
-    document.getElementById('newUserCluster').value = user.cluster;
-  }
+function closeEditUserModal() {
+  document.getElementById('editUserModal').classList.remove('open');
+  currentEditId = null;
 }
 
-function deleteUser(id) {
-  if (confirm('Are you sure?')) {
-    users = users.filter(u => u.id !== id);
-    loadAdminUsers();
+function deleteUser(userId) {
+  if (userId === currentUser.id) {
+    showToast('Cannot delete yourself');
+    return;
+  }
+  
+  if (confirm('Delete this user?')) {
+    users = users.filter(u => u.id !== userId);
+    loadUsersList();
     showToast('User deleted ✓');
   }
 }
 
-function addNewUser() {
-  const name = document.getElementById('newUserName').value;
-  const email = document.getElementById('newUserEmail').value;
-  const dept = document.getElementById('newUserDept').value;
-  const cluster = document.getElementById('newUserCluster').value;
+// ═════════════════════════════════════════════════
+// EVENT MANAGEMENT
+// ═════════════════════════════════════════════════
+
+function loadEventsList() {
+  const html = events.map(e => `
+    <tr>
+      <td>${e.title}</td>
+      <td>${new Date(e.date).toLocaleDateString()}</td>
+      <td>${departments[e.department]?.name || 'N/A'}</td>
+      <td>
+        <div class="admin-actions">
+          <button class="admin-btn edit" onclick="openEditEventModal('${e.id}')">Edit</button>
+          <button class="admin-btn del" onclick="deleteEvent('${e.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
   
-  if (!name || !email || !cluster) {
-    showToast('Please fill in all fields.');
+  document.getElementById('eventsList').innerHTML = html || '<tr><td colspan="4" style="text-align:center;color:var(--tm)">No events yet</td></tr>';
+}
+
+function openAddEventModal() {
+  currentEditId = null;
+  currentEditType = 'event';
+  document.getElementById('editEventTitle').textContent = 'Add Event';
+  document.getElementById('eventTitle').value = '';
+  document.getElementById('eventDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('eventDesc').value = '';
+  
+  updateEventDeptSelect();
+  document.getElementById('eventDept').value = currentUser.department;
+  
+  document.getElementById('editEventModal').classList.add('open');
+}
+
+function openEditEventModal(eventId) {
+  const event = events.find(e => e.id === eventId);
+  if (!event) return;
+  
+  currentEditId = eventId;
+  currentEditType = 'event';
+  document.getElementById('editEventTitle').textContent = 'Edit Event';
+  document.getElementById('eventTitle').value = event.title;
+  document.getElementById('eventDate').value = event.date;
+  document.getElementById('eventDesc').value = event.description || '';
+  
+  updateEventDeptSelect();
+  document.getElementById('eventDept').value = event.department;
+  
+  document.getElementById('editEventModal').classList.add('open');
+}
+
+function updateEventDeptSelect() {
+  const select = document.getElementById('eventDept');
+  select.innerHTML = Object.values(departments).map(dept => 
+    `<option value="${dept.id}">${dept.name}</option>`
+  ).join('');
+}
+
+function updateDeptSelects() {
+  updateUserDeptSelect();
+  updateEventDeptSelect();
+}
+
+function saveEvent() {
+  const title = document.getElementById('eventTitle').value.trim();
+  const date = document.getElementById('eventDate').value;
+  const dept = document.getElementById('eventDept').value;
+  const desc = document.getElementById('eventDesc').value.trim();
+  
+  if (!title || !date || !dept) {
+    showToast('Please fill in all fields');
     return;
   }
   
-  users.push({
-    id: 'u_' + Date.now(),
-    full_name: name,
-    email,
-    department: dept,
-    cluster,
-    is_admin: false
-  });
+  if (currentEditId) {
+    // Edit existing
+    const event = events.find(e => e.id === currentEditId);
+    event.title = title;
+    event.date = date;
+    event.department = dept;
+    event.description = desc;
+    showToast('Event updated ✓');
+  } else {
+    // Create new
+    events.push({
+      id: 'e_' + Date.now(),
+      title,
+      date,
+      department: dept,
+      description: desc
+    });
+    showToast('Event added ✓');
+  }
   
-  document.getElementById('newUserName').value = '';
-  document.getElementById('newUserEmail').value = '';
-  document.getElementById('newUserCluster').value = '';
-  
-  loadAdminUsers();
-  showToast('User added ✓');
+  closeEditEventModal();
+  loadEventsList();
+  renderCalendar();
 }
 
-function updateClusterOptions(dept) {
-  const deptKey = dept || document.getElementById('suDept').value || document.getElementById('newUserDept').value;
-  const clusters = DEPARTMENTS[deptKey]?.sections || [];
-  
-  const select = document.getElementById('suCluster') || document.getElementById('newUserCluster');
-  if (select) {
-    select.innerHTML = clusters.map(c => `<option value="${c}">${c}</option>`).join('');
+function closeEditEventModal() {
+  document.getElementById('editEventModal').classList.remove('open');
+  currentEditId = null;
+}
+
+function deleteEvent(eventId) {
+  if (confirm('Delete this event?')) {
+    events = events.filter(e => e.id !== eventId);
+    loadEventsList();
+    renderCalendar();
+    showToast('Event deleted ✓');
   }
+}
+
+function addSampleEvents() {
+  const today = new Date();
+  events = [
+    { id: 'e1', title: 'Team Meeting', date: today.toISOString().split('T')[0], department: 'marketing', description: 'Weekly team sync' },
+    { id: 'e2', title: 'Product Launch', date: new Date(today.getTime() + 5*24*60*60*1000).toISOString().split('T')[0], department: 'be', description: 'New product release' }
+  ];
+  renderCalendar();
 }
 
 // ═════════════════════════════════════════════════
@@ -1055,16 +1553,14 @@ function goToday() {
   renderCalendar();
 }
 
-function selD(date) {
-  // Select date (future feature)
-}
-
 function toggleNav() {
   document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('drawerOv').classList.toggle('show');
 }
 
 function togglePanel() {
   document.getElementById('sidePanel').classList.toggle('open');
+  document.getElementById('drawerOv').classList.toggle('show');
 }
 
 // ═════════════════════════════════════════════════
@@ -1087,10 +1583,30 @@ function openUserMenu() {
   // Future: open user menu
 }
 
+const body = document.body;
+
+// Initialize - populate department selectors
+document.addEventListener('DOMContentLoaded', () => {
+  updateEventDeptSelect();
+  updateUserDeptSelect();
+  
+  // Set initial user department
+  if (Object.keys(departments).length > 0) {
+    currentUser = {
+      id: 'u_' + Date.now(),
+      full_name: 'Guest User',
+      email: 'guest@example.com',
+      department: Object.keys(departments)[0],
+      subdept: Object.values(departments)[0].subdepts[0]?.id,
+      role: 'user',
+      is_admin: false,
+      is_super_admin: false
+    };
+  }
+});
+
 // Initialize
 showAuthScreen(true);
-document.getElementById('suDept').addEventListener('change', () => updateClusterOptions());
-document.getElementById('newUserDept').addEventListener('change', () => updateClusterOptions());
 </script>
 </body>
 </html>
