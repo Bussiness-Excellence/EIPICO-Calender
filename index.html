@@ -324,7 +324,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 <div class="auth-bg" id="authBg">
   <div class="auth-card">
     <div class="auth-logo-row">
-      <div style="width:56px;height:56px;background:linear-gradient(135deg,#1D5FA8 0%,#0C3D7A 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:24px;flex-shrink:0">E</div>
+      <img src="File1313.png" alt="EIPICO" class="auth-logo">
       <div>
         <div class="auth-brand-name">EIPICO</div>
         <div class="auth-brand-be">Calendar System</div>
@@ -398,7 +398,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
   <div class="topbar">
     <div class="tb-l">
       <button class="ham-btn" onclick="toggleNav()"><i class="ti ti-menu-2"></i></button>
-      <div style="width:38px;height:38px;background:linear-gradient(135deg,#1D5FA8 0%,#0C3D7A 100%);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;flex-shrink:0">E</div>
+      <img src="File1313.png" alt="EIPICO" class="tb-logo">
       <div class="tb-div"></div>
       <div class="tb-texts">
         <div class="tb-title" id="topbarTitle">Calendar</div>
@@ -460,6 +460,18 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       
       <!-- FILTER BAR -->
       <div class="fbar" id="filterBar"></div>
+      
+      <!-- NEXT EVENT BANNER -->
+      <div id="nextEventBanner" style="display:none;margin:10px 12px 0;padding:12px 16px;border-radius:12px;background:var(--dl);border:1px solid var(--da);display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;cursor:pointer" onclick="scrollToNextEvent()">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          <i class="ti ti-calendar-event" style="font-size:20px;color:var(--da);flex-shrink:0"></i>
+          <div style="min-width:0">
+            <div style="font-size:10px;font-weight:800;color:var(--da);text-transform:uppercase;letter-spacing:.06em">Your Next Event</div>
+            <div id="nextEventText" style="font-size:14px;font-weight:700;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          </div>
+        </div>
+        <div id="nextEventWhen" style="font-size:12px;font-weight:700;color:var(--da);white-space:nowrap"></div>
+      </div>
       
       <!-- CALENDAR VIEW -->
       <div class="calendar-wrap">
@@ -772,7 +784,9 @@ async function loadAssignments() {
     date: a.date,
     department: a.department,
     department_id: a.department_id,
-    description: a.notes || ''
+    description: a.notes || '',
+    assigned_to: a.assigned_to,
+    created_by: a.created_by
   }));
 }
 
@@ -953,6 +967,44 @@ async function loadApp() {
   loadFilters();
   await loadAssignments();
   renderCalendar();
+  renderNextEventBanner();
+}
+
+function renderNextEventBanner() {
+  const banner = document.getElementById('nextEventBanner');
+  if (!banner) return;
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const mine = events
+    .filter(e => e.date >= todayStr && (e.assigned_to === currentUser.id || e.created_by === currentUser.id))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (mine.length === 0) {
+    banner.style.display = 'none';
+    return;
+  }
+
+  const next = mine[0];
+  const deptObj = departments[next.department];
+  const dateObj = new Date(next.date);
+  const isToday = next.date === todayStr;
+  const isTomorrow = next.date === new Date(Date.now() + 86400000).toISOString().split('T')[0];
+
+  document.getElementById('nextEventText').textContent = next.title;
+  document.getElementById('nextEventWhen').textContent =
+    isToday ? 'Today' : isTomorrow ? 'Tomorrow' : dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+  banner.style.borderColor = deptObj?.color || 'var(--da)';
+  banner.dataset.eventDate = next.date;
+  banner.style.display = 'flex';
+}
+
+function scrollToNextEvent() {
+  const banner = document.getElementById('nextEventBanner');
+  const dateStr = banner?.dataset.eventDate;
+  if (!dateStr) return;
+  currentDate = new Date(dateStr);
+  setView('month');
 }
 
 function loadDeptNav() {
@@ -1136,10 +1188,11 @@ async function saveCalendarEvent() {
     return;
   }
 
-  events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '' });
+  events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '', assigned_to: data.assigned_to, created_by: data.created_by });
 
   closeEventModal();
   renderCalendar();
+  renderNextEventBanner();
   showToast('Event added ✓');
 }
 
@@ -1243,7 +1296,7 @@ function openEditDeptModal(deptId) {
   
   let html = dept.subdepts.map(sub => `
     <div class="subdept-input-row" style="display:flex;gap:8px;margin-bottom:6px">
-      <input type="text" class="inp subdept-input" value="${sub.name}" style="flex:1">
+      <input type="text" class="inp subdept-input" data-cluster-id="${sub.id}" value="${sub.name}" style="flex:1">
       <button style="background:none;border:1px solid var(--bd);padding:5px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2)" onclick="this.parentElement.remove()">Remove</button>
     </div>
   `).join('');
@@ -1252,42 +1305,72 @@ function openEditDeptModal(deptId) {
   document.getElementById('editDeptModal').classList.add('open');
 }
 
-function saveDept() {
+function slugify(name) {
+  return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+}
+
+async function saveDept() {
   const name = document.getElementById('deptName').value.trim();
   const color = document.getElementById('deptColor').value;
-  const subdeptInputs = document.querySelectorAll('.subdept-input');
-  const subdepts = Array.from(subdeptInputs).map((inp, i) => ({
-    id: 'sub_' + Date.now() + '_' + i,
-    name: inp.value.trim()
-  })).filter(s => s.name);
-  
-  if (!name || subdepts.length === 0) {
+  const rows = Array.from(document.querySelectorAll('.subdept-input'));
+  const subdeptEntries = rows
+    .map(inp => ({ clusterId: inp.dataset.clusterId || null, name: inp.value.trim() }))
+    .filter(s => s.name);
+
+  if (!name || subdeptEntries.length === 0) {
     showToast('Please fill in all fields');
     return;
   }
-  
+
+  let deptUuid;
+
   if (currentEditId) {
-    // Edit existing
-    departments[currentEditId].name = name;
-    departments[currentEditId].color = color;
-    departments[currentEditId].subdepts = subdepts;
+    // Edit existing department
+    const dept = departments[currentEditId];
+    deptUuid = dept.uuid;
+
+    const { error: deptErr } = await sb.from('departments').update({ name, color }).eq('id', deptUuid);
+    if (deptErr) { showToast('Error updating department: ' + deptErr.message); return; }
+
+    // Diff sections: delete ones removed, update ones kept, insert new ones
+    const keptIds = new Set(subdeptEntries.filter(s => s.clusterId).map(s => s.clusterId));
+    const removedIds = dept.subdepts.map(s => s.id).filter(id => !keptIds.has(id));
+
+    for (const id of removedIds) {
+      const { error } = await sb.from('clusters').delete().eq('id', id);
+      if (error) { showToast('Error removing a section: ' + error.message); return; }
+    }
+    for (const entry of subdeptEntries) {
+      if (entry.clusterId) {
+        const { error } = await sb.from('clusters').update({ name: entry.name }).eq('id', entry.clusterId);
+        if (error) { showToast('Error updating a section: ' + error.message); return; }
+      } else {
+        const { error } = await sb.from('clusters').insert({ name: entry.name, department_id: deptUuid, sort_order: 999 });
+        if (error) { showToast('Error adding a section: ' + error.message); return; }
+      }
+    }
     showToast('Department updated ✓');
   } else {
-    // Create new
-    const newId = 'dept_' + Date.now();
-    departments[newId] = {
-      id: newId,
-      name,
-      color,
-      subdepts,
-      admin: null
-    };
+    // Create new department
+    const slug = slugify(name);
+    const { data: newDept, error: deptErr } = await sb.from('departments')
+      .insert({ name, color, slug, sort_order: Object.keys(departments).length + 1 })
+      .select().single();
+    if (deptErr) { showToast('Error creating department: ' + deptErr.message); return; }
+    deptUuid = newDept.id;
+
+    for (const entry of subdeptEntries) {
+      const { error } = await sb.from('clusters').insert({ name: entry.name, department_id: deptUuid, sort_order: 999 });
+      if (error) { showToast('Error adding a section: ' + error.message); return; }
+    }
     showToast('Department added ✓');
   }
-  
+
+  await loadDepartments();
   closeEditDeptModal();
   loadDeptList();
   updateDeptSelects();
+  updateSignupDeptSelect();
 }
 
 function closeEditDeptModal() {
@@ -1304,20 +1387,33 @@ function addSubdeptInput() {
   container.appendChild(row);
 }
 
-function deleteDept(deptId) {
-  if (confirm(`Delete "${departments[deptId].name}" and all its sections?`)) {
-    delete departments[deptId];
-    loadDeptList();
-    showToast('Department deleted ✓');
-  }
+async function deleteDept(deptId) {
+  const dept = departments[deptId];
+  if (!dept) return;
+  if (!confirm(`Delete "${dept.name}" and all its sections? Users/events still assigned to it will block this until reassigned.`)) return;
+
+  const { error: clusterErr } = await sb.from('clusters').delete().eq('department_id', dept.uuid);
+  if (clusterErr) { showToast('Error deleting sections: ' + clusterErr.message); return; }
+
+  const { error: deptErr } = await sb.from('departments').delete().eq('id', dept.uuid);
+  if (deptErr) { showToast('Error deleting department: ' + deptErr.message); return; }
+
+  await loadDepartments();
+  loadDeptList();
+  updateDeptSelects();
+  updateSignupDeptSelect();
+  showToast('Department deleted ✓');
 }
 
-function deleteSubdept(deptId, subdeptId) {
-  if (confirm('Delete this section?')) {
-    departments[deptId].subdepts = departments[deptId].subdepts.filter(s => s.id !== subdeptId);
-    loadDeptList();
-    showToast('Section deleted ✓');
-  }
+async function deleteSubdept(deptId, subdeptId) {
+  if (!confirm('Delete this section?')) return;
+
+  const { error } = await sb.from('clusters').delete().eq('id', subdeptId);
+  if (error) { showToast('Error deleting section: ' + error.message); return; }
+
+  await loadDepartments();
+  loadDeptList();
+  showToast('Section deleted ✓');
 }
 
 // ═════════════════════════════════════════════════
@@ -1552,13 +1648,14 @@ async function saveEvent() {
 
     if (error) { showToast('Error adding event: ' + error.message); return; }
 
-    events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '' });
+    events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '', assigned_to: data.assigned_to, created_by: data.created_by });
     showToast('Event added ✓');
   }
 
   closeEditEventModal();
   loadEventsList();
   renderCalendar();
+  renderNextEventBanner();
 }
 
 function closeEditEventModal() {
@@ -1575,6 +1672,7 @@ async function deleteEvent(eventId) {
   events = events.filter(e => e.id !== eventId);
   loadEventsList();
   renderCalendar();
+  renderNextEventBanner();
   showToast('Event deleted ✓');
 }
 
