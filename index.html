@@ -901,8 +901,8 @@ select.inp{
       </div>
       <div class="form-group"><label>Visibility</label>
         <select id="aeVis" class="inp">
-          <option value="public">🌐 External — all departments</option>
-          <option value="internal">🔒 Internal — dept only</option>
+          <option value="company">🌐 External — all departments</option>
+          <option value="department">🔒 Internal — dept only</option>
         </select>
       </div>
       <div style="display:flex;gap:10px">
@@ -975,18 +975,19 @@ async function loadEvents(){
   if(error){ toast('Failed to load events','err'); events=[]; return; }
   // Visibility filtering: internal = only creator OR dept admin/super admin of same dept
   events = (data||[]).filter(a=>{
-    if(a.visibility === 'internal'){
+    // DB: 'company'=external/all; 'department','cluster','private'=internal/restricted
+    if(a.visibility !== 'company'){
       return a.created_by === currentUser.id
           || currentUser.is_super_admin
           || (currentUser.is_admin && a.department === currentUser.department);
     }
-    return true; // 'public' = external, visible to all
+    return true; // 'company' = visible to all departments
   }).map(a=>({
     id:a.id, title:a.title, date:a.date,
     department:a.department, department_id:a.department_id,
     description:a.notes||'',
-    // DB stores 'public'/'internal'; UI shows 'external'/'internal'
-    visibility: a.visibility === 'internal' ? 'internal' : 'external',
+    // Map DB values → UI: 'company'=external, everything else=internal
+    visibility: a.visibility === 'company' ? 'external' : 'internal',
     assigned_to:a.assigned_to, created_by:a.created_by
   }));
 }
@@ -1315,8 +1316,8 @@ async function saveNewEvent(){
   const date =g('nevDate').value;
   const dept =g('nevDept').value;
   const desc =g('nevDesc').value.trim();
-  // Map UI → DB: 'external'→'public', 'internal'→'internal'
-  const vis  = selectedVis==='external' ? 'public' : 'internal';
+  // Map UI → DB: 'external'→'company', 'internal'→'department'
+  const vis  = selectedVis==='external' ? 'company' : 'department';
   if(!title||!date){ toast('Title and date are required','err'); return; }
   const dObj=departments[dept];
   const {data,error}=await sb.from('assignments').insert({
@@ -1324,13 +1325,13 @@ async function saveNewEvent(){
     department_id:dObj?.uuid||null,
     created_by:currentUser.id,
     notes:desc,
-    visibility:vis  // 'public' or 'internal' — matches DB CHECK constraint
+    visibility:vis  // 'company' or 'department' — matches DB CHECK constraint
   }).select().single();
   if(error){ toast('Error: '+error.message,'err'); return; }
   events.push({
     id:data.id,title:data.title,date:data.date,
     department:data.department,description:data.notes||'',
-    visibility:data.visibility==='internal'?'internal':'external',
+    visibility:data.visibility==='company'?'external':'internal',
     assigned_to:data.assigned_to,created_by:data.created_by
   });
   closeModal('newEvtModal');
@@ -1547,8 +1548,8 @@ function openAdminEvtEditor(eventId=null){
   g('aeDesc').value=evt?.description||'';
   g('aeDept').innerHTML=Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
   g('aeDept').value=evt?.department||currentUser.department;
-  // UI stores 'external'/'internal'; DB uses 'public'/'internal'
-  g('aeVis').value=(evt?.visibility==='internal')?'internal':'public';
+  // UI stores 'external'/'internal'; DB uses 'company'/'department'
+  g('aeVis').value=(evt?.visibility==='internal')?'department':'company';
   openModal('adminEvtModal');
 }
 
@@ -1557,7 +1558,7 @@ async function saveAdminEvent(){
   const date =g('aeDate').value;
   const dept =g('aeDept').value;
   const desc =g('aeDesc').value.trim();
-  const vis  =g('aeVis').value; // already 'public' or 'internal'
+  const vis  =g('aeVis').value; // already 'company' or 'department'
   if(!title||!date){ toast('Title and date required','err'); return; }
   const dObj=departments[dept];
   if(editingId){
@@ -1567,7 +1568,7 @@ async function saveAdminEvent(){
     }).eq('id',editingId);
     if(error){ toast('Error: '+error.message,'err'); return; }
     const ev=events.find(e=>e.id===editingId);
-    if(ev){ev.title=title;ev.date=date;ev.department=dept;ev.description=desc;ev.visibility=vis==='internal'?'internal':'external';}
+    if(ev){ev.title=title;ev.date=date;ev.department=dept;ev.description=desc;ev.visibility=vis==='company'?'external':'internal';}
     toast('Event updated ✓','ok');
   } else {
     const {data,error}=await sb.from('assignments').insert({
@@ -1576,7 +1577,7 @@ async function saveAdminEvent(){
     }).select().single();
     if(error){ toast('Error: '+error.message,'err'); return; }
     events.push({id:data.id,title:data.title,date:data.date,department:data.department,
-      description:data.notes||'',visibility:data.visibility==='internal'?'internal':'external',
+      description:data.notes||'',visibility:data.visibility==='company'?'external':'internal',
       assigned_to:data.assigned_to,created_by:data.created_by});
     toast('Event added ✓','ok');
   }
