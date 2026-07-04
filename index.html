@@ -3,48 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
-<title>EIPICO Calendar - Admin Control</title>
+<title>EIPICO Calender</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
-/* ── LIGHT THEME (default) ── */
+/* ── LIGHT THEME ── */
 :root{
   --bd:#E2E8F0;--bd2:#CBD5E1;
-  --s0:#F5F7FA;--s1:#fff;
+  --s0:#F0F4F8;--s1:#fff;
   --card:#fff;--card2:#F8F7F5;
-  --sidebar-bg:#F8F7F5;
-  --t1:#1A2332;--t2:#475569;--tm:#94A3B8;
-  --r:8px;--rl:14px;
-  --sh1:0 1px 3px rgba(0,0,0,.08);
-  --sh2:0 4px 16px rgba(0,0,0,.10);
-  --sh3:0 16px 48px rgba(0,0,0,.18);
-  --da:#1D5FA8;--dl:#EBF3FB;
-  --modal-bg:rgba(0,0,0,.5);
+  --sidebar-bg:#F8FAFC;
+  --t1:#0F172A;--t2:#475569;--tm:#94A3B8;
+  --r:10px;--rl:16px;
+  --sh1:0 1px 4px rgba(0,0,0,.07);
+  --sh2:0 4px 20px rgba(0,0,0,.10);
+  --sh3:0 20px 60px rgba(0,0,0,.16);
+  --da:#0EA5E9;--dl:#E0F2FE;
+  --modal-bg:rgba(15,23,42,.55);
   --input-bg:#fff;
-  --other-m:#fafafa;
+  --other-m:#f8f9fb;
   --auth-card:#fff;
   --auth-brand:#0C3D7A;
+  --today-bg:#DBEAFE;--today-num:#1D4ED8;
 }
 
-/* ── DARK THEME ── */
+/* ── DARK THEME (default) ── */
 [data-theme="dark"]{
-  --bd:#2D3748;--bd2:#4A5568;
-  --s0:#0F1117;--s1:#1A1F2E;
-  --card:#1A1F2E;--card2:#242938;
-  --sidebar-bg:#151929;
-  --t1:#F0F4FF;--t2:#A0AEC0;--tm:#4A5568;
-  --sh1:0 1px 3px rgba(0,0,0,.3);
-  --sh2:0 4px 16px rgba(0,0,0,.4);
-  --sh3:0 16px 48px rgba(0,0,0,.6);
-  --da:#3B82F6;--dl:#1E3A5F;
-  --modal-bg:rgba(0,0,0,.75);
-  --input-bg:#242938;
-  --other-m:#0d1018;
-  --auth-card:#1A1F2E;
-  --auth-brand:#93C5FD;
+  --bd:#1E293B;--bd2:#334155;
+  --s0:#080C14;--s1:#0D1221;
+  --card:#0D1221;--card2:#111827;
+  --sidebar-bg:#060A10;
+  --t1:#F1F5F9;--t2:#94A3B8;--tm:#1E293B;
+  --sh1:0 1px 6px rgba(0,0,0,.5);
+  --sh2:0 4px 24px rgba(0,0,0,.6);
+  --sh3:0 24px 64px rgba(0,0,0,.8);
+  --da:#38BDF8;--dl:#0C2340;
+  --modal-bg:rgba(0,0,0,.8);
+  --input-bg:#111827;
+  --other-m:#050810;
+  --auth-card:#0D1221;
+  --auth-brand:#7DD3FC;
+  --today-bg:#0C2340;--today-num:#38BDF8;
 }
 
 body{font-family:'Inter',system-ui,sans-serif;background:var(--s0);color:var(--t1);font-size:14px;line-height:1.5;min-height:100vh;overflow-x:hidden;transition:background .2s,color .2s}
@@ -147,14 +149,16 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 .calendar-wrap{flex:1;overflow:auto;position:relative}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:auto;width:100%;background:var(--card)}
 .dow{display:flex;align-items:center;justify-content:center;padding:12px 4px;font-size:12px;font-weight:700;color:var(--tm);background:var(--card);border-bottom:1px solid var(--bd);text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;z-index:10}
-.cal-day{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:8px 4px;min-height:100px;background:var(--card);cursor:pointer;transition:background .12s;position:relative;overflow:hidden}
+.cal-day{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:8px 6px;min-height:108px;background:var(--card);cursor:pointer;transition:background .15s;position:relative;overflow:hidden}
 .cal-day:hover{background:var(--s0)}
-.cal-day.today{background:var(--dl)}
-.cal-day.other-m{opacity:.4;background:var(--other-m)}
-.cal-day-num{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:4px;line-height:1}
-.cal-day-events{display:flex;flex-direction:column;gap:3px}
-.cal-evt{font-size:11px;padding:3px 6px;border-radius:4px;background:var(--dl);color:var(--da);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:all .12s;font-weight:600}
-.cal-evt:hover{transform:translateX(2px)}
+.cal-day.today{background:var(--card);border-top:2px solid var(--da)}
+.cal-day.today .cal-day-num{color:var(--da);background:var(--dl);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+.cal-day.other-m{background:var(--other-m)}
+.cal-day.other-m .cal-day-num{opacity:.3}
+.cal-day-num{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px;line-height:1}
+.cal-day-events{display:flex;flex-direction:column;gap:2px}
+.cal-evt{font-size:11px;padding:3px 6px;border-radius:5px;background:var(--dl);color:var(--da);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:all .12s;font-weight:600;border-left:3px solid var(--da)}
+.cal-evt:hover{opacity:.8;transform:translateX(1px)}
 
 /* CALENDAR LIST VIEW */
 .list-wrap{flex:1;overflow:auto;background:var(--card)}
@@ -421,7 +425,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       <img src="File1313.png" alt="EIPICO" class="tb-logo">
       <div class="tb-div"></div>
       <div class="tb-texts">
-        <div class="tb-title" id="topbarTitle">Calendar</div>
+        <div class="tb-title">EIPICO Calender</div>
         <div class="tb-sub">EIPICO</div>
       </div>
     </div>
@@ -456,7 +460,7 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       </div>
       
       <div class="sidebar-foot">
-        EIPICO Calendar v2.0
+        EIPICO Calender v2.0
       </div>
     </div>
     
@@ -534,6 +538,13 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       <div class="field">
         <label>Department</label>
         <select id="eventDept" class="inp"></select>
+      </div>
+      <div class="field">
+        <label>Visibility</label>
+        <select id="eventVisibility" class="inp">
+          <option value="external">🌐 External — visible to all departments</option>
+          <option value="internal">🔒 Internal — only me & my dept admin</option>
+        </select>
       </div>
       <button class="auth-btn" onclick="saveCalendarEvent()">Save Event</button>
     </div>
@@ -708,6 +719,13 @@ select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
         <label>Description</label>
         <textarea id="eventDesc" class="inp" placeholder="Event description..."></textarea>
       </div>
+      <div class="form-group">
+        <label>Visibility</label>
+        <select id="editEventVisibility" class="inp">
+          <option value="external">🌐 External — all departments</option>
+          <option value="internal">🔒 Internal — me & dept admin only</option>
+        </select>
+      </div>
       <div style="display:flex;gap:8px;margin-top:16px">
         <button class="auth-btn" style="flex:1" onclick="saveEvent()">Save Event</button>
         <button class="out-btn" style="flex:1" onclick="closeEditEventModal()">Cancel</button>
@@ -802,16 +820,27 @@ async function loadAssignments() {
     return;
   }
 
-  events = (data || []).map(a => ({
-    id: a.id,
-    title: a.title,
-    date: a.date,
-    department: a.department,
-    department_id: a.department_id,
-    description: a.notes || '',
-    assigned_to: a.assigned_to,
-    created_by: a.created_by
-  }));
+  events = (data || [])
+    .filter(a => {
+      if (a.visibility === 'internal') {
+        // Only show internal events to the creator or their dept admin / super admin
+        return a.created_by === currentUser.id ||
+               currentUser.is_super_admin ||
+               (currentUser.is_admin && a.department === currentUser.department);
+      }
+      return true;
+    })
+    .map(a => ({
+      id: a.id,
+      title: a.title,
+      date: a.date,
+      department: a.department,
+      department_id: a.department_id,
+      description: a.notes || '',
+      assigned_to: a.assigned_to,
+      created_by: a.created_by,
+      visibility: a.visibility || 'external'
+    }));
 }
 
 async function loadUsersFromDB() {
@@ -1137,21 +1166,22 @@ function createDayElement(date, otherMonth) {
     if (currentFilter) return e.department === currentFilter;
     return true;
   });
-  dayEvents.slice(0, 2).forEach(evt => {
+  dayEvents.slice(0, 3).forEach(evt => {
     const e = document.createElement('div');
     e.className = 'cal-evt';
-    e.textContent = evt.title;
-    const deptColor = departments[evt.department]?.color || '#1D5FA8';
-    e.style.background = deptColor;
-    e.style.color = '#fff';
+    e.textContent = (evt.visibility === 'internal' ? '🔒 ' : '') + evt.title;
+    const deptColor = departments[evt.department]?.color || 'var(--da)';
+    e.style.borderLeftColor = deptColor;
+    e.style.color = deptColor;
+    e.style.background = deptColor + '18';
     eventsDiv.appendChild(e);
   });
-  
-  if (dayEvents.length > 2) {
+
+  if (dayEvents.length > 3) {
     const more = document.createElement('div');
     more.className = 'cal-evt';
-    more.textContent = `+${dayEvents.length - 2} more`;
-    more.style.fontSize = '10px';
+    more.style.opacity = '.6';
+    more.textContent = `+${dayEvents.length - 3} more`;
     eventsDiv.appendChild(more);
   }
   
@@ -1219,6 +1249,7 @@ async function saveCalendarEvent() {
     return;
   }
 
+  const visibility = document.getElementById('eventVisibility')?.value || 'external';
   const deptObj = departments[dept];
   const { data, error } = await sb.from('assignments').insert({
     title,
@@ -1226,7 +1257,8 @@ async function saveCalendarEvent() {
     department: dept,
     department_id: deptObj?.uuid || null,
     created_by: currentUser.id,
-    notes: ''
+    notes: '',
+    visibility
   }).select().single();
 
   if (error) {
@@ -1234,7 +1266,7 @@ async function saveCalendarEvent() {
     return;
   }
 
-  events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '', assigned_to: data.assigned_to, created_by: data.created_by });
+  events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '', assigned_to: data.assigned_to, created_by: data.created_by, visibility: data.visibility });
 
   closeEventModal();
   renderCalendar();
@@ -1694,6 +1726,8 @@ function openEditEventModal(eventId) {
     document.getElementById('eventDept').disabled = false;
   }
   document.getElementById('eventDept').value = event.department;
+  const visEl = document.getElementById('editEventVisibility');
+  if (visEl) visEl.value = event.visibility || 'external';
   
   document.getElementById('editEventModal').classList.add('open');
 }
@@ -1723,27 +1757,23 @@ async function saveEvent() {
 
   const deptObj = departments[dept];
 
+  const visibility = document.getElementById('editEventVisibility')?.value || 'external';
+
   if (currentEditId) {
-    // Edit existing
     const { error } = await sb.from('assignments').update({
-      title, date, department: dept, department_id: deptObj?.uuid || null, notes: desc
+      title, date, department: dept, department_id: deptObj?.uuid || null, notes: desc, visibility
     }).eq('id', currentEditId);
-
     if (error) { showToast('Error updating event: ' + error.message); return; }
-
     const event = events.find(e => e.id === currentEditId);
-    if (event) { event.title = title; event.date = date; event.department = dept; event.description = desc; }
+    if (event) { event.title = title; event.date = date; event.department = dept; event.description = desc; event.visibility = visibility; }
     showToast('Event updated ✓');
   } else {
-    // Create new
     const { data, error } = await sb.from('assignments').insert({
       title, date, department: dept, department_id: deptObj?.uuid || null,
-      created_by: currentUser.id, notes: desc
+      created_by: currentUser.id, notes: desc, visibility
     }).select().single();
-
     if (error) { showToast('Error adding event: ' + error.message); return; }
-
-    events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '', assigned_to: data.assigned_to, created_by: data.created_by });
+    events.push({ id: data.id, title: data.title, date: data.date, department: data.department, description: data.notes || '', assigned_to: data.assigned_to, created_by: data.created_by, visibility: data.visibility });
     showToast('Event added ✓');
   }
 
@@ -1861,7 +1891,7 @@ function toggleTheme() {
 }
 
 // Apply saved theme immediately (before anything renders)
-applyTheme(localStorage.getItem('eipico-theme') || 'light');
+applyTheme(localStorage.getItem('eipico-theme') || 'dark');
 
 const body = document.body;
 
