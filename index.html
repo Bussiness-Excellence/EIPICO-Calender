@@ -1260,12 +1260,35 @@ function renderList(){
 
 function evtById(id){ return events.find(e=>e.id===id); }
 
+// User can edit/delete ONLY events they created. Super admin can edit all.
+function canEditEvent(evt){
+  if(!evt||!currentUser) return false;
+  return currentUser.is_super_admin || evt.created_by === currentUser.id;
+}
+
 function showPanel(evt){
   if(!evt) return;
   const d=departments[evt.department];
   const vp=evt.visibility==='internal'
     ?'<span class="vis-pill internal" style="margin-top:8px"><i class="ti ti-lock"></i>Internal — dept only</span>'
     :'<span class="vis-pill external" style="margin-top:8px"><i class="ti ti-world"></i>External — all departments</span>';
+
+  const editable=canEditEvent(evt);
+  const btns=editable
+    ?`<div style="display:flex;gap:8px;margin-top:14px">
+        <button onclick="openEditEventModal('${evt.id}')"
+          style="flex:1;padding:9px;background:var(--da);color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px">
+          <i class="ti ti-edit"></i>Edit
+        </button>
+        <button onclick="deleteOwnEvent('${evt.id}')"
+          style="flex:1;padding:9px;background:var(--red-lt);color:var(--red);border:1px solid var(--red);border-radius:var(--r);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px">
+          <i class="ti ti-trash"></i>Delete
+        </button>
+      </div>`
+    :`<div style="margin-top:10px;font-size:11px;color:var(--t2);display:flex;align-items:center;gap:5px;padding:8px;background:var(--s0);border-radius:var(--r);border:1px solid var(--bd)">
+        <i class="ti ti-info-circle" style="font-size:13px"></i>Created by another user
+      </div>`;
+
   g('panelContent').innerHTML=`
     <div style="width:100%;height:3px;border-radius:3px;background:${d?.color||'var(--da)'};margin-bottom:16px"></div>
     <div style="font-size:16px;font-weight:800;color:var(--t1);margin-bottom:6px;line-height:1.3">${evt.title}</div>
@@ -1278,6 +1301,7 @@ function showPanel(evt){
     </div>`:''}
     ${vp}
     ${evt.description?`<div style="margin-top:12px;font-size:13px;color:var(--t2);line-height:1.6;padding:12px;background:var(--s0);border-radius:var(--r);border:1px solid var(--bd)">${evt.description}</div>`:''}
+    ${btns}
   `;
 }
 
@@ -1288,6 +1312,49 @@ function selectVis(v){
   selectedVis=v;
   g('visInt').className='vis-opt int'+(v==='internal'?' selected':'');
   g('visExt').className='vis-opt ext'+(v==='external'?' selected':'');
+}
+
+// ════════════════════════════════════════
+// USER EDIT / DELETE OWN EVENT (from panel)
+// ════════════════════════════════════════
+function openEditEventModal(eventId){
+  const evt=events.find(e=>e.id===eventId);
+  if(!evt){ toast('Event not found','err'); return; }
+  if(!canEditEvent(evt)){ toast('You can only edit events you created','err'); return; }
+  editingId=eventId;
+  g('nevTitle').value=evt.title;
+  g('nevDate').value=evt.date;
+  g('nevDesc').value=evt.description||'';
+  selectVis(evt.visibility==='internal'?'internal':'external');
+  const sel=g('nevDept');
+  if(canSeeAll()){
+    sel.innerHTML=Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+    sel.value=evt.department; sel.disabled=false;
+  } else {
+    const dept=departments[currentUser.department];
+    sel.innerHTML=`<option value="${currentUser.department}">${dept?.name||currentUser.department}</option>`;
+    sel.value=currentUser.department; sel.disabled=true;
+  }
+  // Change modal title to Edit
+  g('newEvtModal').querySelector('.modal-title').innerHTML='<i class="ti ti-edit"></i>Edit Event';
+  g('newEvtModal').querySelector('.sub-btn').textContent='Update Event';
+  openModal('newEvtModal');
+}
+
+// Override saveNewEvent to handle both create and update
+const _origSaveNewEvent = null; // defined below, we replace inline
+
+async function deleteOwnEvent(eventId){
+  const evt=events.find(e=>e.id===eventId);
+  if(!evt){ toast('Event not found','err'); return; }
+  if(!canEditEvent(evt)){ toast('You can only delete events you created','err'); return; }
+  if(!confirm('Delete this event?')) return;
+  const {error}=await sb.from('assignments').delete().eq('id',eventId);
+  if(error){ toast('Error: '+error.message,'err'); return; }
+  events=events.filter(e=>e.id!==eventId);
+  g('panelContent').innerHTML='<p style="font-size:12px;color:var(--t2)">Event deleted.</p>';
+  renderCalendar(); if(currentView==='list') renderList(); renderNextBanner();
+  toast('Event deleted ✓','ok');
 }
 
 // ════════════════════════════════════════
@@ -1317,27 +1384,54 @@ async function saveNewEvent(){
   const dept =g('nevDept').value;
   const desc =g('nevDesc').value.trim();
   // Map UI → DB: 'external'→'company', 'internal'→'department'
-  const vis  = selectedVis==='external' ? 'company' : 'department';
+  const vis = selectedVis==='external' ? 'company' : 'department';
   if(!title||!date){ toast('Title and date are required','err'); return; }
   const dObj=departments[dept];
-  const {data,error}=await sb.from('assignments').insert({
-    title, date, department:dept,
-    department_id:dObj?.uuid||null,
-    created_by:currentUser.id,
-    notes:desc,
-    visibility:vis  // 'company' or 'department' — matches DB CHECK constraint
-  }).select().single();
-  if(error){ toast('Error: '+error.message,'err'); return; }
-  events.push({
-    id:data.id,title:data.title,date:data.date,
-    department:data.department,description:data.notes||'',
-    visibility:data.visibility==='company'?'external':'internal',
-    assigned_to:data.assigned_to,created_by:data.created_by
-  });
+
+  if(editingId){
+    // UPDATE existing own event
+    const evt=events.find(e=>e.id===editingId);
+    if(!evt||!canEditEvent(evt)){ toast('Permission denied','err'); return; }
+    const {error}=await sb.from('assignments').update({
+      title, date, department:dept,
+      department_id:dObj?.uuid||null,
+      notes:desc, visibility:vis
+    }).eq('id',editingId);
+    if(error){ toast('Error: '+error.message,'err'); return; }
+    evt.title=title; evt.date=date; evt.department=dept;
+    evt.description=desc; evt.visibility=vis==='company'?'external':'internal';
+    toast('Event updated ✓','ok');
+  } else {
+    // CREATE new event
+    const {data,error}=await sb.from('assignments').insert({
+      title, date, department:dept,
+      department_id:dObj?.uuid||null,
+      created_by:currentUser.id,
+      notes:desc,
+      visibility:vis
+    }).select().single();
+    if(error){ toast('Error: '+error.message,'err'); return; }
+    events.push({
+      id:data.id,title:data.title,date:data.date,
+      department:data.department,description:data.notes||'',
+      visibility:data.visibility==='company'?'external':'internal',
+      assigned_to:data.assigned_to,created_by:data.created_by
+    });
+    toast('Event added ✓','ok');
+  }
+  resetNewEvtModal();
   closeModal('newEvtModal');
   renderCalendar(); if(currentView==='list') renderList();
   renderNextBanner();
-  toast('Event added ✓','ok');
+}
+
+// Reset modal title/button back to "New Event" after close
+function resetNewEvtModal(){
+  const modal=g('newEvtModal');
+  if(!modal) return;
+  modal.querySelector('.modal-title').innerHTML='<i class="ti ti-calendar-plus"></i>New Event';
+  modal.querySelector('.sub-btn').textContent='Save Event';
+  editingId=null;
 }
 
 // ════════════════════════════════════════
@@ -1620,7 +1714,11 @@ function closeDrawers(){g('sidebar').classList.remove('open');g('sidePanel').cla
 // MODAL HELPERS
 // ════════════════════════════════════════
 function openModal(id){g(id).classList.add('open');}
-function closeModal(id){g(id).classList.remove('open');editingId=null;}
+function closeModal(id){
+  g(id).classList.remove('open');
+  if(id==='newEvtModal') resetNewEvtModal();
+  else editingId=null;
+}
 
 // ════════════════════════════════════════
 // UTILS
