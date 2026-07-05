@@ -83,10 +83,10 @@ body{
 .auth-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
 .auth-logo-box{
   width:52px;height:52px;border-radius:13px;
-  background:linear-gradient(135deg,#2563EB,#1E40AF);
+  background:transparent;
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;overflow:hidden;
-  box-shadow:0 4px 16px rgba(37,99,235,.4);
+  box-shadow:none;
 }
 .auth-logo-box img{width:100%;height:100%;object-fit:contain}
 .auth-logo-box .lf{color:#fff;font-size:22px;font-weight:900;display:none}
@@ -127,6 +127,18 @@ select.inp{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;
 }
+
+/* Remember Me Checkbox */
+.checkbox-group{
+  display:flex;align-items:center;gap:7px;margin:12px 0 16px;
+}
+.checkbox-group input[type="checkbox"]{
+  width:16px;height:16px;cursor:pointer;accent-color:var(--da);
+}
+.checkbox-group label{
+  font-size:12px;color:var(--t2);cursor:pointer;margin:0;text-transform:none;letter-spacing:0;
+}
+
 .auth-btn{
   width:100%;padding:12px;
   background:#2563EB;color:#fff;border:none;
@@ -173,7 +185,7 @@ select.inp{
 
 .tb-logo-box{
   width:36px;height:36px;border-radius:9px;flex-shrink:0;
-  background:linear-gradient(135deg,#2563EB,#1E40AF);
+  background:transparent;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
@@ -361,7 +373,7 @@ select.inp{
 }
 .cal-day-num{
   font-size:13px;font-weight:700;
-  color:var(--t1);  /* ★ FIX: was using t2 in dark — t1 is now E2E8F0 */
+  color:var(--t1);
   margin-bottom:4px;line-height:1;display:block;
 }
 .cal-day-events{display:flex;flex-direction:column;gap:2px}
@@ -621,6 +633,10 @@ select.inp{
       <div class="field"><label>Password</label>
         <input type="password" id="loginPassword" class="inp" placeholder="••••••" onkeydown="if(event.key==='Enter')handleLogin()">
       </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">Remember me</label>
+      </div>
       <button class="auth-btn" onclick="handleLogin()">Sign In</button>
       <div class="auth-err" id="loginErr"></div>
       <div class="auth-ok"  id="loginOk"></div>
@@ -688,7 +704,7 @@ select.inp{
         <div class="ni" onclick="openAdmin()"><i class="ti ti-settings"></i>Control Panel</div>
       </div>
       <div class="sidebar-foot">
-        <span>EIPICO Calendar</span><span style="opacity:.5">v3.1</span>
+        <span>EIPICO Calendar</span><span style="opacity:.5">v3.2</span>
       </div>
     </div>
 
@@ -933,8 +949,8 @@ let currentUser = null;
 let currentDate = new Date();
 let currentView = 'month';
 let editingId   = null;
-let deptFilter  = null;   // null = all
-let selectedVis = 'internal';  // for new event modal
+let deptFilter  = null;
+let selectedVis = 'internal';
 
 // ════════════════════════════════════════
 // THEME  — dark is default
@@ -948,8 +964,29 @@ function applyTheme(t){
 function toggleTheme(){
   applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 }
-// Apply immediately — dark default
 applyTheme(localStorage.getItem('eipico_theme') || 'dark');
+
+// ════════════════════════════════════════
+// REMEMBER ME
+// ════════════════════════════════════════
+function saveLoginCredentials(email, remember) {
+  if(remember) {
+    localStorage.setItem('eipico_email', email);
+    localStorage.setItem('eipico_remember', 'true');
+  } else {
+    localStorage.removeItem('eipico_email');
+    localStorage.removeItem('eipico_remember');
+  }
+}
+
+function loadSavedEmail() {
+  const saved = localStorage.getItem('eipico_email');
+  const remember = localStorage.getItem('eipico_remember');
+  if(saved && remember === 'true') {
+    g('loginEmail').value = saved;
+    g('rememberMe').checked = true;
+  }
+}
 
 // ════════════════════════════════════════
 // SUPABASE DATA LOADERS
@@ -973,20 +1010,17 @@ async function loadDepartments(){
 async function loadEvents(){
   const {data, error} = await sb.from('assignments').select('*').order('date');
   if(error){ toast('Failed to load events','err'); events=[]; return; }
-  // Visibility filtering: internal = only creator OR dept admin/super admin of same dept
   events = (data||[]).filter(a=>{
-    // DB: 'company'=external/all; 'department','cluster','private'=internal/restricted
     if(a.visibility !== 'company'){
       return a.created_by === currentUser.id
           || currentUser.is_super_admin
           || (currentUser.is_admin && a.department === currentUser.department);
     }
-    return true; // 'company' = visible to all departments
+    return true;
   }).map(a=>({
     id:a.id, title:a.title, date:a.date,
     department:a.department, department_id:a.department_id,
     description:a.notes||'',
-    // Map DB values → UI: 'company'=external, everything else=internal
     visibility: a.visibility === 'company' ? 'external' : 'internal',
     assigned_to:a.assigned_to, created_by:a.created_by
   }));
@@ -1014,7 +1048,6 @@ async function loadCurrentUserProfile(uid){
     department:data.department, department_id:data.department_id,
     cluster_id:data.cluster_id, cluster_name:data.cluster_name,
     role:data.role||'user',
-    // ★ Role sourced ONLY from DB columns — never from email comparison
     is_super_admin : !!data.is_app_admin,
     is_admin       : !!data.is_dept_admin,
     is_cluster_admin: !!data.is_cluster_admin
@@ -1035,11 +1068,13 @@ function showTab(t){
 async function handleLogin(){
   const email = g('loginEmail').value.trim();
   const pw    = g('loginPassword').value;
+  const remember = g('rememberMe').checked;
   if(!email||!pw){ showMsg('loginErr','Please fill in all fields.'); return; }
   const {data,error} = await sb.auth.signInWithPassword({email,password:pw});
   if(error){ showMsg('loginErr',error.message); return; }
   const ok = await loadCurrentUserProfile(data.user.id);
   if(!ok){ showMsg('loginErr','No profile found. Contact your admin.'); await sb.auth.signOut(); return; }
+  saveLoginCredentials(email, remember);
   showMsg('loginOk','Welcome back, '+currentUser.full_name+'!');
   setTimeout(()=>{ showAuth(false); loadApp(); }, 500);
 }
@@ -1065,7 +1100,7 @@ async function handleSignup(){
     cluster_id:section?.id||null, cluster_name:section?.name||null,
     role:'user',
     is_dept_admin:false, is_cluster_admin:false,
-    is_app_admin:false,  // never auto-granted
+    is_app_admin:false,
     initials:(first[0]+(last?last[0]:'')).toUpperCase()
   });
   if(pe){ showMsg('signupErr','Profile setup failed: '+pe.message); return; }
@@ -1079,6 +1114,7 @@ async function logout(){
   currentUser=null; events=[]; allUsers=[];
   showAuth(true);
   g('loginEmail').value=''; g('loginPassword').value='';
+  loadSavedEmail();
 }
 
 function showAuth(show){
@@ -1095,11 +1131,9 @@ async function loadApp(){
   g('userAvatar').textContent = currentUser.full_name.charAt(0).toUpperCase();
   g('deptBadge').textContent  = dept?.name || currentUser.department || '';
   if(dept?.color){
-    // Only set dept color on avatar — do NOT override global --da to keep UI consistent
     g('userAvatar').style.background = dept.color;
   }
 
-  // Role badge — strictly from DB
   const rb = g('roleBadge');
   if(currentUser.is_super_admin){
     rb.textContent='Super Admin'; rb.className='role-badge sa'; rb.style.display='';
@@ -1125,7 +1159,6 @@ async function loadApp(){
 function canSeeAll(){ return currentUser.is_super_admin || currentUser.is_admin; }
 
 function visibleEvts(){
-  // already filtered on load; filter bar applies dept filter on top
   let evts = [...events];
   if(deptFilter) evts = evts.filter(e=>e.department===deptFilter);
   return evts;
@@ -1190,7 +1223,7 @@ function renderNextBanner(){
 }
 
 // ════════════════════════════════════════
-// CALENDAR RENDER
+// CALENDAR RENDER (with FIX for day offset)
 // ════════════════════════════════════════
 function renderCalendar(){
   const yr=currentDate.getFullYear(), mo=currentDate.getMonth();
@@ -1215,12 +1248,18 @@ function makeDayEl(date,other){
   const num=document.createElement('div'); num.className='cal-day-num'; num.textContent=date.getDate();
   el.appendChild(num);
   const wrap=document.createElement('div'); wrap.className='cal-day-events';
-  const dayEvts=visibleEvts().filter(e=>new Date(e.date+'T00:00:00').toDateString()===date.toDateString());
+  
+  // ★ FIX: Convert date to YYYY-MM-DD string using local date components (no timezone offset)
+  const yr = date.getFullYear();
+  const mo = String(date.getMonth() + 1).padStart(2, '0');
+  const da = String(date.getDate()).padStart(2, '0');
+  const dateStr = yr + '-' + mo + '-' + da;
+  
+  const dayEvts=visibleEvts().filter(e=>e.date===dateStr);
   dayEvts.slice(0,3).forEach(evt=>{
     const pill=document.createElement('div'); pill.className='cal-evt';
     const col=departments[evt.department]?.color||'var(--da)';
     pill.textContent=(evt.visibility==='internal'?'🔒 ':'')+evt.title;
-    // Subtle tinted background, colored text
     pill.style.cssText=`background:${col}22;color:${col};border-left:2px solid ${col}`;
     pill.onclick=ev=>{ev.stopPropagation();showPanel(evt);};
     wrap.appendChild(pill);
@@ -1260,7 +1299,6 @@ function renderList(){
 
 function evtById(id){ return events.find(e=>e.id===id); }
 
-// User can edit/delete ONLY events they created. Super admin can edit all.
 function canEditEvent(evt){
   if(!evt||!currentUser) return false;
   return currentUser.is_super_admin || evt.created_by === currentUser.id;
@@ -1315,7 +1353,7 @@ function selectVis(v){
 }
 
 // ════════════════════════════════════════
-// USER EDIT / DELETE OWN EVENT (from panel)
+// USER EDIT / DELETE OWN EVENT
 // ════════════════════════════════════════
 function openEditEventModal(eventId){
   const evt=events.find(e=>e.id===eventId);
@@ -1335,14 +1373,10 @@ function openEditEventModal(eventId){
     sel.innerHTML=`<option value="${currentUser.department}">${dept?.name||currentUser.department}</option>`;
     sel.value=currentUser.department; sel.disabled=true;
   }
-  // Change modal title to Edit
   g('newEvtModal').querySelector('.modal-title').innerHTML='<i class="ti ti-edit"></i>Edit Event';
   g('newEvtModal').querySelector('.sub-btn').textContent='Update Event';
   openModal('newEvtModal');
 }
-
-// Override saveNewEvent to handle both create and update
-const _origSaveNewEvent = null; // defined below, we replace inline
 
 async function deleteOwnEvent(eventId){
   const evt=events.find(e=>e.id===eventId);
@@ -1358,7 +1392,7 @@ async function deleteOwnEvent(eventId){
 }
 
 // ════════════════════════════════════════
-// NEW EVENT MODAL  — dept locked for regular users
+// NEW EVENT MODAL
 // ════════════════════════════════════════
 function openNewEventModal(date=null){
   editingId=null;
@@ -1383,13 +1417,11 @@ async function saveNewEvent(){
   const date =g('nevDate').value;
   const dept =g('nevDept').value;
   const desc =g('nevDesc').value.trim();
-  // Map UI → DB: 'external'→'company', 'internal'→'department'
   const vis = selectedVis==='external' ? 'company' : 'department';
   if(!title||!date){ toast('Title and date are required','err'); return; }
   const dObj=departments[dept];
 
   if(editingId){
-    // UPDATE existing own event
     const evt=events.find(e=>e.id===editingId);
     if(!evt||!canEditEvent(evt)){ toast('Permission denied','err'); return; }
     const {error}=await sb.from('assignments').update({
@@ -1402,7 +1434,6 @@ async function saveNewEvent(){
     evt.description=desc; evt.visibility=vis==='company'?'external':'internal';
     toast('Event updated ✓','ok');
   } else {
-    // CREATE new event
     const {data,error}=await sb.from('assignments').insert({
       title, date, department:dept,
       department_id:dObj?.uuid||null,
@@ -1425,7 +1456,6 @@ async function saveNewEvent(){
   renderNextBanner();
 }
 
-// Reset modal title/button back to "New Event" after close
 function resetNewEvtModal(){
   const modal=g('newEvtModal');
   if(!modal) return;
@@ -1642,7 +1672,6 @@ function openAdminEvtEditor(eventId=null){
   g('aeDesc').value=evt?.description||'';
   g('aeDept').innerHTML=Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
   g('aeDept').value=evt?.department||currentUser.department;
-  // UI stores 'external'/'internal'; DB uses 'company'/'department'
   g('aeVis').value=(evt?.visibility==='internal')?'department':'company';
   openModal('adminEvtModal');
 }
@@ -1652,7 +1681,7 @@ async function saveAdminEvent(){
   const date =g('aeDate').value;
   const dept =g('aeDept').value;
   const desc =g('aeDesc').value.trim();
-  const vis  =g('aeVis').value; // already 'company' or 'department'
+  const vis  =g('aeVis').value;
   if(!title||!date){ toast('Title and date required','err'); return; }
   const dObj=departments[dept];
   if(editingId){
@@ -1755,10 +1784,9 @@ function updateSignupClusters(){
 document.addEventListener('DOMContentLoaded', async()=>{
   showAuth(true);
   await loadDepartments();
-  // Populate signup dept list
   g('suDept').innerHTML='<option value="">Select Department</option>'+
     Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
-  // Restore session
+  loadSavedEmail();
   const {data:{session}} = await sb.auth.getSession();
   if(session){
     const ok = await loadCurrentUserProfile(session.user.id);
