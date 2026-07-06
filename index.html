@@ -83,10 +83,8 @@ body{
 .auth-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
 .auth-logo-box{
   width:52px;height:52px;border-radius:13px;
-  background:linear-gradient(135deg,#2563EB,#1E40AF);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;overflow:hidden;
-  box-shadow:0 4px 16px rgba(37,99,235,.4);
 }
 .auth-logo-box img{width:100%;height:100%;object-fit:contain}
 .auth-logo-box .lf{color:#fff;font-size:22px;font-weight:900;display:none}
@@ -173,7 +171,6 @@ select.inp{
 
 .tb-logo-box{
   width:36px;height:36px;border-radius:9px;flex-shrink:0;
-  background:linear-gradient(135deg,#2563EB,#1E40AF);
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
@@ -680,6 +677,7 @@ select.inp{
     <div class="sidebar" id="sidebar">
       <div class="sl">Views</div>
       <div class="ni active" id="navMonth" onclick="setView('month')"><i class="ti ti-calendar-month"></i>Month</div>
+      <div class="ni" id="navWeek" onclick="setView('week')"><i class="ti ti-calendar-week"></i>Week</div>
       <div class="ni" id="navList"  onclick="setView('list')"><i class="ti ti-list"></i>List</div>
       <div class="sl" style="margin-top:4px">Departments</div>
       <div id="deptNav"></div>
@@ -695,14 +693,15 @@ select.inp{
     <div class="main">
       <div class="cal-hdr">
         <div class="mnav">
-          <button class="nbtn" onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
+          <button class="nbtn" onclick="prevPeriod()"><i class="ti ti-chevron-left"></i></button>
           <div class="mtitle" id="monthTitle">—</div>
-          <button class="nbtn" onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
+          <button class="nbtn" onclick="nextPeriod()"><i class="ti ti-chevron-right"></i></button>
           <button class="nbtn today-b" onclick="goToday()">Today</button>
         </div>
         <div class="cal-tools">
           <div class="vtog">
             <button class="vbtn active" onclick="setView('month')">Month</button>
+            <button class="vbtn" onclick="setView('week')">Week</button>
             <button class="vbtn" onclick="setView('list')">List</button>
           </div>
           <button class="panel-tog" onclick="togglePanel()"><i class="ti ti-sidebar-right"></i></button>
@@ -728,6 +727,7 @@ select.inp{
 
       <div class="calendar-wrap">
         <div class="cal-grid" id="calView"></div>
+        <div class="week-grid" id="weekView" style="display:none"></div>
         <div class="list-wrap" id="listView" style="display:none"></div>
       </div>
     </div>
@@ -1696,16 +1696,20 @@ async function deleteAdminEvent(id){
 // ════════════════════════════════════════
 function setView(v){
   currentView=v;
-  document.querySelectorAll('.vbtn').forEach((b,i)=>b.classList.toggle('active',(v==='month'&&i===0)||(v==='list'&&i===1)));
+  document.querySelectorAll('.vbtn').forEach((b,i)=>b.classList.toggle('active',(v==='month'&&i===0)||(v==='week'&&i===1)||(v==='list'&&i===2)));
   g('navMonth').classList.toggle('active',v==='month');
+  g('navWeek').classList.toggle('active',v==='week');
   g('navList').classList.toggle('active',v==='list');
   g('calView').style.display =v==='month'?'grid':'none';
+  g('weekView').style.display=v==='week' ?'grid':'none';
   g('listView').style.display=v==='list' ?'block':'none';
-  if(v==='month') renderCalendar(); else renderList();
+  if(v==='month') renderCalendar();
+  else if(v==='week') renderWeek();
+  else renderList();
 }
 function prevMonth(){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()-1);renderCalendar();}
 function nextMonth(){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+1);renderCalendar();}
-function goToday(){currentDate=new Date();renderCalendar();}
+function goToday(){currentDate=new Date();setView(currentView);}
 function toggleNav(){g('sidebar').classList.toggle('open');g('drawerOv').classList.toggle('show');}
 function togglePanel(){g('sidePanel').classList.toggle('open');g('drawerOv').classList.toggle('show');}
 function closeDrawers(){g('sidebar').classList.remove('open');g('sidePanel').classList.remove('open');g('drawerOv').classList.remove('show');}
