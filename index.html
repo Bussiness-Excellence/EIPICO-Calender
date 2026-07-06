@@ -4,588 +4,967 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
 <title>EIPICO Calendar</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
-/* ══ LIGHT THEME ══ */
+/* ══════════════════════════════════════════════════
+   CRYSTAL DARK (default)
+   Deep navy + crystal glass surfaces + electric cyan
+══════════════════════════════════════════════════ */
 :root{
-  --bd:#E2E8F0;--bd2:#CBD5E1;
-  --s0:#F0F4F8;
-  --card:#FFFFFF;--card2:#F8FAFC;
-  --sidebar-bg:#F8FAFC;
-  --t1:#0F172A;--t2:#475569;--tm:#64748B;
-  --r:10px;--rl:16px;
-  --sh1:0 1px 4px rgba(0,0,0,.07);
-  --sh2:0 4px 20px rgba(0,0,0,.10);
-  --sh3:0 20px 60px rgba(0,0,0,.16);
-  --da:#2563EB;--dl:#DBEAFE;
-  --modal-bg:rgba(15,23,42,.5);
-  --input-bg:#FFFFFF;
-  --other-m:#F8FAFC;
-  --auth-card:#FFFFFF;
-  --auth-brand:#1E3A8A;
-  --today-ring:#2563EB;
-  --green:#059669;--green-lt:#D1FAE5;
-  --amber:#D97706;--amber-lt:#FEF3C7;
-  --red:#DC2626;--red-lt:#FEE2E2;
-  --pink:#DB2777;--pink-lt:#FCE7F3;
+  /* Base planes */
+  --bg-deep:#02050F;
+  --bg-mid:#050C1C;
+  --bg-surf:#080F22;
+
+  /* Crystal glass surfaces */
+  --glass-1:rgba(255,255,255,.04);
+  --glass-2:rgba(255,255,255,.07);
+  --glass-3:rgba(255,255,255,.11);
+  --glass-border:rgba(255,255,255,.10);
+  --glass-border-bright:rgba(255,255,255,.20);
+
+  /* Accent — electric cyan/blue */
+  --accent:#0EA5E9;
+  --accent-2:#38BDF8;
+  --accent-dk:#0284C7;
+  --accent-glow:rgba(14,165,233,.35);
+  --accent-lt:rgba(14,165,233,.12);
+  --accent-lt2:rgba(14,165,233,.06);
+
+  /* Text */
+  --t1:#F0F6FF;
+  --t2:#7E9BB5;
+  --t3:#2D4A6A;
+
+  /* Semantic */
+  --green:#10B981;   --green-lt:rgba(16,185,129,.15);
+  --amber:#F59E0B;   --amber-lt:rgba(245,158,11,.15);
+  --red:#EF4444;     --red-lt:rgba(239,68,68,.12);
+  --pink:#EC4899;    --pink-lt:rgba(236,72,153,.15);
+
+  /* 3D shadows */
+  --sh-inset:inset 0 1px 0 rgba(255,255,255,.08);
+  --sh-card:0 4px 24px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.06) inset;
+  --sh-float:0 20px 60px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.06);
+  --sh-glow:0 0 40px rgba(14,165,233,.25);
+  --sh-btn:0 2px 8px rgba(0,0,0,.4), 0 1px 0 rgba(255,255,255,.12) inset;
+
+  /* Misc */
+  --r:10px; --r2:14px; --r3:20px;
+  --sidebar-w:220px;
+  --topbar-h:56px;
+  --trans:.18s cubic-bezier(.4,0,.2,1);
 }
 
-/* ══ DARK THEME (default) ══ */
-[data-theme="dark"]{
-  --bd:#1E293B;--bd2:#334155;
-  --s0:#060B14;
-  --card:#0D1526;--card2:#111E33;
-  --sidebar-bg:#080E1C;
-  /* ★ FIX: proper readable text colors for dark */
-  --t1:#E2E8F0;--t2:#94A3B8;--tm:#334155;
-  --sh1:0 1px 6px rgba(0,0,0,.5);
-  --sh2:0 4px 24px rgba(0,0,0,.6);
-  --sh3:0 24px 64px rgba(0,0,0,.8);
-  --da:#38BDF8;--dl:#0C2340;
-  --modal-bg:rgba(0,0,0,.78);
-  --input-bg:#0D1526;
-  --other-m:#050810;
-  --auth-card:#0D1526;
-  --auth-brand:#7DD3FC;
-  --today-ring:#38BDF8;
-  --green:#10B981;--green-lt:#022C22;
-  --amber:#FBBF24;--amber-lt:#1C1400;
-  --red:#F87171;--red-lt:#1A0404;
-  --pink:#F472B6;--pink-lt:#1A0414;
+/* ══════════════════════════════════════════════════
+   CRYSTAL LIGHT
+══════════════════════════════════════════════════ */
+[data-theme="light"]{
+  --bg-deep:#EEF4FF;
+  --bg-mid:#F4F7FD;
+  --bg-surf:#FAFCFF;
+
+  --glass-1:rgba(255,255,255,.6);
+  --glass-2:rgba(255,255,255,.8);
+  --glass-3:rgba(255,255,255,.95);
+  --glass-border:rgba(14,165,233,.15);
+  --glass-border-bright:rgba(14,165,233,.30);
+
+  --accent:#0284C7;
+  --accent-2:#0EA5E9;
+  --accent-dk:#0369A1;
+  --accent-glow:rgba(2,132,199,.2);
+  --accent-lt:rgba(2,132,199,.10);
+  --accent-lt2:rgba(2,132,199,.04);
+
+  --t1:#0A1628;
+  --t2:#3D5A80;
+  --t3:#A8C0D8;
+
+  --green:#059669;   --green-lt:rgba(5,150,105,.12);
+  --amber:#D97706;   --amber-lt:rgba(217,119,6,.12);
+  --red:#DC2626;     --red-lt:rgba(220,38,38,.08);
+  --pink:#DB2777;    --pink-lt:rgba(219,39,119,.12);
+
+  --sh-inset:inset 0 1px 0 rgba(255,255,255,.9);
+  --sh-card:0 4px 20px rgba(14,165,233,.08), 0 1px 0 rgba(255,255,255,.9) inset;
+  --sh-float:0 20px 60px rgba(14,165,233,.15), 0 0 0 1px rgba(14,165,233,.12);
+  --sh-glow:0 0 40px rgba(14,165,233,.15);
+  --sh-btn:0 2px 8px rgba(14,165,233,.2), 0 1px 0 rgba(255,255,255,.9) inset;
 }
 
+/* ══════════════════════════════════════════════════
+   BASE
+══════════════════════════════════════════════════ */
+html,body{height:100%}
 body{
   font-family:'Inter',system-ui,sans-serif;
-  background:var(--s0);color:var(--t1);
+  background:var(--bg-deep);
+  color:var(--t1);
   font-size:14px;line-height:1.5;
-  min-height:100vh;overflow-x:hidden;
-  transition:background .2s,color .2s;
+  overflow-x:hidden;
+  transition:background var(--trans),color var(--trans);
 }
 
-/* ══ AUTH ══ */
+/* Ambient background orbs — dark only */
+body::before{
+  content:'';
+  position:fixed;top:-20%;left:-10%;
+  width:60vw;height:60vw;
+  background:radial-gradient(circle,rgba(14,165,233,.07) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';
+  position:fixed;bottom:-20%;right:-10%;
+  width:50vw;height:50vw;
+  background:radial-gradient(circle,rgba(99,102,241,.06) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+[data-theme="light"] body::before,[data-theme="light"] body::after{display:none}
+
+/* ══════════════════════════════════════════════════
+   GLASS MIXIN (utility classes)
+══════════════════════════════════════════════════ */
+.glass{
+  background:var(--glass-2);
+  backdrop-filter:blur(20px) saturate(1.4);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border:1px solid var(--glass-border);
+  box-shadow:var(--sh-card);
+}
+.glass-bright{
+  background:var(--glass-3);
+  backdrop-filter:blur(24px) saturate(1.6);
+  -webkit-backdrop-filter:blur(24px) saturate(1.6);
+  border:1px solid var(--glass-border-bright);
+  box-shadow:var(--sh-float);
+}
+
+/* ══════════════════════════════════════════════════
+   AUTH SCREEN
+══════════════════════════════════════════════════ */
 .auth-bg{
-  position:fixed;inset:0;
-  background:linear-gradient(140deg,#030B1A 0%,#0F2952 50%,#1A4080 100%);
+  position:fixed;inset:0;z-index:1000;
   display:flex;align-items:center;justify-content:center;
-  z-index:1000;overflow-y:auto;padding:16px;
+  overflow-y:auto;padding:20px;
+  background:var(--bg-deep);
 }
+[data-theme="dark"] .auth-bg{
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(14,165,233,.12) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 90%,rgba(99,102,241,.10) 0%,transparent 60%),
+    #02050F;
+}
+[data-theme="light"] .auth-bg{
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%,rgba(14,165,233,.15) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 90%,rgba(99,102,241,.10) 0%,transparent 60%),
+    #EEF4FF;
+}
+
 .auth-card{
-  background:var(--auth-card);
-  border:1px solid var(--bd);
-  border-radius:20px;padding:32px;
-  width:100%;max-width:420px;
-  box-shadow:var(--sh3);
+  position:relative;
+  width:100%;max-width:440px;
+  border-radius:24px;
+  padding:36px;
+  background:var(--glass-2);
+  backdrop-filter:blur(40px) saturate(1.5);
+  -webkit-backdrop-filter:blur(40px) saturate(1.5);
+  border:1px solid var(--glass-border-bright);
+  box-shadow:var(--sh-float), var(--sh-glow);
 }
-.auth-logo-row{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+/* Top edge light streak */
+.auth-card::before{
+  content:'';
+  position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  border-radius:1px;
+}
+
+.auth-logo-row{display:flex;align-items:center;gap:14px;margin-bottom:28px}
 .auth-logo-box{
-  width:52px;height:52px;border-radius:13px;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;overflow:hidden;
+  width:52px;height:52px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  /* NO background — transparent logo */
+  background:transparent;
 }
-.auth-logo-box img{width:100%;height:100%;object-fit:contain}
-.auth-logo-box .lf{color:#fff;font-size:22px;font-weight:900;display:none}
-.auth-brand-name{font-size:20px;font-weight:800;color:var(--auth-brand);letter-spacing:-.4px}
-.auth-brand-be{font-size:9px;font-weight:600;color:var(--t2);letter-spacing:.12em;text-transform:uppercase;margin-top:3px}
+.auth-logo-box img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 8px var(--accent-glow))}
+.auth-logo-box .lf{
+  color:var(--accent-2);font-size:26px;font-weight:900;
+  text-shadow:0 0 20px var(--accent-glow);display:none;
+}
+.auth-app-name{font-size:21px;font-weight:800;color:var(--t1);letter-spacing:-.5px;line-height:1}
+.auth-app-sub{font-size:9px;font-weight:600;color:var(--accent-2);text-transform:uppercase;letter-spacing:.14em;margin-top:4px;opacity:.8}
 
 .auth-tabs{
-  display:flex;gap:3px;
-  background:var(--s0);border:1px solid var(--bd);
-  border-radius:var(--r);padding:3px;margin-bottom:20px;
+  display:flex;gap:4px;padding:4px;
+  background:var(--glass-1);
+  border:1px solid var(--glass-border);
+  border-radius:var(--r);margin-bottom:24px;
 }
 .auth-tab{
-  flex:1;padding:8px;text-align:center;
+  flex:1;padding:9px;text-align:center;
   font-size:13px;font-weight:600;cursor:pointer;
-  color:var(--t2);border-radius:7px;transition:all .15s;
+  color:var(--t2);border-radius:7px;
+  transition:all var(--trans);
 }
-.auth-tab.on{background:#2563EB;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.auth-tab.on{
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  color:#fff;
+  box-shadow:0 2px 12px var(--accent-glow),var(--sh-inset);
+}
 
-.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field{margin-bottom:13px}
+/* Fields */
+.field{margin-bottom:14px}
 .field label{
   display:block;font-size:10px;font-weight:700;
-  color:var(--t2);margin-bottom:5px;
-  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--t2);margin-bottom:6px;
+  letter-spacing:.08em;text-transform:uppercase;
 }
 .inp{
-  width:100%;padding:10px 13px;
-  border:1.5px solid var(--bd);border-radius:var(--r);
+  width:100%;padding:11px 14px;
+  background:var(--glass-1);
+  border:1px solid var(--glass-border);
+  border-radius:var(--r);
   font-size:13px;font-family:inherit;
-  color:var(--t1);background:var(--input-bg);
-  transition:border-color .15s,box-shadow .15s;
-  outline:none;
+  color:var(--t1);
+  transition:all var(--trans);outline:none;
+  backdrop-filter:blur(8px);
 }
-.inp:focus{border-color:var(--da);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
-.inp:disabled{opacity:.45;cursor:not-allowed}
+.inp:focus{
+  border-color:var(--accent);
+  background:var(--glass-2);
+  box-shadow:0 0 0 3px var(--accent-lt), var(--sh-inset);
+}
+.inp:disabled{opacity:.4;cursor:not-allowed}
 select.inp{
   appearance:none;cursor:pointer;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 11px center;padding-right:30px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%230EA5E9' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;
 }
-.auth-btn{
-  width:100%;padding:12px;
-  background:#2563EB;color:#fff;border:none;
-  border-radius:var(--r);font-size:14px;font-weight:700;
-  cursor:pointer;font-family:inherit;
-  transition:all .15s;margin-top:2px;
-  box-shadow:0 4px 14px rgba(37,99,235,.35);
-}
-.auth-btn:hover{background:#1D4ED8;box-shadow:0 6px 20px rgba(37,99,235,.45);transform:translateY(-1px)}
-.auth-btn:active{transform:translateY(0)}
-.auth-err{
-  background:var(--red-lt);border:1px solid var(--red);
-  border-radius:var(--r);padding:9px 12px;font-size:12px;
-  color:var(--red);margin-top:8px;display:none;font-weight:500;
-}
-.auth-err.show{display:block}
-.auth-ok{
-  background:var(--green-lt);border:1px solid var(--green);
-  border-radius:var(--r);padding:9px 12px;font-size:12px;
-  color:var(--green);margin-top:8px;display:none;font-weight:500;
-}
-.auth-ok.show{display:block}
-.auth-hint{font-size:11px;color:var(--t2);text-align:center;margin-top:12px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-/* ══ APP ══ */
-#app{display:none;flex-direction:column;height:100vh;overflow:hidden}
+.auth-btn{
+  width:100%;padding:13px;border:none;border-radius:var(--r);
+  font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dk) 100%);
+  color:#fff;margin-top:4px;
+  box-shadow:0 4px 20px var(--accent-glow),var(--sh-inset);
+  transition:all var(--trans);
+  position:relative;overflow:hidden;
+}
+.auth-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  opacity:0;transition:opacity var(--trans);
+}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px var(--accent-glow),var(--sh-inset)}
+.auth-btn:hover::before{opacity:1}
+.auth-btn:active{transform:translateY(0)}
+
+.msg{border-radius:var(--r);padding:10px 14px;font-size:12px;margin-top:10px;display:none;font-weight:500;backdrop-filter:blur(8px)}
+.msg.show{display:block}
+.msg.err{background:var(--red-lt);border:1px solid var(--red);color:var(--red)}
+.msg.ok{background:var(--green-lt);border:1px solid var(--green);color:var(--green)}
+.auth-hint{font-size:11px;color:var(--t2);text-align:center;margin-top:14px;opacity:.7}
+
+/* ══════════════════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════════════════ */
+#app{display:none;flex-direction:column;height:100vh;overflow:hidden;position:relative;z-index:1}
 #app.on{display:flex}
 
-/* ══ TOPBAR ══ */
+/* ══════════════════════════════════════════════════
+   TOPBAR — Crystal glass bar
+══════════════════════════════════════════════════ */
 .topbar{
-  background:var(--card);border-bottom:1px solid var(--bd);
-  height:54px;display:flex;align-items:center;
-  justify-content:space-between;
-  padding:0 14px;flex-shrink:0;
-  box-shadow:var(--sh1);z-index:200;gap:8px;
+  height:var(--topbar-h);flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;gap:10px;z-index:200;
+  background:var(--glass-2);
+  backdrop-filter:blur(24px) saturate(1.4);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);
+  border-bottom:1px solid var(--glass-border);
+  box-shadow:0 1px 0 rgba(255,255,255,.06), 0 4px 20px rgba(0,0,0,.3);
 }
-.tb-l{display:flex;align-items:center;gap:9px;flex:1;min-width:0}
+.tb-l{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .ham-btn{
   display:none;background:none;border:none;cursor:pointer;
-  color:var(--t2);padding:6px;border-radius:7px;font-size:20px;flex-shrink:0;
-  transition:all .12s;
+  color:var(--t2);padding:7px;border-radius:8px;font-size:18px;flex-shrink:0;
+  transition:all var(--trans);
 }
-.ham-btn:hover{background:var(--s0);color:var(--t1)}
+.ham-btn:hover{background:var(--glass-2);color:var(--t1)}
 
+/* Logo — no background, transparent */
 .tb-logo-box{
-  width:36px;height:36px;border-radius:9px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
+  width:36px;height:36px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:transparent;
 }
-.tb-logo-box img{width:100%;height:100%;object-fit:contain}
-.tb-logo-box .lf{color:#fff;font-size:15px;font-weight:900;display:none}
+.tb-logo-box img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 6px var(--accent-glow))}
+.tb-logo-box .lf{color:var(--accent-2);font-size:16px;font-weight:900;display:none;text-shadow:0 0 12px var(--accent-glow)}
 
-.tb-div{width:1px;height:26px;background:var(--bd);flex-shrink:0}
-.tb-title{font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-.2px}
-.tb-sub{font-size:8px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.1em;margin-top:1px}
+.tb-div{width:1px;height:24px;background:var(--glass-border-bright);flex-shrink:0}
+.tb-title{font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-.3px}
+.tb-sub{font-size:8px;font-weight:600;color:var(--accent-2);text-transform:uppercase;letter-spacing:.12em;margin-top:1px;opacity:.8}
 
-/* dept badge — neutral chip, not theme-override */
+/* Dept badge */
 .dept-badge{
-  font-size:11px;font-weight:700;padding:3px 11px;
-  border-radius:20px;
-  background:var(--dl);color:var(--da);
-  border:1px solid var(--da);
-  flex-shrink:0;white-space:nowrap;
-  letter-spacing:.02em;text-transform:uppercase;
+  font-size:10px;font-weight:700;padding:4px 12px;
+  border-radius:20px;flex-shrink:0;white-space:nowrap;
+  background:var(--accent-lt);color:var(--accent-2);
+  border:1px solid rgba(14,165,233,.3);
+  letter-spacing:.04em;text-transform:uppercase;
+  box-shadow:0 0 12px var(--accent-lt);
 }
 
-.tb-r{display:flex;align-items:center;gap:6px;flex-shrink:0}
+/* Role badges */
+.role-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.role-badge.sa{background:var(--pink-lt);color:var(--pink);border:1px solid rgba(236,72,153,.3)}
+.role-badge.da{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.role-badge.ca{background:var(--green-lt);color:var(--green);border:1px solid rgba(16,185,129,.3)}
 
-/* role badge */
-.role-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;white-space:nowrap}
-.role-badge.sa{background:var(--pink-lt);color:var(--pink);border:1px solid var(--pink)}
-.role-badge.da{background:var(--amber-lt);color:var(--amber);border:1px solid var(--amber)}
-.role-badge.ca{background:var(--green-lt);color:var(--green);border:1px solid var(--green)}
+.tb-r{display:flex;align-items:center;gap:7px;flex-shrink:0}
 
-/* icon button */
+/* Icon btn */
 .icon-btn{
-  background:none;border:1px solid var(--bd);
-  width:33px;height:33px;border-radius:8px;
+  background:var(--glass-1);border:1px solid var(--glass-border);
+  width:34px;height:34px;border-radius:9px;
   cursor:pointer;color:var(--t2);
   display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;transition:all .15s;
+  font-size:16px;flex-shrink:0;
+  transition:all var(--trans);
+  backdrop-filter:blur(8px);
 }
-.icon-btn:hover{background:var(--s0);color:var(--t1);border-color:var(--bd2)}
+.icon-btn:hover{background:var(--glass-3);color:var(--accent-2);border-color:rgba(14,165,233,.3);box-shadow:0 0 12px var(--accent-lt)}
 
-/* user chip */
+/* User chip */
 .user-chip{
-  display:flex;align-items:center;gap:7px;
-  background:var(--s0);border:1px solid var(--bd);
-  border-radius:20px;padding:4px 10px 4px 5px;
-  cursor:pointer;transition:border-color .15s;min-width:0;
+  display:flex;align-items:center;gap:8px;
+  background:var(--glass-1);border:1px solid var(--glass-border);
+  border-radius:20px;padding:4px 12px 4px 5px;
+  cursor:pointer;transition:all var(--trans);min-width:0;
+  backdrop-filter:blur(8px);
 }
-.user-chip:hover{border-color:var(--da)}
+.user-chip:hover{background:var(--glass-2);border-color:rgba(14,165,233,.3);box-shadow:0 0 12px var(--accent-lt)}
 .ua{
   width:28px;height:28px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:800;color:#fff;
-  background:var(--da);flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  flex-shrink:0;
+  box-shadow:0 0 10px var(--accent-glow);
 }
-.chip-name{font-size:12px;font-weight:600;color:var(--t1);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip-name{font-size:12px;font-weight:600;color:var(--t1);max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 .out-btn{
-  background:none;border:1px solid var(--bd);
-  padding:5px 10px;border-radius:var(--r);
-  font-size:12px;font-weight:500;color:var(--t2);
+  background:var(--glass-1);border:1px solid var(--glass-border);
+  padding:6px 12px;border-radius:var(--r);
+  font-size:12px;font-weight:600;color:var(--t2);
   cursor:pointer;font-family:inherit;
-  display:flex;align-items:center;gap:4px;transition:all .15s;
+  display:flex;align-items:center;gap:5px;
+  transition:all var(--trans);backdrop-filter:blur(8px);
 }
-.out-btn:hover{background:var(--red-lt);color:var(--red);border-color:var(--red)}
+.out-btn:hover{background:var(--red-lt);color:var(--red);border-color:rgba(239,68,68,.3)}
 
-/* ══ LAYOUT ══ */
+/* ══════════════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════════════ */
 .body-wrap{display:flex;flex:1;overflow:hidden;position:relative}
-.drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:150;backdrop-filter:blur(3px)}
+.drawer-ov{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.6);z-index:150;
+  backdrop-filter:blur(6px);
+}
 .drawer-ov.show{display:block}
 
-/* ══ SIDEBAR ══ */
+/* ══════════════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════════════ */
 .sidebar{
-  width:214px;background:var(--sidebar-bg);
-  border-right:1px solid var(--bd);
+  width:var(--sidebar-w);
+  background:var(--glass-1);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-right:1px solid var(--glass-border);
   display:flex;flex-direction:column;flex-shrink:0;
-  overflow-y:auto;z-index:160;transition:transform .25s;
+  overflow-y:auto;z-index:160;
+  transition:transform var(--trans);
+  box-shadow:4px 0 24px rgba(0,0,0,.2);
 }
+
+/* Sidebar scrollbar */
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:var(--glass-border);border-radius:3px}
+
 .sl{
-  font-size:9px;font-weight:800;color:var(--t2);
-  text-transform:uppercase;letter-spacing:.14em;
-  padding:0 15px;margin:16px 0 6px;
+  font-size:9px;font-weight:700;color:var(--t3);
+  text-transform:uppercase;letter-spacing:.16em;
+  padding:0 16px;margin:18px 0 6px;
 }
+
 .ni{
-  display:flex;align-items:center;gap:8px;
-  padding:9px 15px;font-size:13px;cursor:pointer;
-  color:var(--t2);transition:all .12s;
+  display:flex;align-items:center;gap:9px;
+  padding:9px 16px;font-size:13px;cursor:pointer;
+  color:var(--t2);transition:all var(--trans);
   border-left:2px solid transparent;font-weight:500;
+  position:relative;
 }
-.ni:hover{background:rgba(56,189,248,.06);color:var(--t1)}
+.ni:hover{background:var(--glass-1);color:var(--t1)}
 .ni.active{
-  background:var(--dl);color:var(--da);
-  border-left-color:var(--da);font-weight:700;
+  background:var(--accent-lt);
+  color:var(--accent-2);
+  border-left-color:var(--accent-2);
+  font-weight:700;
+}
+/* Glow on active */
+.ni.active::after{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;width:2px;
+  box-shadow:0 0 8px var(--accent);
 }
 .ni i{font-size:15px;flex-shrink:0}
 
-.dept-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dept-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;flex-shrink:0}
 .sidebar-foot{
-  padding:12px 15px;border-top:1px solid var(--bd);
+  padding:14px 16px;
+  border-top:1px solid var(--glass-border);
   font-size:10px;color:var(--t2);margin-top:auto;
   display:flex;justify-content:space-between;align-items:center;
+  background:var(--glass-1);
 }
 
-/* ══ MAIN ══ */
+/* ══════════════════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════════════════ */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
 /* CAL HEADER */
 .cal-hdr{
-  background:var(--card);border-bottom:1px solid var(--bd);
-  padding:10px 14px;display:flex;align-items:center;
-  justify-content:space-between;flex-shrink:0;gap:8px;flex-wrap:wrap;
+  background:var(--glass-1);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--glass-border);
+  padding:10px 16px;display:flex;align-items:center;
+  justify-content:space-between;flex-shrink:0;gap:10px;flex-wrap:wrap;
+  box-shadow:0 1px 0 rgba(255,255,255,.04);
 }
 .mnav{display:flex;align-items:center;gap:6px}
-.mtitle{font-size:17px;font-weight:800;min-width:150px;text-align:center;color:var(--t1);letter-spacing:-.2px}
-.nbtn{
-  background:none;border:1px solid var(--bd);
-  padding:6px 10px;border-radius:var(--r);cursor:pointer;
-  color:var(--t2);font-size:14px;
-  display:flex;align-items:center;transition:all .12s;font-weight:600;
+.mtitle{
+  font-size:17px;font-weight:800;min-width:160px;text-align:center;
+  color:var(--t1);letter-spacing:-.3px;
+  text-shadow:0 0 20px rgba(14,165,233,.15);
 }
-.nbtn:hover{background:var(--s0);border-color:var(--bd2)}
-.today-b{font-size:12px;font-weight:700;padding:6px 13px}
-.cal-tools{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.nbtn{
+  background:var(--glass-1);border:1px solid var(--glass-border);
+  padding:7px 11px;border-radius:var(--r);cursor:pointer;
+  color:var(--t2);font-size:14px;
+  display:flex;align-items:center;
+  transition:all var(--trans);font-weight:600;
+  backdrop-filter:blur(8px);
+}
+.nbtn:hover{background:var(--glass-2);color:var(--accent-2);border-color:rgba(14,165,233,.3)}
+.today-b{font-size:12px;padding:7px 14px}
+
+.cal-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .vtog{
-  display:flex;border:1px solid var(--bd);
-  border-radius:var(--r);overflow:hidden;background:var(--s0);
+  display:flex;
+  background:var(--glass-1);
+  border:1px solid var(--glass-border);
+  border-radius:var(--r);overflow:hidden;
+  backdrop-filter:blur(8px);
 }
 .vbtn{
   padding:6px 12px;font-size:12px;cursor:pointer;
   background:none;border:none;color:var(--t2);
-  font-family:inherit;font-weight:600;transition:all .12s;
+  font-family:inherit;font-weight:600;transition:all var(--trans);
 }
-.vbtn.active{background:var(--da);color:#fff}
+.vbtn.active{
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  color:#fff;
+  box-shadow:var(--sh-inset);
+}
 .pri-btn{
-  background:var(--da);color:#fff;border:none;
-  padding:7px 15px;border-radius:var(--r);
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dk) 100%);
+  color:#fff;border:none;
+  padding:8px 16px;border-radius:var(--r);
   font-size:13px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;gap:5px;
-  font-family:inherit;transition:all .15s;white-space:nowrap;
-  box-shadow:0 2px 10px rgba(56,189,248,.25);
+  display:flex;align-items:center;gap:6px;
+  font-family:inherit;transition:all var(--trans);white-space:nowrap;
+  box-shadow:0 4px 16px var(--accent-glow),var(--sh-inset);
+  position:relative;overflow:hidden;
 }
-.pri-btn:hover{opacity:.88;transform:translateY(-1px)}
+.pri-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity var(--trans)}
+.pri-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px var(--accent-glow),var(--sh-inset)}
+.pri-btn:hover::before{opacity:1}
 .pri-btn:active{transform:translateY(0)}
-.panel-tog{display:none;background:none;border:1px solid var(--bd);padding:6px 10px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;align-items:center;font-weight:600}
+.panel-tog{display:none;background:var(--glass-1);border:1px solid var(--glass-border);padding:7px 11px;border-radius:var(--r);cursor:pointer;color:var(--t2);font-size:14px;align-items:center}
 
 /* FILTER BAR */
 .fbar{
-  display:flex;gap:6px;padding:8px 14px;
-  background:var(--card);border-bottom:1px solid var(--bd);
+  display:flex;gap:6px;padding:8px 16px;
+  background:var(--glass-1);
+  border-bottom:1px solid var(--glass-border);
   overflow-x:auto;flex-shrink:0;scrollbar-width:none;
+  backdrop-filter:blur(12px);
 }
 .fbar::-webkit-scrollbar{display:none}
 .fpill{
-  font-size:12px;font-weight:600;padding:5px 13px;
+  font-size:12px;font-weight:600;padding:5px 14px;
   border-radius:20px;cursor:pointer;
-  border:1px solid var(--bd);color:var(--t2);background:var(--s0);
-  white-space:nowrap;transition:all .12s;display:flex;align-items:center;gap:5px;
+  border:1px solid var(--glass-border);
+  color:var(--t2);background:var(--glass-1);
+  white-space:nowrap;transition:all var(--trans);
+  display:flex;align-items:center;gap:5px;
+  backdrop-filter:blur(8px);
 }
-.fpill:hover{border-color:var(--da);color:var(--da)}
-.fpill.active{background:var(--dl);color:var(--da);border-color:var(--da);font-weight:700}
+.fpill:hover{border-color:rgba(14,165,233,.3);color:var(--accent-2)}
+.fpill.active{
+  background:var(--accent-lt);
+  color:var(--accent-2);
+  border-color:rgba(14,165,233,.4);
+  box-shadow:0 0 12px var(--accent-lt);
+  font-weight:700;
+}
 .fp-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-
-/* CALENDAR GRID */
-.calendar-wrap{flex:1;overflow:auto;background:var(--s0)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);width:100%}
-.dow{
-  display:flex;align-items:center;justify-content:center;
-  padding:10px 4px;font-size:11px;font-weight:700;
-  color:var(--t2);background:var(--card);
-  border-bottom:1px solid var(--bd);
-  text-transform:uppercase;letter-spacing:.06em;
-  position:sticky;top:0;z-index:10;
-}
-.cal-day{
-  border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);
-  padding:7px 5px;min-height:105px;background:var(--card);
-  cursor:pointer;transition:background .12s;overflow:hidden;
-}
-.cal-day:hover{background:var(--s0)}
-.cal-day.other-m{background:var(--other-m)}
-.cal-day.other-m .cal-day-num{opacity:.3}
-.cal-day.today{border-top:2px solid var(--today-ring)}
-.cal-day.today .cal-day-num{
-  width:26px;height:26px;background:var(--da);color:#fff;
-  border-radius:50%;display:inline-flex;align-items:center;
-  justify-content:center;font-size:13px;font-weight:800;
-  box-shadow:0 2px 8px rgba(56,189,248,.35);
-}
-.cal-day-num{
-  font-size:13px;font-weight:700;
-  color:var(--t1);  /* ★ FIX: was using t2 in dark — t1 is now E2E8F0 */
-  margin-bottom:4px;line-height:1;display:block;
-}
-.cal-day-events{display:flex;flex-direction:column;gap:2px}
-.cal-evt{
-  font-size:11px;padding:2px 7px;border-radius:4px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  cursor:pointer;font-weight:600;
-  transition:opacity .12s;
-}
-.cal-evt:hover{opacity:.8}
 
 /* NEXT EVENT BANNER */
 .next-banner{
-  margin:10px 14px 0;padding:12px 16px;border-radius:12px;
-  background:var(--dl);border:1px solid var(--da);
+  margin:10px 16px 0;padding:13px 18px;border-radius:14px;
+  background:var(--glass-1);
+  border:1px solid rgba(14,165,233,.25);
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 20px var(--accent-lt), var(--sh-card);
   display:none;align-items:center;justify-content:space-between;
   gap:12px;flex-wrap:wrap;cursor:pointer;
+  transition:all var(--trans);
 }
-.next-banner:hover{opacity:.9}
+.next-banner:hover{box-shadow:0 0 30px var(--accent-lt), var(--sh-card);transform:translateY(-1px)}
 
-/* LIST VIEW */
-.list-wrap{flex:1;overflow:auto;background:var(--card)}
+/* ══════════════════════════════════════════════════
+   CALENDAR GRID — MONTH VIEW
+══════════════════════════════════════════════════ */
+.calendar-wrap{flex:1;overflow:auto;background:var(--bg-mid)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);width:100%}
+.dow{
+  display:flex;align-items:center;justify-content:center;
+  padding:10px 4px;font-size:10px;font-weight:700;
+  color:var(--t2);
+  background:var(--glass-1);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--glass-border);
+  text-transform:uppercase;letter-spacing:.08em;
+  position:sticky;top:0;z-index:10;
+}
+.cal-day{
+  border-right:1px solid var(--glass-border);
+  border-bottom:1px solid var(--glass-border);
+  padding:8px 6px;min-height:110px;
+  background:var(--glass-1);
+  cursor:pointer;transition:all var(--trans);overflow:hidden;
+  position:relative;
+}
+.cal-day::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--glass-3),transparent);
+  opacity:0;transition:opacity var(--trans);pointer-events:none;
+}
+.cal-day:hover{background:var(--glass-2)}
+.cal-day:hover::before{opacity:1}
+.cal-day.other-m{background:rgba(2,5,15,.3);opacity:.6}
+.cal-day.today{
+  background:var(--accent-lt2);
+  border-top:2px solid var(--accent);
+  box-shadow:inset 0 0 30px var(--accent-lt2);
+}
+.cal-day.today .cal-day-num{
+  width:26px;height:26px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  color:#fff;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;
+  box-shadow:0 0 12px var(--accent-glow);
+}
+.cal-day-num{
+  font-size:13px;font-weight:700;color:var(--t1);
+  margin-bottom:5px;line-height:1;display:block;
+}
+.cal-day-events{display:flex;flex-direction:column;gap:2px}
+.cal-evt{
+  font-size:10px;padding:3px 7px;border-radius:5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  cursor:pointer;font-weight:600;color:#fff;
+  transition:all var(--trans);
+  backdrop-filter:blur(4px);
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+  position:relative;overflow:hidden;
+}
+.cal-evt::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:rgba(255,255,255,.25);
+}
+.cal-evt:hover{transform:translateX(2px);filter:brightness(1.1)}
+
+/* ══════════════════════════════════════════════════
+   WEEK VIEW
+══════════════════════════════════════════════════ */
+.week-wrap{flex:1;overflow:auto;display:none}
+.week-grid{
+  display:grid;
+  grid-template-columns:56px repeat(7,1fr);
+  min-width:600px;
+  background:var(--bg-mid);
+}
+.week-corner{
+  background:var(--glass-1);
+  border-right:1px solid var(--glass-border);
+  border-bottom:1px solid var(--glass-border);
+  position:sticky;top:0;left:0;z-index:20;
+  backdrop-filter:blur(12px);
+}
+.week-day-hdr{
+  padding:10px 8px;text-align:center;
+  background:var(--glass-1);
+  border-right:1px solid var(--glass-border);
+  border-bottom:1px solid var(--glass-border);
+  position:sticky;top:0;z-index:10;
+  backdrop-filter:blur(12px);
+  cursor:pointer;transition:all var(--trans);
+}
+.week-day-hdr:hover{background:var(--glass-2)}
+.week-day-hdr.today-col{background:var(--accent-lt2);border-top:2px solid var(--accent)}
+.week-day-name{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.06em}
+.week-day-num{font-size:18px;font-weight:800;color:var(--t1);margin-top:2px}
+.week-day-num.today-num{
+  width:34px;height:34px;margin:2px auto 0;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  color:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;box-shadow:0 0 14px var(--accent-glow);
+}
+.week-time-cell{
+  padding:0 8px;
+  font-size:10px;font-weight:600;color:var(--t2);
+  background:var(--glass-1);
+  border-right:1px solid var(--glass-border);
+  border-bottom:1px solid var(--glass-border);
+  display:flex;align-items:flex-start;padding-top:6px;
+  min-height:60px;
+  position:sticky;left:0;z-index:5;
+  backdrop-filter:blur(8px);
+}
+.week-cell{
+  border-right:1px solid var(--glass-border);
+  border-bottom:1px solid var(--glass-border);
+  min-height:60px;padding:3px;
+  background:var(--glass-1);
+  transition:all var(--trans);cursor:pointer;
+  position:relative;
+}
+.week-cell:hover{background:var(--glass-2)}
+.week-cell.today-col{background:var(--accent-lt2)}
+.week-evt{
+  font-size:10px;padding:3px 6px;border-radius:5px;
+  font-weight:600;color:#fff;margin-bottom:2px;
+  cursor:pointer;transition:all var(--trans);
+  box-shadow:0 1px 4px rgba(0,0,0,.3);
+  position:relative;overflow:hidden;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.week-evt::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:rgba(255,255,255,.25)}
+.week-evt:hover{filter:brightness(1.1);transform:scale(1.01)}
+
+/* ══════════════════════════════════════════════════
+   LIST VIEW
+══════════════════════════════════════════════════ */
+.list-wrap{flex:1;overflow:auto;background:var(--bg-mid)}
 .list-item{
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px;border-bottom:1px solid var(--bd);
-  cursor:pointer;transition:background .12s;flex-wrap:wrap;gap:8px;
+  padding:14px 18px;
+  border-bottom:1px solid var(--glass-border);
+  cursor:pointer;transition:all var(--trans);flex-wrap:wrap;gap:10px;
+  background:var(--glass-1);
 }
-.list-item:hover{background:var(--s0)}
-.list-date{font-size:11px;color:var(--t2);font-weight:700;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.list-item:hover{background:var(--glass-2);transform:translateX(2px)}
+.list-date{font-size:10px;color:var(--t2);font-weight:700;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
 .list-title{font-size:14px;font-weight:700;color:var(--t1)}
 .list-meta{font-size:11px;color:var(--t2);margin-top:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .vis-pill{
   display:inline-flex;align-items:center;gap:4px;
-  font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;
 }
-.vis-pill.internal{background:var(--amber-lt);color:var(--amber)}
-.vis-pill.external{background:var(--green-lt);color:var(--green)}
+.vis-pill.internal{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.vis-pill.external{background:var(--green-lt);color:var(--green);border:1px solid rgba(16,185,129,.3)}
 
-/* RIGHT PANEL */
+/* ══════════════════════════════════════════════════
+   RIGHT PANEL
+══════════════════════════════════════════════════ */
 .side-pnl{
-  width:270px;background:var(--sidebar-bg);
-  border-left:1px solid var(--bd);
+  width:270px;
+  background:var(--glass-1);
+  backdrop-filter:blur(20px);
+  border-left:1px solid var(--glass-border);
   display:flex;flex-direction:column;flex-shrink:0;
-  overflow-y:auto;z-index:160;transition:transform .25s;padding:14px;
+  overflow-y:auto;z-index:160;
+  transition:transform var(--trans);padding:16px;
 }
 .pnl-h{
-  font-size:10px;font-weight:800;color:var(--t2);
-  text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;
+  font-size:9px;font-weight:700;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.14em;
+  margin-bottom:14px;
 }
 
-/* ══ MODALS ══ */
+/* ══════════════════════════════════════════════════
+   MODALS — Crystal glass cards
+══════════════════════════════════════════════════ */
 .modal-bg{
   display:none;position:fixed;inset:0;
-  background:var(--modal-bg);z-index:500;
+  background:rgba(0,0,0,.7);z-index:500;
   align-items:center;justify-content:center;
-  backdrop-filter:blur(5px);padding:16px;
+  backdrop-filter:blur(8px);padding:16px;
 }
 .modal-bg.open{display:flex}
 .modal-card{
-  background:var(--card);
-  border:1px solid var(--bd);
-  border-radius:18px;
-  max-width:520px;width:100%;
+  background:var(--glass-2);
+  backdrop-filter:blur(40px) saturate(1.5);
+  -webkit-backdrop-filter:blur(40px) saturate(1.5);
+  border:1px solid var(--glass-border-bright);
+  border-radius:20px;
+  max-width:540px;width:100%;
   max-height:90vh;overflow-y:auto;
-  box-shadow:var(--sh3);
+  box-shadow:var(--sh-float),var(--sh-glow);
+  position:relative;
 }
-.modal-card.wide{max-width:800px}
-.modal-header{
-  padding:20px 24px;border-bottom:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;background:var(--card);z-index:5;
-  border-radius:18px 18px 0 0;
+/* Top rim light */
+.modal-card::before{
+  content:'';position:absolute;top:0;left:8%;right:8%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);
 }
-.modal-title{font-size:15px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:8px}
-.modal-close{
-  background:none;border:none;font-size:20px;color:var(--t2);
-  cursor:pointer;width:32px;height:32px;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:7px;transition:all .12s;
-}
-.modal-close:hover{background:var(--s0);color:var(--t1)}
-.modal-body{padding:22px;display:flex;flex-direction:column;gap:14px}
+.modal-card.wide{max-width:860px}
 
-/* VISIBILITY SELECTOR */
-.vis-select{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.vis-opt{
-  border:2px solid var(--bd);border-radius:12px;
-  padding:14px;cursor:pointer;transition:all .15s;
-  display:flex;flex-direction:column;gap:5px;
+.modal-header{
+  padding:20px 24px;
+  border-bottom:1px solid var(--glass-border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;
+  background:var(--glass-2);
+  backdrop-filter:blur(20px);
+  z-index:5;border-radius:20px 20px 0 0;
 }
-.vis-opt:hover{border-color:var(--da)}
-.vis-opt.selected.int{border-color:var(--amber);background:var(--amber-lt)}
-.vis-opt.selected.ext{border-color:var(--green);background:var(--green-lt)}
-.vis-opt-icon{font-size:20px;margin-bottom:2px}
-.vis-opt.selected.int .vis-opt-icon{color:var(--amber)}
-.vis-opt.selected.ext .vis-opt-icon{color:var(--green)}
+.modal-title{font-size:15px;font-weight:800;color:var(--t1);display:flex;align-items:center;gap:9px}
+.modal-close{
+  background:var(--glass-1);border:1px solid var(--glass-border);
+  font-size:16px;color:var(--t2);cursor:pointer;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;transition:all var(--trans);
+}
+.modal-close:hover{background:var(--red-lt);color:var(--red);border-color:rgba(239,68,68,.3)}
+.modal-body{padding:24px;display:flex;flex-direction:column;gap:16px}
+
+/* Form groups */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{
+  font-size:10px;font-weight:700;color:var(--t2);
+  text-transform:uppercase;letter-spacing:.08em;
+}
+.form-group .inp{background:var(--glass-1)}
+.form-group textarea.inp{resize:vertical;min-height:88px}
+
+/* Submit button */
+.sub-btn{
+  width:100%;padding:13px;border:none;border-radius:var(--r);
+  font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  color:#fff;margin-top:4px;
+  box-shadow:0 4px 20px var(--accent-glow),var(--sh-inset);
+  transition:all var(--trans);position:relative;overflow:hidden;
+}
+.sub-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity var(--trans)}
+.sub-btn:hover{transform:translateY(-1px);box-shadow:0 8px 28px var(--accent-glow),var(--sh-inset)}
+.sub-btn:hover::before{opacity:1}
+.sub-btn:active{transform:translateY(0)}
+
+/* ── VISIBILITY CARDS ── */
+.vis-select{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.vis-opt{
+  border:1px solid var(--glass-border);border-radius:14px;
+  padding:16px;cursor:pointer;transition:all var(--trans);
+  display:flex;flex-direction:column;gap:6px;
+  background:var(--glass-1);
+  backdrop-filter:blur(8px);
+  position:relative;overflow:hidden;
+}
+.vis-opt::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:rgba(255,255,255,.1)}
+.vis-opt:hover{background:var(--glass-2);border-color:rgba(14,165,233,.3)}
+.vis-opt.selected.int{
+  border-color:rgba(245,158,11,.5);
+  background:var(--amber-lt);
+  box-shadow:0 0 20px var(--amber-lt);
+}
+.vis-opt.selected.ext{
+  border-color:rgba(16,185,129,.5);
+  background:var(--green-lt);
+  box-shadow:0 0 20px var(--green-lt);
+}
+.vis-opt-icon{font-size:22px;margin-bottom:2px}
+.vis-opt.selected.int .vis-opt-icon{color:var(--amber);filter:drop-shadow(0 0 8px var(--amber))}
+.vis-opt.selected.ext .vis-opt-icon{color:var(--green);filter:drop-shadow(0 0 8px var(--green))}
 .vis-opt-title{font-size:13px;font-weight:700;color:var(--t1)}
 .vis-opt-desc{font-size:11px;color:var(--t2);line-height:1.5}
 
-/* form helpers */
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-group{display:flex;flex-direction:column;gap:5px}
-.form-group label{
-  font-size:10px;font-weight:700;color:var(--t2);
-  text-transform:uppercase;letter-spacing:.06em;
-}
-.form-group .inp{background:var(--input-bg)}
-.form-group textarea.inp{resize:vertical;min-height:80px}
-.sub-btn{
-  width:100%;padding:12px;
-  background:var(--da);color:#fff;border:none;
-  border-radius:var(--r);font-size:14px;font-weight:700;
-  cursor:pointer;font-family:inherit;transition:all .15s;
-  box-shadow:0 2px 12px rgba(56,189,248,.25);
-}
-.sub-btn:hover{opacity:.88;transform:translateY(-1px)}
-
-/* ══ ADMIN ══ */
+/* ══════════════════════════════════════════════════
+   ADMIN PANEL
+══════════════════════════════════════════════════ */
 .admin-tabs{
-  display:flex;border-bottom:1px solid var(--bd);
-  overflow-x:auto;padding:0 4px;
+  display:flex;
+  border-bottom:1px solid var(--glass-border);
+  overflow-x:auto;padding:0 6px;
+  background:var(--glass-1);
 }
 .admin-tab{
-  padding:12px 16px;font-size:13px;font-weight:600;
+  padding:13px 18px;font-size:13px;font-weight:600;
   cursor:pointer;color:var(--t2);
   border-bottom:2px solid transparent;
-  margin-bottom:-1px;white-space:nowrap;transition:all .12s;
+  margin-bottom:-1px;white-space:nowrap;
+  transition:all var(--trans);
   display:flex;align-items:center;gap:6px;
 }
 .admin-tab:hover{color:var(--t1)}
-.admin-tab.active{color:var(--da);border-bottom-color:var(--da)}
-.a-section{display:none;padding:20px}
+.admin-tab.active{color:var(--accent-2);border-bottom-color:var(--accent);text-shadow:0 0 12px var(--accent-lt)}
+
+.a-section{display:none;padding:22px}
 .a-section.active{display:block}
-.a-toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.a-toolbar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;align-items:center}
+
 .a-btn{
-  background:var(--da);color:#fff;border:none;
-  padding:8px 14px;border-radius:var(--r);
+  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+  color:#fff;border:none;
+  padding:8px 16px;border-radius:var(--r);
   font-size:13px;font-weight:600;cursor:pointer;
-  font-family:inherit;display:flex;align-items:center;gap:5px;
-  transition:all .15s;
+  font-family:inherit;display:flex;align-items:center;gap:6px;
+  transition:all var(--trans);
+  box-shadow:0 2px 12px var(--accent-lt),var(--sh-inset);
 }
-.a-btn:hover{opacity:.85}
-.a-btn.ghost{background:none;color:var(--t2);border:1px solid var(--bd)}
-.a-btn.ghost:hover{background:var(--s0);color:var(--t1);opacity:1}
-.a-btn.danger{background:var(--red)}
-.a-btn.small{padding:4px 10px;font-size:11px}
+.a-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--accent-lt),var(--sh-inset)}
+.a-btn.ghost{
+  background:var(--glass-1);color:var(--t2);
+  border:1px solid var(--glass-border);
+  box-shadow:none;
+}
+.a-btn.ghost:hover{background:var(--glass-2);color:var(--t1);transform:none}
+.a-btn.danger{background:linear-gradient(135deg,var(--red),#B91C1C);box-shadow:0 2px 12px var(--red-lt),var(--sh-inset)}
+.a-btn.danger:hover{box-shadow:0 6px 20px var(--red-lt),var(--sh-inset)}
+.a-btn.small{padding:5px 11px;font-size:11px}
+
+/* Crystal table */
 .a-table{width:100%;border-collapse:collapse;font-size:13px}
 .a-table th{
-  background:var(--s0);padding:9px 11px;text-align:left;
-  font-weight:700;color:var(--t2);border-bottom:1px solid var(--bd);
-  white-space:nowrap;font-size:11px;text-transform:uppercase;letter-spacing:.05em;
+  background:var(--glass-1);padding:10px 12px;text-align:left;
+  font-weight:700;color:var(--t2);
+  border-bottom:1px solid var(--glass-border);
+  white-space:nowrap;font-size:10px;
+  text-transform:uppercase;letter-spacing:.07em;
+  backdrop-filter:blur(8px);
 }
-.a-table td{padding:9px 11px;border-bottom:1px solid var(--bd);color:var(--t1);vertical-align:middle}
-.a-table tr:hover td{background:var(--s0)}
-.a-actions{display:flex;gap:5px}
-.dept-card{
-  background:var(--s0);border:1px solid var(--bd);
-  border-radius:12px;padding:16px;margin-bottom:10px;
-}
-.dept-swatch{width:14px;height:14px;border-radius:4px;flex-shrink:0}
-.dept-sections{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.sec-chip{
-  background:var(--card);border:1px solid var(--bd);
-  padding:3px 10px;border-radius:7px;font-size:11px;font-weight:600;
-  display:flex;align-items:center;gap:5px;color:var(--t2);
-}
-.sec-chip button{background:none;border:none;cursor:pointer;color:var(--t2);font-size:11px;padding:0;transition:color .12s}
-.sec-chip button:hover{color:var(--red)}
-.rb{display:inline-flex;align-items:center;padding:3px 9px;border-radius:7px;font-size:11px;font-weight:700}
-.rb.u{background:var(--s0);color:var(--t2);border:1px solid var(--bd)}
-.rb.sa{background:var(--pink-lt);color:var(--pink)}
-.rb.da{background:var(--amber-lt);color:var(--amber)}
-.rb.ca{background:var(--green-lt);color:var(--green)}
+.a-table td{padding:10px 12px;border-bottom:1px solid var(--glass-border);color:var(--t1);vertical-align:middle}
+.a-table tr:hover td{background:var(--glass-1)}
+.a-actions{display:flex;gap:6px}
 
-/* SECTION INPUT ROWS */
+/* Dept card in admin */
+.dept-card{
+  background:var(--glass-1);border:1px solid var(--glass-border);
+  border-radius:14px;padding:18px;margin-bottom:12px;
+  backdrop-filter:blur(8px);
+  transition:all var(--trans);
+  position:relative;overflow:hidden;
+}
+.dept-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:rgba(255,255,255,.08)}
+.dept-card:hover{background:var(--glass-2);border-color:var(--glass-border-bright)}
+.dept-swatch{width:14px;height:14px;border-radius:5px;flex-shrink:0;box-shadow:0 0 8px currentColor}
+
+.dept-sections{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.sec-chip{
+  background:var(--glass-1);border:1px solid var(--glass-border);
+  padding:4px 11px;border-radius:8px;font-size:11px;font-weight:600;
+  display:flex;align-items:center;gap:5px;color:var(--t2);
+  backdrop-filter:blur(4px);transition:all var(--trans);
+}
+.sec-chip:hover{background:var(--glass-2)}
+.sec-chip button{background:none;border:none;cursor:pointer;color:var(--t3);font-size:11px;padding:0;transition:color var(--trans)}
+.sec-chip button:hover{color:var(--red)}
+
+/* Role badges */
+.rb{display:inline-flex;align-items:center;padding:3px 9px;border-radius:8px;font-size:11px;font-weight:700}
+.rb.u{background:var(--glass-1);color:var(--t2);border:1px solid var(--glass-border)}
+.rb.sa{background:var(--pink-lt);color:var(--pink);border:1px solid rgba(236,72,153,.3)}
+.rb.da{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.rb.ca{background:var(--green-lt);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+
+/* Section input rows */
 .sec-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
 .sec-row .inp{flex:1}
 
-/* TOAST */
+/* ══════════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════════ */
 #toast{
-  position:fixed;bottom:22px;right:22px;
-  background:var(--card2);color:var(--t1);
-  border:1px solid var(--bd);
-  padding:11px 16px;border-radius:10px;
+  position:fixed;bottom:24px;right:24px;
+  background:var(--glass-2);color:var(--t1);
+  border:1px solid var(--glass-border-bright);
+  padding:12px 18px;border-radius:12px;
   font-size:13px;font-weight:600;z-index:9999;
-  display:none;box-shadow:var(--sh2);max-width:310px;
+  display:none;box-shadow:var(--sh-float);
+  max-width:320px;
+  backdrop-filter:blur(24px);
 }
-#toast.show{display:flex;align-items:center;gap:9px;animation:tin .25s ease-out}
-#toast.ok{background:var(--green-lt);border-color:var(--green);color:var(--green)}
-#toast.err{background:var(--red-lt);border-color:var(--red);color:var(--red)}
-@keyframes tin{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+#toast.show{display:flex;align-items:center;gap:10px;animation:tin .25s cubic-bezier(.4,0,.2,1)}
+#toast.ok{background:var(--green-lt);border-color:rgba(16,185,129,.4);color:var(--green)}
+#toast.err{background:var(--red-lt);border-color:rgba(239,68,68,.4);color:var(--red)}
+@keyframes tin{from{transform:translateX(40px) scale(.95);opacity:0}to{transform:translateX(0) scale(1);opacity:1}}
 
-/* ══ RESPONSIVE ══ */
+/* ══════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════ */
 @media(max-width:768px){
   .ham-btn{display:flex}
-  .sidebar{position:fixed;left:0;top:54px;height:calc(100vh - 54px);transform:translateX(-100%)}
+  .sidebar{position:fixed;left:0;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));transform:translateX(-100%);box-shadow:4px 0 40px rgba(0,0,0,.6)}
   .sidebar.open{transform:translateX(0)}
   .panel-tog{display:flex}
-  .side-pnl{position:fixed;right:0;top:54px;height:calc(100vh - 54px);transform:translateX(100%);width:100%;max-width:280px;border:none}
+  .side-pnl{position:fixed;right:0;top:var(--topbar-h);height:calc(100vh - var(--topbar-h));transform:translateX(100%);width:100%;max-width:290px;border:none}
   .side-pnl.open{transform:translateX(0)}
   .chip-name,.dept-badge,.role-badge{display:none}
   .tb-div,.tb-sub{display:none}
-  .cal-day{min-height:78px;padding:4px 3px}
+  .cal-day{min-height:76px;padding:4px 3px}
   .cal-day-num{font-size:11px}
-  .cal-evt{font-size:9px;padding:1px 4px}
-  .mtitle{font-size:14px;min-width:110px}
-  .f2{grid-template-columns:1fr}
-  .form-row{grid-template-columns:1fr}
+  .cal-evt{font-size:9px;padding:2px 4px}
+  .mtitle{font-size:14px;min-width:120px}
+  .f2,.form-row{grid-template-columns:1fr}
   .modal-card{max-width:95vw;max-height:95vh}
   .vis-select{grid-template-columns:1fr}
-  .auth-card{padding:24px;max-width:95vw}
+  .auth-card{padding:24px;max-width:96vw}
+  .week-wrap{display:none!important} /* week view too narrow on mobile */
 }
 @media(max-width:480px){
-  .topbar{padding:0 8px;height:50px}
-  .tb-logo-box{width:30px;height:30px;border-radius:7px}
+  :root{--topbar-h:50px}
+  .topbar{padding:0 10px}
+  .tb-logo-box{width:30px;height:30px}
   .tb-title{font-size:13px}
   .ua{width:26px;height:26px;font-size:10px}
-  .cal-day{min-height:64px}
-  .dow{font-size:9px;padding:6px 2px}
+  .cal-day{min-height:62px}
+  .dow{font-size:8px;padding:6px 2px}
   .mtitle{font-size:12px;min-width:90px}
   .pri-btn span{display:none}
   .out-btn span{display:none}
-  .out-btn{padding:5px 8px}
   #toast{left:12px;right:12px;max-width:none;bottom:16px}
 }
 @supports(padding:max(0px)){
-  .topbar{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .topbar{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
   .sidebar,.side-pnl{padding-bottom:env(safe-area-inset-bottom)}
 }
 </style>
@@ -601,16 +980,14 @@ select.inp{
         <span class="lf">E</span>
       </div>
       <div>
-        <div class="auth-brand-name">EIPICO Calendar</div>
-        <div class="auth-brand-be">Business Excellence</div>
+        <div class="auth-app-name">EIPICO Calendar</div>
+        <div class="auth-app-sub">Business Excellence</div>
       </div>
     </div>
-
     <div class="auth-tabs">
       <div class="auth-tab on" onclick="showTab('login')">Sign In</div>
       <div class="auth-tab" onclick="showTab('signup')">Sign Up</div>
     </div>
-
     <div id="loginTab">
       <div class="field"><label>Email</label>
         <input type="email" id="loginEmail" class="inp" placeholder="your@eipico.net" onkeydown="if(event.key==='Enter')handleLogin()">
@@ -619,10 +996,9 @@ select.inp{
         <input type="password" id="loginPassword" class="inp" placeholder="••••••" onkeydown="if(event.key==='Enter')handleLogin()">
       </div>
       <button class="auth-btn" onclick="handleLogin()">Sign In</button>
-      <div class="auth-err" id="loginErr"></div>
-      <div class="auth-ok"  id="loginOk"></div>
+      <div class="msg err" id="loginErr"></div>
+      <div class="msg ok"  id="loginOk"></div>
     </div>
-
     <div id="signupTab" style="display:none">
       <div class="f2">
         <div class="field"><label>First Name</label><input type="text" id="suFirstName" class="inp" placeholder="Ahmed"></div>
@@ -637,8 +1013,8 @@ select.inp{
         <select id="suCluster" class="inp"><option value="">Select Section</option></select>
       </div>
       <button class="auth-btn" onclick="handleSignup()">Create Account</button>
-      <div class="auth-err" id="signupErr"></div>
-      <div class="auth-ok"  id="signupOk"></div>
+      <div class="msg err" id="signupErr"></div>
+      <div class="msg ok"  id="signupOk"></div>
     </div>
     <div class="auth-hint">Powered by EIPICO Business Excellence</div>
   </div>
@@ -646,6 +1022,7 @@ select.inp{
 
 <!-- APP -->
 <div id="app">
+  <!-- TOPBAR -->
   <div class="topbar">
     <div class="tb-l">
       <button class="ham-btn" onclick="toggleNav()"><i class="ti ti-menu-2"></i></button>
@@ -674,22 +1051,24 @@ select.inp{
   </div>
 
   <div class="body-wrap">
+    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
       <div class="sl">Views</div>
       <div class="ni active" id="navMonth" onclick="setView('month')"><i class="ti ti-calendar-month"></i>Month</div>
-      <div class="ni" id="navWeek" onclick="setView('week')"><i class="ti ti-calendar-week"></i>Week</div>
+      <div class="ni" id="navWeek"  onclick="setView('week')"><i class="ti ti-calendar-week"></i>Week</div>
       <div class="ni" id="navList"  onclick="setView('list')"><i class="ti ti-list"></i>List</div>
       <div class="sl" style="margin-top:4px">Departments</div>
       <div id="deptNav"></div>
       <div id="adminNavSection" style="display:none">
         <div class="sl" style="margin-top:4px">Admin</div>
-        <div class="ni" onclick="openAdmin()"><i class="ti ti-settings"></i>Control Panel</div>
+        <div class="ni" onclick="openAdmin()"><i class="ti ti-shield-check"></i>Control Panel</div>
       </div>
       <div class="sidebar-foot">
-        <span>EIPICO Calendar</span><span style="opacity:.5">v3.1</span>
+        <span>EIPICO Calendar</span><span style="opacity:.4">v4.0</span>
       </div>
     </div>
 
+    <!-- MAIN -->
     <div class="main">
       <div class="cal-hdr">
         <div class="mnav">
@@ -711,27 +1090,30 @@ select.inp{
 
       <div class="fbar" id="filterBar"></div>
 
-      <!-- next event banner -->
+      <!-- Next event banner -->
       <div class="next-banner" id="nextBanner">
-        <div style="display:flex;align-items:center;gap:10px;min-width:0">
-          <div style="width:38px;height:38px;border-radius:9px;background:var(--dl);border:1px solid var(--da);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <i class="ti ti-calendar-event" style="font-size:18px;color:var(--da)"></i>
+        <div style="display:flex;align-items:center;gap:12px;min-width:0">
+          <div style="width:40px;height:40px;border-radius:10px;background:var(--accent-lt);border:1px solid rgba(14,165,233,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px var(--accent-lt)">
+            <i class="ti ti-calendar-event" style="font-size:18px;color:var(--accent-2)"></i>
           </div>
           <div style="min-width:0">
-            <div style="font-size:9px;font-weight:800;color:var(--da);text-transform:uppercase;letter-spacing:.08em">Upcoming Event</div>
+            <div style="font-size:9px;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Upcoming Event</div>
             <div id="nextBannerTitle" style="font-size:13px;font-weight:700;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
           </div>
         </div>
-        <div id="nextBannerWhen" style="font-size:12px;font-weight:800;color:var(--da);white-space:nowrap;flex-shrink:0"></div>
+        <div id="nextBannerWhen" style="font-size:12px;font-weight:800;color:var(--accent-2);white-space:nowrap;flex-shrink:0;text-shadow:0 0 12px var(--accent-lt)"></div>
       </div>
 
       <div class="calendar-wrap">
         <div class="cal-grid" id="calView"></div>
-        <div class="week-grid" id="weekView" style="display:none"></div>
+        <div class="week-wrap" id="weekView">
+          <div class="week-grid" id="weekGrid"></div>
+        </div>
         <div class="list-wrap" id="listView" style="display:none"></div>
       </div>
     </div>
 
+    <!-- RIGHT PANEL -->
     <div class="side-pnl" id="sidePanel">
       <div class="pnl-h">Event Details</div>
       <div id="panelContent" style="font-size:12px;color:var(--t2)">Click an event to view details.</div>
@@ -749,8 +1131,8 @@ select.inp{
       <button class="modal-close" onclick="closeModal('newEvtModal')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-group"><label>Title</label>
-        <input type="text" id="nevTitle" class="inp" placeholder="e.g. Team Sync Meeting">
+      <div class="form-group"><label>Event Title</label>
+        <input type="text" id="nevTitle" class="inp" placeholder="e.g. Q3 Planning Meeting">
       </div>
       <div class="form-row">
         <div class="form-group"><label>Date</label>
@@ -760,12 +1142,12 @@ select.inp{
           <select id="nevDept" class="inp"></select>
         </div>
       </div>
-      <div class="form-group"><label>Description <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--t2);font-size:10px">(optional)</span></label>
-        <textarea id="nevDesc" class="inp" placeholder="Add details…"></textarea>
+      <div class="form-group">
+        <label>Description <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--t2);font-size:10px">(optional)</span></label>
+        <textarea id="nevDesc" class="inp" placeholder="Add notes or details…"></textarea>
       </div>
-      <!-- VISIBILITY -->
       <div>
-        <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Visibility</div>
+        <label style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:10px">Visibility</label>
         <div class="vis-select">
           <div class="vis-opt int selected" id="visInt" onclick="selectVis('internal')">
             <div class="vis-opt-icon"><i class="ti ti-lock"></i></div>
@@ -833,17 +1215,17 @@ select.inp{
         <input type="text" id="deName" class="inp" placeholder="e.g. Marketing">
       </div>
       <div class="form-group"><label>Color</label>
-        <input type="color" id="deColor" class="inp" style="height:42px;cursor:pointer;padding:5px">
+        <input type="color" id="deColor" class="inp" style="height:44px;cursor:pointer;padding:6px">
       </div>
       <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
           <span style="font-size:12px;font-weight:700;color:var(--t2)">Sections</span>
-          <button class="a-btn small" onclick="addSecInput()"><i class="ti ti-plus"></i>Add</button>
+          <button class="a-btn small" onclick="addSecInput()"><i class="ti ti-plus"></i>Add Section</button>
         </div>
         <div id="secInputs"></div>
       </div>
       <div style="display:flex;gap:10px">
-        <button class="sub-btn" style="flex:1" onclick="saveDept()">Save</button>
+        <button class="sub-btn" style="flex:1" onclick="saveDept()">Save Department</button>
         <button class="a-btn ghost" style="flex:1;justify-content:center" onclick="closeModal('deptEditorModal')">Cancel</button>
       </div>
     </div>
@@ -858,7 +1240,9 @@ select.inp{
       <button class="modal-close" onclick="closeModal('userEditorModal')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-group"><label>Full Name</label><input type="text" id="ueName" class="inp"></div>
+      <div class="form-group"><label>Full Name</label>
+        <input type="text" id="ueName" class="inp">
+      </div>
       <div class="form-row">
         <div class="form-group"><label>Department</label>
           <select id="ueDept" class="inp" onchange="updateUeSecs()"></select>
@@ -891,13 +1275,19 @@ select.inp{
       <button class="modal-close" onclick="closeModal('adminEvtModal')">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-group"><label>Title</label><input type="text" id="aeTitle" class="inp" placeholder="Event title"></div>
+      <div class="form-group"><label>Title</label>
+        <input type="text" id="aeTitle" class="inp" placeholder="Event title">
+      </div>
       <div class="form-row">
-        <div class="form-group"><label>Date</label><input type="date" id="aeDate" class="inp"></div>
-        <div class="form-group"><label>Department</label><select id="aeDept" class="inp"></select></div>
+        <div class="form-group"><label>Date</label>
+          <input type="date" id="aeDate" class="inp">
+        </div>
+        <div class="form-group"><label>Department</label>
+          <select id="aeDept" class="inp"></select>
+        </div>
       </div>
       <div class="form-group"><label>Description</label>
-        <textarea id="aeDesc" class="inp" placeholder="Optional…"></textarea>
+        <textarea id="aeDesc" class="inp" placeholder="Optional details…"></textarea>
       </div>
       <div class="form-group"><label>Visibility</label>
         <select id="aeVis" class="inp">
@@ -906,7 +1296,7 @@ select.inp{
         </select>
       </div>
       <div style="display:flex;gap:10px">
-        <button class="sub-btn" style="flex:1" onclick="saveAdminEvent()">Save</button>
+        <button class="sub-btn" style="flex:1" onclick="saveAdminEvent()">Save Event</button>
         <button class="a-btn ghost" style="flex:1;justify-content:center" onclick="closeModal('adminEvtModal')">Cancel</button>
       </div>
     </div>
@@ -933,91 +1323,83 @@ let currentUser = null;
 let currentDate = new Date();
 let currentView = 'month';
 let editingId   = null;
-let deptFilter  = null;   // null = all
-let selectedVis = 'internal';  // for new event modal
+let deptFilter  = null;
+let selectedVis = 'internal';
 
 // ════════════════════════════════════════
-// THEME  — dark is default
+// THEME — dark default
 // ════════════════════════════════════════
 function applyTheme(t){
-  document.documentElement.setAttribute('data-theme', t);
-  localStorage.setItem('eipico_theme', t);
-  const icon = g('themeIcon');
-  if(icon) icon.className = t === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('eipico_theme',t);
+  const icon=g('themeIcon');
+  if(icon) icon.className = t==='dark'?'ti ti-sun':'ti ti-moon';
 }
 function toggleTheme(){
-  applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
 }
-// Apply immediately — dark default
-applyTheme(localStorage.getItem('eipico_theme') || 'dark');
+applyTheme(localStorage.getItem('eipico_theme')||'dark');
 
 // ════════════════════════════════════════
-// SUPABASE DATA LOADERS
+// DATA LOADERS
 // ════════════════════════════════════════
 async function loadDepartments(){
-  const {data:depts, error:e1} = await sb.from('departments').select('id,name,slug,color,sort_order').order('sort_order');
-  if(e1){ toast('Failed to load departments','err'); return; }
-  const {data:clusters, error:e2} = await sb.from('clusters').select('id,name,department_id,sort_order').order('sort_order');
-  if(e2){ toast('Failed to load sections','err'); return; }
-  const next = {};
+  const {data:depts,error:e1}=await sb.from('departments').select('id,name,slug,color,sort_order').order('sort_order');
+  if(e1){toast('Failed to load departments','err');return;}
+  const {data:clusters,error:e2}=await sb.from('clusters').select('id,name,department_id,sort_order').order('sort_order');
+  if(e2){toast('Failed to load sections','err');return;}
+  const next={};
   (depts||[]).forEach(d=>{
-    const key = d.slug || d.id;
-    next[key] = {
-      id:key, uuid:d.id, name:d.name, color:d.color,
-      subdepts:(clusters||[]).filter(c=>c.department_id===d.id).map(c=>({id:c.id,name:c.name}))
-    };
+    const key=d.slug||d.id;
+    next[key]={id:key,uuid:d.id,name:d.name,color:d.color,
+      subdepts:(clusters||[]).filter(c=>c.department_id===d.id).map(c=>({id:c.id,name:c.name}))};
   });
-  departments = next;
+  departments=next;
 }
 
 async function loadEvents(){
-  const {data, error} = await sb.from('assignments').select('*').order('date');
-  if(error){ toast('Failed to load events','err'); events=[]; return; }
-  // Visibility filtering: internal = only creator OR dept admin/super admin of same dept
-  events = (data||[]).filter(a=>{
-    // DB: 'company'=external/all; 'department','cluster','private'=internal/restricted
-    if(a.visibility !== 'company'){
-      return a.created_by === currentUser.id
-          || currentUser.is_super_admin
-          || (currentUser.is_admin && a.department === currentUser.department);
+  const {data,error}=await sb.from('assignments').select('*').order('date');
+  if(error){toast('Failed to load events','err');events=[];return;}
+  events=(data||[]).filter(a=>{
+    if(a.visibility!=='company'){
+      return a.created_by===currentUser.id||currentUser.is_super_admin
+        ||(currentUser.is_admin&&a.department===currentUser.department);
     }
-    return true; // 'company' = visible to all departments
+    return true;
   }).map(a=>({
-    id:a.id, title:a.title, date:a.date,
-    department:a.department, department_id:a.department_id,
+    id:a.id,title:a.title,date:a.date,
+    department:a.department,department_id:a.department_id,
     description:a.notes||'',
-    // Map DB values → UI: 'company'=external, everything else=internal
-    visibility: a.visibility === 'company' ? 'external' : 'internal',
-    assigned_to:a.assigned_to, created_by:a.created_by
+    visibility:a.visibility==='company'?'external':'internal',
+    assigned_to:a.assigned_to,created_by:a.created_by
   }));
 }
 
 async function loadAllUsers(){
-  const {data,error} = await sb.from('user_profiles').select('*');
-  if(error){ toast('Failed to load users','err'); allUsers=[]; return; }
-  allUsers = (data||[]).map(u=>({
-    id:u.id, full_name:u.full_name, email:u.email,
-    department:u.department, department_id:u.department_id,
-    cluster_id:u.cluster_id, cluster_name:u.cluster_name,
+  const {data,error}=await sb.from('user_profiles').select('*');
+  if(error){toast('Failed to load users','err');allUsers=[];return;}
+  allUsers=(data||[]).map(u=>({
+    id:u.id,full_name:u.full_name,email:u.email,
+    department:u.department,department_id:u.department_id,
+    cluster_id:u.cluster_id,cluster_name:u.cluster_name,
     role:u.role||'user',
     is_super_admin:!!u.is_app_admin,
-    is_dept_admin :!!u.is_dept_admin,
+    is_dept_admin:!!u.is_dept_admin,
     is_cluster_admin:!!u.is_cluster_admin
   }));
 }
 
 async function loadCurrentUserProfile(uid){
-  const {data,error} = await sb.from('user_profiles').select('*').eq('id',uid).single();
-  if(error||!data) return false;
-  currentUser = {
-    id:data.id, full_name:data.full_name, email:data.email,
-    department:data.department, department_id:data.department_id,
-    cluster_id:data.cluster_id, cluster_name:data.cluster_name,
+  const {data,error}=await sb.from('user_profiles').select('*').eq('id',uid).single();
+  if(error||!data)return false;
+  currentUser={
+    id:data.id,full_name:data.full_name,email:data.email,
+    department:data.department,department_id:data.department_id,
+    cluster_id:data.cluster_id,cluster_name:data.cluster_name,
     role:data.role||'user',
-    // ★ Role sourced ONLY from DB columns — never from email comparison
-    is_super_admin : !!data.is_app_admin,
-    is_admin       : !!data.is_dept_admin,
-    is_cluster_admin: !!data.is_cluster_admin
+    is_super_admin:!!data.is_app_admin,
+    is_admin:!!data.is_dept_admin,
+    is_cluster_admin:!!data.is_cluster_admin
   };
   return true;
 }
@@ -1028,57 +1410,55 @@ async function loadCurrentUserProfile(uid){
 function showTab(t){
   document.querySelectorAll('.auth-tab').forEach((el,i)=>
     el.classList.toggle('on',(t==='login'&&i===0)||(t==='signup'&&i===1)));
-  g('loginTab').style.display  = t==='login' ?'block':'none';
-  g('signupTab').style.display = t==='signup'?'block':'none';
+  g('loginTab').style.display=t==='login'?'block':'none';
+  g('signupTab').style.display=t==='signup'?'block':'none';
 }
 
 async function handleLogin(){
-  const email = g('loginEmail').value.trim();
-  const pw    = g('loginPassword').value;
-  if(!email||!pw){ showMsg('loginErr','Please fill in all fields.'); return; }
-  const {data,error} = await sb.auth.signInWithPassword({email,password:pw});
-  if(error){ showMsg('loginErr',error.message); return; }
-  const ok = await loadCurrentUserProfile(data.user.id);
-  if(!ok){ showMsg('loginErr','No profile found. Contact your admin.'); await sb.auth.signOut(); return; }
+  const email=g('loginEmail').value.trim();
+  const pw=g('loginPassword').value;
+  if(!email||!pw){showMsg('loginErr','Please fill in all fields.');return;}
+  const {data,error}=await sb.auth.signInWithPassword({email,password:pw});
+  if(error){showMsg('loginErr',error.message);return;}
+  const ok=await loadCurrentUserProfile(data.user.id);
+  if(!ok){showMsg('loginErr','No profile found. Contact your admin.');await sb.auth.signOut();return;}
   showMsg('loginOk','Welcome back, '+currentUser.full_name+'!');
-  setTimeout(()=>{ showAuth(false); loadApp(); }, 500);
+  setTimeout(()=>{showAuth(false);loadApp();},500);
 }
 
 async function handleSignup(){
-  const first    = g('suFirstName').value.trim();
-  const last     = g('suLastName').value.trim();
-  const email    = g('suEmail').value.trim();
-  const pw       = g('suPassword').value;
-  const deptSlug = g('suDept').value;
-  const secId    = g('suCluster').value;
-  if(!first||!email||!pw||!deptSlug){ showMsg('signupErr','Please fill in all required fields.'); return; }
-  if(pw.length<6){ showMsg('signupErr','Password must be at least 6 characters.'); return; }
-  const {data,error} = await sb.auth.signUp({email,password:pw});
-  if(error){ showMsg('signupErr',error.message); return; }
-  if(!data.session||!data.user){ showMsg('signupOk','Check your email to confirm, then sign in.'); return; }
-  const dept    = departments[deptSlug];
-  const section = dept?.subdepts.find(s=>s.id===secId);
-  const {error:pe} = await sb.from('user_profiles').insert({
-    id:data.user.id, email,
+  const first=g('suFirstName').value.trim();
+  const last=g('suLastName').value.trim();
+  const email=g('suEmail').value.trim();
+  const pw=g('suPassword').value;
+  const deptSlug=g('suDept').value;
+  const secId=g('suCluster').value;
+  if(!first||!email||!pw||!deptSlug){showMsg('signupErr','Please fill in all required fields.');return;}
+  if(pw.length<6){showMsg('signupErr','Password must be at least 6 characters.');return;}
+  const {data,error}=await sb.auth.signUp({email,password:pw});
+  if(error){showMsg('signupErr',error.message);return;}
+  if(!data.session||!data.user){showMsg('signupOk','Check your email to confirm, then sign in.');return;}
+  const dept=departments[deptSlug];
+  const section=dept?.subdepts.find(s=>s.id===secId);
+  const {error:pe}=await sb.from('user_profiles').insert({
+    id:data.user.id,email,
     full_name:first+(last?' '+last:''),
-    department:deptSlug, department_id:dept?.uuid||null,
-    cluster_id:section?.id||null, cluster_name:section?.name||null,
-    role:'user',
-    is_dept_admin:false, is_cluster_admin:false,
-    is_app_admin:false,  // never auto-granted
+    department:deptSlug,department_id:dept?.uuid||null,
+    cluster_id:section?.id||null,cluster_name:section?.name||null,
+    role:'user',is_dept_admin:false,is_cluster_admin:false,is_app_admin:false,
     initials:(first[0]+(last?last[0]:'')).toUpperCase()
   });
-  if(pe){ showMsg('signupErr','Profile setup failed: '+pe.message); return; }
+  if(pe){showMsg('signupErr','Profile setup failed: '+pe.message);return;}
   await loadCurrentUserProfile(data.user.id);
   showMsg('signupOk','Account created! Welcome, '+first+'!');
-  setTimeout(()=>{ showAuth(false); loadApp(); }, 600);
+  setTimeout(()=>{showAuth(false);loadApp();},600);
 }
 
 async function logout(){
   await sb.auth.signOut();
-  currentUser=null; events=[]; allUsers=[];
+  currentUser=null;events=[];allUsers=[];
   showAuth(true);
-  g('loginEmail').value=''; g('loginPassword').value='';
+  g('loginEmail').value='';g('loginPassword').value='';
 }
 
 function showAuth(show){
@@ -1090,29 +1470,34 @@ function showAuth(show){
 // APP INIT
 // ════════════════════════════════════════
 async function loadApp(){
-  const dept = departments[currentUser.department];
-  g('userName').textContent   = currentUser.full_name;
-  g('userAvatar').textContent = currentUser.full_name.charAt(0).toUpperCase();
-  g('deptBadge').textContent  = dept?.name || currentUser.department || '';
-  if(dept?.color){
-    // Only set dept color on avatar — do NOT override global --da to keep UI consistent
-    g('userAvatar').style.background = dept.color;
+  const dept=departments[currentUser.department];
+  g('userName').textContent=currentUser.full_name;
+  g('userAvatar').textContent=currentUser.full_name.charAt(0).toUpperCase();
+
+  if(currentUser.is_super_admin){
+    g('deptBadge').textContent='All Depts';
+    g('deptBadge').style.display='';
+    g('userAvatar').style.background='linear-gradient(135deg,var(--accent),var(--accent-dk))';
+  } else if(dept){
+    g('deptBadge').textContent=dept.name;
+    g('deptBadge').style.display='';
+    g('userAvatar').style.background=dept.color;
+  } else {
+    g('deptBadge').style.display='none';
   }
 
-  // Role badge — strictly from DB
-  const rb = g('roleBadge');
+  const rb=g('roleBadge');
   if(currentUser.is_super_admin){
-    rb.textContent='Super Admin'; rb.className='role-badge sa'; rb.style.display='';
+    rb.textContent='Super Admin';rb.className='role-badge sa';rb.style.display='';
     g('adminNavSection').style.display='block';
   } else if(currentUser.is_admin){
-    rb.textContent='Dept Admin'; rb.className='role-badge da'; rb.style.display='';
+    rb.textContent='Dept Admin';rb.className='role-badge da';rb.style.display='';
     g('adminNavSection').style.display='none';
   } else if(currentUser.is_cluster_admin){
-    rb.textContent='Section Admin'; rb.className='role-badge ca'; rb.style.display='';
+    rb.textContent='Section Admin';rb.className='role-badge ca';rb.style.display='';
     g('adminNavSection').style.display='none';
   } else {
-    rb.style.display='none';
-    g('adminNavSection').style.display='none';
+    rb.style.display='none';g('adminNavSection').style.display='none';
   }
 
   buildSidebarDepts();
@@ -1122,12 +1507,12 @@ async function loadApp(){
   renderNextBanner();
 }
 
-function canSeeAll(){ return currentUser.is_super_admin || currentUser.is_admin; }
+function canSeeAll(){return currentUser.is_super_admin||currentUser.is_admin;}
+function getDept(x){return departments[x]||Object.values(departments).find(d=>d.slug===x||d.id===x);}
 
 function visibleEvts(){
-  // already filtered on load; filter bar applies dept filter on top
-  let evts = [...events];
-  if(deptFilter) evts = evts.filter(e=>e.department===deptFilter);
+  let evts=[...events];
+  if(deptFilter) evts=evts.filter(e=>e.department===deptFilter);
   return evts;
 }
 
@@ -1135,112 +1520,187 @@ function visibleEvts(){
 // SIDEBAR & FILTER BAR
 // ════════════════════════════════════════
 function buildSidebarDepts(){
-  const list = canSeeAll()
-    ? Object.values(departments)
-    : Object.values(departments).filter(d=>d.id===currentUser.department);
-  g('deptNav').innerHTML = list.map(d=>`
+  const list=canSeeAll()?Object.values(departments):Object.values(departments).filter(d=>d.id===currentUser.department);
+  g('deptNav').innerHTML=list.map(d=>`
     <div class="ni" id="sdn_${d.id}" onclick="filterByDept('${d.id}')">
-      <div class="dept-dot" style="background:${d.color}"></div>${d.name}
+      <div class="dept-dot" style="background:${d.color};box-shadow:0 0 6px ${d.color}"></div>${d.name}
     </div>`).join('');
 }
 
 function buildFilterBar(){
-  const list = canSeeAll()
-    ? Object.values(departments)
-    : Object.values(departments).filter(d=>d.id===currentUser.department);
-  let html = `<div class="fpill active" id="fpAll" onclick="filterByDept(null)">All</div>`;
-  html += list.map(d=>`
+  const list=canSeeAll()?Object.values(departments):Object.values(departments).filter(d=>d.id===currentUser.department);
+  let html=`<div class="fpill active" id="fpAll" onclick="filterByDept(null)">All</div>`;
+  html+=list.map(d=>`
     <div class="fpill" id="fp_${d.id}" data-dept="${d.id}" onclick="filterByDept('${d.id}')">
-      <div class="fp-dot" style="background:${d.color}"></div>${d.name}
+      <div class="fp-dot" style="background:${d.color};box-shadow:0 0 4px ${d.color}"></div>${d.name}
     </div>`).join('');
-  g('filterBar').innerHTML = html;
+  g('filterBar').innerHTML=html;
 }
 
 function filterByDept(deptId){
-  deptFilter = deptId;
+  deptFilter=deptId;
   document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ni[id^=sdn_]').forEach(p=>p.classList.remove('active'));
-  if(deptId){
-    g('fp_'+deptId)?.classList.add('active');
-    g('sdn_'+deptId)?.classList.add('active');
-  } else {
-    g('fpAll')?.classList.add('active');
-  }
+  if(deptId){g('fp_'+deptId)?.classList.add('active');g('sdn_'+deptId)?.classList.add('active');}
+  else g('fpAll')?.classList.add('active');
   renderCalendar();
   if(currentView==='list') renderList();
+  if(currentView==='week') renderWeek();
 }
 
 // ════════════════════════════════════════
 // NEXT EVENT BANNER
 // ════════════════════════════════════════
 function renderNextBanner(){
-  const banner = g('nextBanner');
-  const today  = new Date().toISOString().split('T')[0];
-  const upcoming = events.filter(e=>e.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!upcoming.length){ banner.style.display='none'; return; }
-  const next = upcoming[0];
-  const dObj = departments[next.department];
-  const tom  = new Date(Date.now()+86400000).toISOString().split('T')[0];
-  g('nextBannerTitle').textContent = next.title + (dObj?' · '+dObj.name:'');
-  g('nextBannerWhen').textContent  =
-    next.date===today ? 'Today' : next.date===tom ? 'Tomorrow' :
+  const banner=g('nextBanner');
+  const today=new Date().toISOString().split('T')[0];
+  const upcoming=events.filter(e=>e.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!upcoming.length){banner.style.display='none';return;}
+  const next=upcoming[0];
+  const dObj=getDept(next.department);
+  const tom=new Date(Date.now()+86400000).toISOString().split('T')[0];
+  g('nextBannerTitle').textContent=next.title+(dObj?' · '+dObj.name:'');
+  g('nextBannerWhen').textContent=
+    next.date===today?'Today':next.date===tom?'Tomorrow':
     new Date(next.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-  if(dObj?.color) banner.style.borderColor = dObj.color;
+  if(dObj?.color) banner.style.borderColor=dObj.color+'66';
   banner.style.display='flex';
 }
 
 // ════════════════════════════════════════
-// CALENDAR RENDER
+// MONTH VIEW
 // ════════════════════════════════════════
 function renderCalendar(){
-  const yr=currentDate.getFullYear(), mo=currentDate.getMonth();
-  const first=new Date(yr,mo,1), last=new Date(yr,mo+1,0);
-  const grid=g('calView'); grid.innerHTML='';
+  const yr=currentDate.getFullYear(),mo=currentDate.getMonth();
+  const first=new Date(yr,mo,1),last=new Date(yr,mo+1,0);
+  const grid=g('calView');grid.innerHTML='';
   ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(d=>{
-    const el=document.createElement('div'); el.className='dow'; el.textContent=d; grid.appendChild(el);
+    const el=document.createElement('div');el.className='dow';el.textContent=d;grid.appendChild(el);
   });
   const pLast=new Date(yr,mo,0).getDate();
   for(let i=pLast-first.getDay()+1;i<=pLast;i++) grid.appendChild(makeDayEl(new Date(yr,mo-1,i),true));
   for(let i=1;i<=last.getDate();i++)               grid.appendChild(makeDayEl(new Date(yr,mo,i),false));
   const fill=7-last.getDay()-1;
   for(let i=1;i<=fill;i++)                          grid.appendChild(makeDayEl(new Date(yr,mo+1,i),true));
-  g('monthTitle').textContent = first.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  g('monthTitle').textContent=first.toLocaleDateString('en-US',{month:'long',year:'numeric'});
 }
 
 function makeDayEl(date,other){
-  const today = new Date();
-  const isToday = date.toDateString()===today.toDateString();
-  const el = document.createElement('div');
+  const today=new Date();
+  const isToday=date.toDateString()===today.toDateString();
+  const el=document.createElement('div');
   el.className='cal-day'+(other?' other-m':'')+(isToday?' today':'');
-  const num=document.createElement('div'); num.className='cal-day-num'; num.textContent=date.getDate();
+  const num=document.createElement('div');num.className='cal-day-num';num.textContent=date.getDate();
   el.appendChild(num);
-  const wrap=document.createElement('div'); wrap.className='cal-day-events';
+  const wrap=document.createElement('div');wrap.className='cal-day-events';
   const dayEvts=visibleEvts().filter(e=>new Date(e.date+'T00:00:00').toDateString()===date.toDateString());
   dayEvts.slice(0,3).forEach(evt=>{
-    const pill=document.createElement('div'); pill.className='cal-evt';
-    const col=departments[evt.department]?.color||'var(--da)';
+    const pill=document.createElement('div');pill.className='cal-evt';
+    const col=getDept(evt.department)?.color||'var(--accent)';
     pill.textContent=(evt.visibility==='internal'?'🔒 ':'')+evt.title;
-    // Subtle tinted background, colored text
-    pill.style.cssText=`background:${col}22;color:${col};border-left:2px solid ${col}`;
+    pill.style.cssText=`background:${col};`;
     pill.onclick=ev=>{ev.stopPropagation();showPanel(evt);};
     wrap.appendChild(pill);
   });
   if(dayEvts.length>3){
-    const m=document.createElement('div'); m.className='cal-evt';
-    m.style.cssText='background:var(--s0);color:var(--t2);border-left:2px solid var(--bd)';
-    m.textContent=`+${dayEvts.length-3} more`; wrap.appendChild(m);
+    const m=document.createElement('div');m.className='cal-evt';
+    m.style.cssText='background:var(--glass-2);color:var(--t2);border:1px solid var(--glass-border)';
+    m.textContent=`+${dayEvts.length-3} more`;wrap.appendChild(m);
   }
   el.appendChild(wrap);
   el.onclick=()=>openNewEventModal(date);
   return el;
 }
 
+// ════════════════════════════════════════
+// WEEK VIEW
+// ════════════════════════════════════════
+function getWeekStart(date){
+  const d=new Date(date);
+  d.setDate(d.getDate()-d.getDay());
+  return d;
+}
+
+function renderWeek(){
+  const wStart=getWeekStart(currentDate);
+  const days=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(wStart);d.setDate(d.getDate()+i);days.push(d);
+  }
+  const today=new Date();
+  const grid=g('weekGrid');
+  grid.innerHTML='';
+
+  // Update title
+  const endDay=days[6];
+  const startDay=days[0];
+  g('monthTitle').textContent=
+    startDay.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' – '+
+    endDay.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+  // Corner
+  const corner=document.createElement('div');corner.className='week-corner';grid.appendChild(corner);
+
+  // Day headers
+  const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  days.forEach(day=>{
+    const isToday=day.toDateString()===today.toDateString();
+    const hdr=document.createElement('div');
+    hdr.className='week-day-hdr'+(isToday?' today-col':'');
+    const numEl=document.createElement('div');
+    numEl.className='week-day-num'+(isToday?' today-num':'');
+    numEl.textContent=day.getDate();
+    hdr.innerHTML=`<div class="week-day-name">${dayNames[day.getDay()]}</div>`;
+    hdr.appendChild(numEl);
+    hdr.onclick=()=>{currentDate=new Date(day);setView('month');};
+    grid.appendChild(hdr);
+  });
+
+  // Hour rows (6am–10pm)
+  const hours=[];
+  for(let h=6;h<=22;h++) hours.push(h);
+
+  hours.forEach(h=>{
+    // Time label
+    const timeCell=document.createElement('div');
+    timeCell.className='week-time-cell';
+    timeCell.textContent=h===12?'12pm':h<12?h+'am':(h-12)+'pm';
+    grid.appendChild(timeCell);
+
+    days.forEach(day=>{
+      const isToday=day.toDateString()===today.toDateString();
+      const cell=document.createElement('div');
+      cell.className='week-cell'+(isToday?' today-col':'');
+
+      // Events on this day (all-day events shown in first row)
+      if(h===6){
+        const dayEvts=visibleEvts().filter(e=>new Date(e.date+'T00:00:00').toDateString()===day.toDateString());
+        dayEvts.forEach(evt=>{
+          const col=getDept(evt.department)?.color||'var(--accent)';
+          const ev=document.createElement('div');
+          ev.className='week-evt';
+          ev.textContent=(evt.visibility==='internal'?'🔒 ':'')+evt.title;
+          ev.style.background=col;
+          ev.onclick=e=>{e.stopPropagation();showPanel(evt);};
+          cell.appendChild(ev);
+        });
+      }
+
+      cell.onclick=()=>openNewEventModal(day);
+      grid.appendChild(cell);
+    });
+  });
+}
+
+// ════════════════════════════════════════
+// LIST VIEW
+// ════════════════════════════════════════
 function renderList(){
   const lv=g('listView');
   const sorted=visibleEvts().sort((a,b)=>a.date.localeCompare(b.date));
-  if(!sorted.length){ lv.innerHTML='<div style="padding:60px;text-align:center;color:var(--t2)">No events to display.</div>'; return; }
+  if(!sorted.length){lv.innerHTML='<div style="padding:60px;text-align:center;color:var(--t2)">No events to display.</div>';return;}
   lv.innerHTML=sorted.map(e=>{
-    const d=departments[e.department];
+    const d=getDept(e.department);
     const vp=e.visibility==='internal'
       ?'<span class="vis-pill internal"><i class="ti ti-lock"></i>Internal</span>'
       :'<span class="vis-pill external"><i class="ti ti-world"></i>External</span>';
@@ -1249,58 +1709,56 @@ function renderList(){
         <div class="list-date">${new Date(e.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})}</div>
         <div class="list-title">${e.title}</div>
         <div class="list-meta">
-          ${d?`<span style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:${d.color};display:inline-block"></span>${d.name}</span>`:''}
+          ${d?`<span style="display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:${d.color};box-shadow:0 0 5px ${d.color};display:inline-block"></span>${d.name}</span>`:''}
           ${vp}
         </div>
       </div>
-      ${d?`<span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:${d.color};color:#fff;white-space:nowrap">${d.name}</span>`:''}
+      ${d?`<span style="font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;background:${d.color}22;color:${d.color};border:1px solid ${d.color}44;white-space:nowrap">${d.name}</span>`:''}
     </div>`;
   }).join('');
 }
 
-function evtById(id){ return events.find(e=>e.id===id); }
+function evtById(id){return events.find(e=>e.id===id);}
 
-// User can edit/delete ONLY events they created. Super admin can edit all.
-function canEditEvent(evt){
-  if(!evt||!currentUser) return false;
-  return currentUser.is_super_admin || evt.created_by === currentUser.id;
-}
+// ════════════════════════════════════════
+// PANEL
+// ════════════════════════════════════════
+function canEditEvent(evt){if(!evt||!currentUser)return false;return currentUser.is_super_admin||evt.created_by===currentUser.id;}
 
 function showPanel(evt){
-  if(!evt) return;
-  const d=departments[evt.department];
+  if(!evt)return;
+  const d=getDept(evt.department);
   const vp=evt.visibility==='internal'
     ?'<span class="vis-pill internal" style="margin-top:8px"><i class="ti ti-lock"></i>Internal — dept only</span>'
-    :'<span class="vis-pill external" style="margin-top:8px"><i class="ti ti-world"></i>External — all departments</span>';
-
+    :'<span class="vis-pill external" style="margin-top:8px"><i class="ti ti-world"></i>External — all depts</span>';
   const editable=canEditEvent(evt);
   const btns=editable
-    ?`<div style="display:flex;gap:8px;margin-top:14px">
+    ?`<div style="display:flex;gap:8px;margin-top:16px">
         <button onclick="openEditEventModal('${evt.id}')"
-          style="flex:1;padding:9px;background:var(--da);color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px">
+          style="flex:1;padding:9px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));color:#fff;border:none;border-radius:var(--r);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px;box-shadow:0 2px 10px var(--accent-lt)">
           <i class="ti ti-edit"></i>Edit
         </button>
         <button onclick="deleteOwnEvent('${evt.id}')"
-          style="flex:1;padding:9px;background:var(--red-lt);color:var(--red);border:1px solid var(--red);border-radius:var(--r);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px">
+          style="flex:1;padding:9px;background:var(--red-lt);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:var(--r);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px">
           <i class="ti ti-trash"></i>Delete
         </button>
       </div>`
-    :`<div style="margin-top:10px;font-size:11px;color:var(--t2);display:flex;align-items:center;gap:5px;padding:8px;background:var(--s0);border-radius:var(--r);border:1px solid var(--bd)">
+    :`<div style="margin-top:10px;font-size:11px;color:var(--t2);display:flex;align-items:center;gap:5px;padding:8px;background:var(--glass-1);border-radius:var(--r);border:1px solid var(--glass-border)">
         <i class="ti ti-info-circle" style="font-size:13px"></i>Created by another user
       </div>`;
 
   g('panelContent').innerHTML=`
-    <div style="width:100%;height:3px;border-radius:3px;background:${d?.color||'var(--da)'};margin-bottom:16px"></div>
+    <div style="width:100%;height:3px;border-radius:3px;background:${d?.color||'var(--accent)'};margin-bottom:16px;box-shadow:0 0 12px ${d?.color||'var(--accent)'}"></div>
     <div style="font-size:16px;font-weight:800;color:var(--t1);margin-bottom:6px;line-height:1.3">${evt.title}</div>
-    <div style="font-size:12px;color:var(--t2);margin-bottom:12px">
+    <div style="font-size:12px;color:var(--t2);margin-bottom:14px">
       ${new Date(evt.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}
     </div>
-    ${d?`<div style="display:flex;align-items:center;gap:8px;padding:9px;background:var(--s0);border-radius:var(--r);margin-bottom:10px;border:1px solid var(--bd)">
-      <div style="width:10px;height:10px;border-radius:50%;background:${d.color}"></div>
+    ${d?`<div style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--glass-1);border-radius:var(--r);margin-bottom:10px;border:1px solid var(--glass-border)">
+      <div style="width:10px;height:10px;border-radius:50%;background:${d.color};box-shadow:0 0 8px ${d.color}"></div>
       <span style="font-size:12px;font-weight:700;color:var(--t1)">${d.name}</span>
     </div>`:''}
     ${vp}
-    ${evt.description?`<div style="margin-top:12px;font-size:13px;color:var(--t2);line-height:1.6;padding:12px;background:var(--s0);border-radius:var(--r);border:1px solid var(--bd)">${evt.description}</div>`:''}
+    ${evt.description?`<div style="margin-top:12px;font-size:13px;color:var(--t2);line-height:1.6;padding:12px;background:var(--glass-1);border-radius:var(--r);border:1px solid var(--glass-border)">${evt.description}</div>`:''}
     ${btns}
   `;
 }
@@ -1315,12 +1773,12 @@ function selectVis(v){
 }
 
 // ════════════════════════════════════════
-// USER EDIT / DELETE OWN EVENT (from panel)
+// USER EDIT / DELETE OWN EVENT
 // ════════════════════════════════════════
 function openEditEventModal(eventId){
   const evt=events.find(e=>e.id===eventId);
-  if(!evt){ toast('Event not found','err'); return; }
-  if(!canEditEvent(evt)){ toast('You can only edit events you created','err'); return; }
+  if(!evt){toast('Event not found','err');return;}
+  if(!canEditEvent(evt)){toast('You can only edit events you created','err');return;}
   editingId=eventId;
   g('nevTitle').value=evt.title;
   g('nevDate').value=evt.date;
@@ -1328,37 +1786,33 @@ function openEditEventModal(eventId){
   selectVis(evt.visibility==='internal'?'internal':'external');
   const sel=g('nevDept');
   if(canSeeAll()){
-    sel.innerHTML=Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
-    sel.value=evt.department; sel.disabled=false;
+    sel.innerHTML=Object.values(departments).map(d=>`<option value="${d.slug||d.id}">${d.name}</option>`).join('');
+    sel.value=evt.department;sel.disabled=false;
   } else {
-    const dept=departments[currentUser.department];
-    sel.innerHTML=`<option value="${currentUser.department}">${dept?.name||currentUser.department}</option>`;
-    sel.value=currentUser.department; sel.disabled=true;
+    const dept=getDept(currentUser.department);
+    sel.innerHTML=`<option value="${dept?.slug||currentUser.department}">${dept?.name||currentUser.department}</option>`;
+    sel.value=dept?.slug||currentUser.department;sel.disabled=true;
   }
-  // Change modal title to Edit
   g('newEvtModal').querySelector('.modal-title').innerHTML='<i class="ti ti-edit"></i>Edit Event';
   g('newEvtModal').querySelector('.sub-btn').textContent='Update Event';
   openModal('newEvtModal');
 }
 
-// Override saveNewEvent to handle both create and update
-const _origSaveNewEvent = null; // defined below, we replace inline
-
 async function deleteOwnEvent(eventId){
   const evt=events.find(e=>e.id===eventId);
-  if(!evt){ toast('Event not found','err'); return; }
-  if(!canEditEvent(evt)){ toast('You can only delete events you created','err'); return; }
-  if(!confirm('Delete this event?')) return;
+  if(!evt){toast('Event not found','err');return;}
+  if(!canEditEvent(evt)){toast('You can only delete events you created','err');return;}
+  if(!confirm('Delete this event?'))return;
   const {error}=await sb.from('assignments').delete().eq('id',eventId);
-  if(error){ toast('Error: '+error.message,'err'); return; }
+  if(error){toast('Error: '+error.message,'err');return;}
   events=events.filter(e=>e.id!==eventId);
   g('panelContent').innerHTML='<p style="font-size:12px;color:var(--t2)">Event deleted.</p>';
-  renderCalendar(); if(currentView==='list') renderList(); renderNextBanner();
+  renderCalendar();if(currentView==='list')renderList();if(currentView==='week')renderWeek();renderNextBanner();
   toast('Event deleted ✓','ok');
 }
 
 // ════════════════════════════════════════
-// NEW EVENT MODAL  — dept locked for regular users
+// NEW EVENT MODAL
 // ════════════════════════════════════════
 function openNewEventModal(date=null){
   editingId=null;
@@ -1368,96 +1822,81 @@ function openNewEventModal(date=null){
   selectVis('internal');
   const sel=g('nevDept');
   if(canSeeAll()){
-    sel.innerHTML=Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
-    sel.value=currentUser.department; sel.disabled=false;
+    sel.innerHTML=Object.values(departments).map(d=>`<option value="${d.slug||d.id}">${d.name}</option>`).join('');
+    sel.value=currentUser.department||Object.values(departments)[0]?.slug;
+    sel.disabled=false;
   } else {
-    const dept=departments[currentUser.department];
-    sel.innerHTML=`<option value="${currentUser.department}">${dept?.name||currentUser.department}</option>`;
-    sel.value=currentUser.department; sel.disabled=true;
+    const dept=getDept(currentUser.department);
+    sel.innerHTML=`<option value="${dept?.slug||currentUser.department}">${dept?.name||currentUser.department}</option>`;
+    sel.value=dept?.slug||currentUser.department;sel.disabled=true;
   }
   openModal('newEvtModal');
 }
 
 async function saveNewEvent(){
   const title=g('nevTitle').value.trim();
-  const date =g('nevDate').value;
-  const dept =g('nevDept').value;
-  const desc =g('nevDesc').value.trim();
-  // Map UI → DB: 'external'→'company', 'internal'→'department'
-  const vis = selectedVis==='external' ? 'company' : 'department';
-  if(!title||!date){ toast('Title and date are required','err'); return; }
-  const dObj=departments[dept];
-
+  const date=g('nevDate').value;
+  const dept=g('nevDept').value;
+  const desc=g('nevDesc').value.trim();
+  const vis=selectedVis==='external'?'company':'department';
+  if(!title||!date){toast('Title and date are required','err');return;}
+  const dObj=getDept(dept);
   if(editingId){
-    // UPDATE existing own event
     const evt=events.find(e=>e.id===editingId);
-    if(!evt||!canEditEvent(evt)){ toast('Permission denied','err'); return; }
+    if(!evt||!canEditEvent(evt)){toast('Permission denied','err');return;}
     const {error}=await sb.from('assignments').update({
-      title, date, department:dept,
-      department_id:dObj?.uuid||null,
-      notes:desc, visibility:vis
+      title,date,department:dept,department_id:dObj?.uuid||null,notes:desc,visibility:vis
     }).eq('id',editingId);
-    if(error){ toast('Error: '+error.message,'err'); return; }
-    evt.title=title; evt.date=date; evt.department=dept;
-    evt.description=desc; evt.visibility=vis==='company'?'external':'internal';
+    if(error){toast('Error: '+error.message,'err');return;}
+    evt.title=title;evt.date=date;evt.department=dept;evt.description=desc;
+    evt.visibility=vis==='company'?'external':'internal';
     toast('Event updated ✓','ok');
   } else {
-    // CREATE new event
     const {data,error}=await sb.from('assignments').insert({
-      title, date, department:dept,
-      department_id:dObj?.uuid||null,
-      created_by:currentUser.id,
-      notes:desc,
-      visibility:vis
+      title,date,department:dept,department_id:dObj?.uuid||null,
+      created_by:currentUser.id,notes:desc,visibility:vis
     }).select().single();
-    if(error){ toast('Error: '+error.message,'err'); return; }
-    events.push({
-      id:data.id,title:data.title,date:data.date,
+    if(error){toast('Error: '+error.message,'err');return;}
+    events.push({id:data.id,title:data.title,date:data.date,
       department:data.department,description:data.notes||'',
       visibility:data.visibility==='company'?'external':'internal',
-      assigned_to:data.assigned_to,created_by:data.created_by
-    });
+      assigned_to:data.assigned_to,created_by:data.created_by});
     toast('Event added ✓','ok');
   }
-  resetNewEvtModal();
-  closeModal('newEvtModal');
-  renderCalendar(); if(currentView==='list') renderList();
+  resetNewEvtModal();closeModal('newEvtModal');
+  renderCalendar();if(currentView==='list')renderList();if(currentView==='week')renderWeek();
   renderNextBanner();
 }
 
-// Reset modal title/button back to "New Event" after close
 function resetNewEvtModal(){
-  const modal=g('newEvtModal');
-  if(!modal) return;
+  const modal=g('newEvtModal');if(!modal)return;
   modal.querySelector('.modal-title').innerHTML='<i class="ti ti-calendar-plus"></i>New Event';
   modal.querySelector('.sub-btn').textContent='Save Event';
   editingId=null;
 }
 
 // ════════════════════════════════════════
-// ADMIN PANEL
+// ADMIN
 // ════════════════════════════════════════
 async function openAdmin(){
-  if(!currentUser.is_super_admin){ toast('Access denied','err'); return; }
+  if(!currentUser.is_super_admin){toast('Access denied','err');return;}
   await Promise.all([loadAllUsers(),loadEvents()]);
-  renderAdminDepts(); renderAdminUsers(); renderAdminEvents();
+  renderAdminDepts();renderAdminUsers();renderAdminEvents();
   openModal('adminModal');
 }
 
 function switchTab(tabEl,sectionId){
   document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.a-section').forEach(s=>s.classList.remove('active'));
-  tabEl.classList.add('active');
-  g(sectionId).classList.add('active');
+  tabEl.classList.add('active');g(sectionId).classList.add('active');
 }
 
-// ── DEPARTMENTS ──
 function renderAdminDepts(){
   g('deptListAdmin').innerHTML=Object.values(departments).map(d=>`
     <div class="dept-card">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
         <div style="display:flex;align-items:center;gap:9px">
-          <div class="dept-swatch" style="background:${d.color}"></div>
+          <div class="dept-swatch" style="background:${d.color};box-shadow:0 0 8px ${d.color}"></div>
           <strong style="font-size:14px;color:var(--t1)">${d.name}</strong>
         </div>
         <div class="a-actions">
@@ -1466,9 +1905,7 @@ function renderAdminDepts(){
         </div>
       </div>
       <div class="dept-sections">
-        ${d.subdepts.map(s=>`<div class="sec-chip">${s.name}
-          <button onclick="deleteSection('${d.id}','${s.id}')">✕</button>
-        </div>`).join('')}
+        ${d.subdepts.map(s=>`<div class="sec-chip">${s.name}<button onclick="deleteSection('${d.id}','${s.id}')">✕</button></div>`).join('')}
         ${!d.subdepts.length?'<span style="font-size:11px;color:var(--t2)">No sections yet</span>':''}
       </div>
     </div>`).join('');
@@ -1478,8 +1915,8 @@ function openDeptEditor(deptId=null){
   editingId=deptId||null;
   const dept=deptId?departments[deptId]:null;
   g('deptEditorTtl').innerHTML=`<i class="ti ti-building"></i>${dept?'Edit Department':'Add Department'}`;
-  g('deName').value =dept?.name||'';
-  g('deColor').value=dept?.color||'#2563EB';
+  g('deName').value=dept?.name||'';
+  g('deColor').value=dept?.color||'#0EA5E9';
   g('secInputs').innerHTML=(dept?.subdepts||[]).map(s=>`
     <div class="sec-row">
       <input type="text" class="inp sec-inp" data-sec-id="${s.id}" value="${s.name}">
@@ -1488,25 +1925,24 @@ function openDeptEditor(deptId=null){
   openModal('deptEditorModal');
 }
 function addSecInput(){
-  const row=document.createElement('div'); row.className='sec-row';
+  const row=document.createElement('div');row.className='sec-row';
   row.innerHTML='<input type="text" class="inp sec-inp" placeholder="Section name"><button class="a-btn small danger" onclick="this.parentElement.remove()"><i class="ti ti-x"></i></button>';
   g('secInputs').appendChild(row);
 }
 function slugify(n){return n.trim().toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
 
 async function saveDept(){
-  const name =g('deName').value.trim();
+  const name=g('deName').value.trim();
   const color=g('deColor').value;
-  const rows =Array.from(document.querySelectorAll('.sec-inp'));
-  const secs =rows.map(i=>({secId:i.dataset.secId||null,name:i.value.trim()})).filter(s=>s.name);
-  if(!name){ toast('Department name required','err'); return; }
+  const rows=Array.from(document.querySelectorAll('.sec-inp'));
+  const secs=rows.map(i=>({secId:i.dataset.secId||null,name:i.value.trim()})).filter(s=>s.name);
+  if(!name){toast('Department name required','err');return;}
   if(editingId){
     const dept=departments[editingId];
     const {error:e1}=await sb.from('departments').update({name,color}).eq('id',dept.uuid);
-    if(e1){ toast('Error: '+e1.message,'err'); return; }
+    if(e1){toast('Error: '+e1.message,'err');return;}
     const kept=new Set(secs.filter(s=>s.secId).map(s=>s.secId));
-    for(const id of dept.subdepts.map(s=>s.id).filter(id=>!kept.has(id)))
-      await sb.from('clusters').delete().eq('id',id);
+    for(const id of dept.subdepts.map(s=>s.id).filter(id=>!kept.has(id))) await sb.from('clusters').delete().eq('id',id);
     for(const s of secs)
       if(s.secId) await sb.from('clusters').update({name:s.name}).eq('id',s.secId);
       else await sb.from('clusters').insert({name:s.name,department_id:dept.uuid,sort_order:999});
@@ -1514,34 +1950,35 @@ async function saveDept(){
   } else {
     const slug=slugify(name);
     const {data:nd,error:e2}=await sb.from('departments').insert({name,color,slug,sort_order:999}).select().single();
-    if(e2){ toast('Error: '+e2.message,'err'); return; }
+    if(e2){toast('Error: '+e2.message,'err');return;}
     for(const s of secs) await sb.from('clusters').insert({name:s.name,department_id:nd.id,sort_order:999});
     toast('Department added ✓','ok');
   }
-  await loadDepartments(); renderAdminDepts(); buildSidebarDepts(); buildFilterBar();
+  await loadDepartments();renderAdminDepts();buildSidebarDepts();buildFilterBar();
   closeModal('deptEditorModal');
 }
+
 async function deleteDept(deptId){
   const d=departments[deptId];
-  if(!confirm(`Delete "${d.name}"? Cannot be undone.`)) return;
+  if(!confirm(`Delete "${d.name}"? Cannot be undone.`))return;
   await sb.from('clusters').delete().eq('department_id',d.uuid);
   const {error}=await sb.from('departments').delete().eq('id',d.uuid);
-  if(error){ toast('Error: '+error.message,'err'); return; }
-  await loadDepartments(); renderAdminDepts(); buildSidebarDepts(); buildFilterBar();
+  if(error){toast('Error: '+error.message,'err');return;}
+  await loadDepartments();renderAdminDepts();buildSidebarDepts();buildFilterBar();
   toast('Department deleted ✓','ok');
 }
+
 async function deleteSection(deptId,secId){
-  if(!confirm('Delete this section?')) return;
+  if(!confirm('Delete this section?'))return;
   const {error}=await sb.from('clusters').delete().eq('id',secId);
-  if(error){ toast('Error: '+error.message,'err'); return; }
-  await loadDepartments(); renderAdminDepts();
+  if(error){toast('Error: '+error.message,'err');return;}
+  await loadDepartments();renderAdminDepts();
   toast('Section deleted ✓','ok');
 }
 
-// ── USERS ──
 function renderAdminUsers(){
   g('usersListAdmin').innerHTML=allUsers.map(u=>{
-    const dept=departments[u.department];
+    const dept=getDept(u.department);
     const rl=u.is_super_admin?'<span class="rb sa">Super Admin</span>'
       :u.is_dept_admin?'<span class="rb da">Dept Admin</span>'
       :u.is_cluster_admin?'<span class="rb ca">Section Admin</span>'
@@ -1561,62 +1998,62 @@ function renderAdminUsers(){
 }
 
 function openUserEditor(userId){
-  const u=allUsers.find(x=>x.id===userId); if(!u) return;
+  const u=allUsers.find(x=>x.id===userId);if(!u)return;
   editingId=userId;
   g('ueName').value=u.full_name;
-  g('ueDept').innerHTML=Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+  g('ueDept').innerHTML=Object.values(departments).map(d=>`<option value="${d.slug||d.id}">${d.name}</option>`).join('');
   g('ueDept').value=u.department;
   updateUeSecs(u.cluster_id);
   g('ueRole').value=u.is_super_admin?'super_admin':u.is_dept_admin?'dept_admin':u.is_cluster_admin?'cluster_admin':'user';
   openModal('userEditorModal');
 }
+
 function updateUeSecs(selectedId=null){
   const deptId=g('ueDept').value;
-  const dept=departments[deptId];
+  const dept=getDept(deptId);
   const sel=g('ueSection');
   if(dept?.subdepts?.length){
     sel.innerHTML=dept.subdepts.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
-    if(selectedId) sel.value=selectedId;
-  } else {
-    sel.innerHTML='<option value="">No sections</option>';
-  }
+    if(selectedId)sel.value=selectedId;
+  } else {sel.innerHTML='<option value="">No sections</option>';}
 }
+
 async function saveUserEdit(){
-  if(!editingId) return;
+  if(!editingId)return;
   const name=g('ueName').value.trim();
   const dept=g('ueDept').value;
-  const sec =g('ueSection').value;
+  const sec=g('ueSection').value;
   const role=g('ueRole').value;
-  if(!name||!dept){ toast('Name and department required','err'); return; }
-  const dObj=departments[dept];
+  if(!name){toast('Name required','err');return;}
+  const dObj=getDept(dept);
   const sObj=dObj?.subdepts.find(s=>s.id===sec);
   const {error}=await sb.from('user_profiles').update({
     full_name:name,
-    department:dept, department_id:dObj?.uuid||null,
-    cluster_id:sObj?.id||null, cluster_name:sObj?.name||null,
+    department:dObj?.slug||dept,department_id:dObj?.uuid||null,
+    cluster_id:sObj?.id||null,cluster_name:sObj?.name||null,
     role:role==='super_admin'?'super_admin':role,
-    is_dept_admin   :role==='dept_admin',
+    is_dept_admin:role==='dept_admin',
     is_cluster_admin:role==='cluster_admin',
-    is_app_admin    :role==='super_admin'
+    is_app_admin:role==='super_admin'
   }).eq('id',editingId);
-  if(error){ toast('Error: '+error.message,'err'); return; }
-  await loadAllUsers(); renderAdminUsers();
+  if(error){toast('Error: '+error.message,'err');return;}
+  await loadAllUsers();renderAdminUsers();
   closeModal('userEditorModal');
   toast('User updated ✓','ok');
 }
+
 async function deleteUserProfile(userId){
-  if(userId===currentUser.id){ toast('Cannot delete yourself','err'); return; }
-  if(!confirm('Remove this user profile?')) return;
+  if(userId===currentUser.id){toast('Cannot delete yourself','err');return;}
+  if(!confirm('Remove this user profile?'))return;
   const {error}=await sb.from('user_profiles').delete().eq('id',userId);
-  if(error){ toast('Error: '+error.message,'err'); return; }
-  allUsers=allUsers.filter(u=>u.id!==userId); renderAdminUsers();
+  if(error){toast('Error: '+error.message,'err');return;}
+  allUsers=allUsers.filter(u=>u.id!==userId);renderAdminUsers();
   toast('User removed ✓','ok');
 }
 
-// ── ADMIN EVENTS ──
 function renderAdminEvents(){
   g('eventsListAdmin').innerHTML=events.map(e=>{
-    const d=departments[e.department];
+    const d=getDept(e.department);
     const vl=e.visibility==='internal'
       ?'<span class="rb ca"><i class="ti ti-lock" style="font-size:10px"></i> Internal</span>'
       :'<span class="rb da"><i class="ti ti-world" style="font-size:10px"></i> External</span>';
@@ -1640,27 +2077,25 @@ function openAdminEvtEditor(eventId=null){
   g('aeTitle').value=evt?.title||'';
   g('aeDate').value=evt?.date||localDateStr(new Date());
   g('aeDesc').value=evt?.description||'';
-  g('aeDept').innerHTML=Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+  g('aeDept').innerHTML=Object.values(departments).map(d=>`<option value="${d.slug||d.id}">${d.name}</option>`).join('');
   g('aeDept').value=evt?.department||currentUser.department;
-  // UI stores 'external'/'internal'; DB uses 'company'/'department'
   g('aeVis').value=(evt?.visibility==='internal')?'department':'company';
   openModal('adminEvtModal');
 }
 
 async function saveAdminEvent(){
   const title=g('aeTitle').value.trim();
-  const date =g('aeDate').value;
-  const dept =g('aeDept').value;
-  const desc =g('aeDesc').value.trim();
-  const vis  =g('aeVis').value; // already 'company' or 'department'
-  if(!title||!date){ toast('Title and date required','err'); return; }
-  const dObj=departments[dept];
+  const date=g('aeDate').value;
+  const dept=g('aeDept').value;
+  const desc=g('aeDesc').value.trim();
+  const vis=g('aeVis').value;
+  if(!title||!date){toast('Title and date required','err');return;}
+  const dObj=getDept(dept);
   if(editingId){
     const {error}=await sb.from('assignments').update({
-      title,date,department:dept,
-      department_id:dObj?.uuid||null,notes:desc,visibility:vis
+      title,date,department:dept,department_id:dObj?.uuid||null,notes:desc,visibility:vis
     }).eq('id',editingId);
-    if(error){ toast('Error: '+error.message,'err'); return; }
+    if(error){toast('Error: '+error.message,'err');return;}
     const ev=events.find(e=>e.id===editingId);
     if(ev){ev.title=title;ev.date=date;ev.department=dept;ev.description=desc;ev.visibility=vis==='company'?'external':'internal';}
     toast('Event updated ✓','ok');
@@ -1669,25 +2104,25 @@ async function saveAdminEvent(){
       title,date,department:dept,department_id:dObj?.uuid||null,
       created_by:currentUser.id,notes:desc,visibility:vis
     }).select().single();
-    if(error){ toast('Error: '+error.message,'err'); return; }
+    if(error){toast('Error: '+error.message,'err');return;}
     events.push({id:data.id,title:data.title,date:data.date,department:data.department,
       description:data.notes||'',visibility:data.visibility==='company'?'external':'internal',
       assigned_to:data.assigned_to,created_by:data.created_by});
     toast('Event added ✓','ok');
   }
   closeModal('adminEvtModal');
-  renderAdminEvents(); renderCalendar();
-  if(currentView==='list') renderList();
+  renderAdminEvents();renderCalendar();
+  if(currentView==='list')renderList();if(currentView==='week')renderWeek();
   renderNextBanner();
 }
 
 async function deleteAdminEvent(id){
-  if(!confirm('Delete this event?')) return;
+  if(!confirm('Delete this event?'))return;
   const {error}=await sb.from('assignments').delete().eq('id',id);
-  if(error){ toast('Error: '+error.message,'err'); return; }
+  if(error){toast('Error: '+error.message,'err');return;}
   events=events.filter(e=>e.id!==id);
-  renderAdminEvents(); renderCalendar();
-  if(currentView==='list') renderList(); renderNextBanner();
+  renderAdminEvents();renderCalendar();
+  if(currentView==='list')renderList();if(currentView==='week')renderWeek();renderNextBanner();
   toast('Event deleted ✓','ok');
 }
 
@@ -1696,20 +2131,28 @@ async function deleteAdminEvent(id){
 // ════════════════════════════════════════
 function setView(v){
   currentView=v;
-  document.querySelectorAll('.vbtn').forEach((b,i)=>b.classList.toggle('active',(v==='month'&&i===0)||(v==='week'&&i===1)||(v==='list'&&i===2)));
-  g('navMonth').classList.toggle('active',v==='month');
-  g('navWeek').classList.toggle('active',v==='week');
-  g('navList').classList.toggle('active',v==='list');
-  g('calView').style.display =v==='month'?'grid':'none';
-  g('weekView').style.display=v==='week' ?'grid':'none';
-  g('listView').style.display=v==='list' ?'block':'none';
-  if(v==='month') renderCalendar();
-  else if(v==='week') renderWeek();
-  else renderList();
+  ['month','week','list'].forEach((name,i)=>{
+    document.querySelectorAll('.vbtn')[i]?.classList.toggle('active',v===name);
+    g('nav'+name.charAt(0).toUpperCase()+name.slice(1))?.classList.toggle('active',v===name);
+  });
+  g('calView').style.display  = v==='month'?'grid':'none';
+  g('weekView').style.display = v==='week'?'block':'none';
+  g('listView').style.display = v==='list'?'block':'none';
+  if(v==='month')      renderCalendar();
+  else if(v==='week')  renderWeek();
+  else                 renderList();
 }
-function prevMonth(){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()-1);renderCalendar();}
-function nextMonth(){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+1);renderCalendar();}
-function goToday(){currentDate=new Date();setView(currentView);}
+
+function prevPeriod(){
+  if(currentView==='week'){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate()-7);renderWeek();}
+  else{currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()-1);renderCalendar();}
+}
+function nextPeriod(){
+  if(currentView==='week'){currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth(),currentDate.getDate()+7);renderWeek();}
+  else{currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+1);renderCalendar();}
+}
+function goToday(){currentDate=new Date();if(currentView==='week')renderWeek();else renderCalendar();}
+
 function toggleNav(){g('sidebar').classList.toggle('open');g('drawerOv').classList.toggle('show');}
 function togglePanel(){g('sidePanel').classList.toggle('open');g('drawerOv').classList.toggle('show');}
 function closeDrawers(){g('sidebar').classList.remove('open');g('sidePanel').classList.remove('open');g('drawerOv').classList.remove('show');}
@@ -1720,8 +2163,7 @@ function closeDrawers(){g('sidebar').classList.remove('open');g('sidePanel').cla
 function openModal(id){g(id).classList.add('open');}
 function closeModal(id){
   g(id).classList.remove('open');
-  if(id==='newEvtModal') resetNewEvtModal();
-  else editingId=null;
+  if(id==='newEvtModal')resetNewEvtModal();else editingId=null;
 }
 
 // ════════════════════════════════════════
@@ -1729,11 +2171,10 @@ function closeModal(id){
 // ════════════════════════════════════════
 function g(id){return document.getElementById(id);}
 
-// ★ FIX: Always format dates in LOCAL timezone to avoid UTC day-shift bug
 function localDateStr(date){
-  const y = date.getFullYear();
-  const m = String(date.getMonth()+1).padStart(2,'0');
-  const d = String(date.getDate()).padStart(2,'0');
+  const y=date.getFullYear();
+  const m=String(date.getMonth()+1).padStart(2,'0');
+  const d=String(date.getDate()).padStart(2,'0');
   return `${y}-${m}-${d}`;
 }
 
@@ -1745,10 +2186,12 @@ function toast(msg,type=''){
   clearTimeout(el._t);
   el._t=setTimeout(()=>{el.className='';el.innerHTML='';},3000);
 }
+
 function showMsg(id,msg){
-  const el=g(id); el.textContent=msg; el.classList.add('show');
+  const el=g(id);el.textContent=msg;el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),5000);
 }
+
 function updateSignupClusters(){
   const dSlug=g('suDept').value;
   const dept=departments[dSlug];
@@ -1756,30 +2199,26 @@ function updateSignupClusters(){
   if(dept?.subdepts?.length){
     sel.innerHTML='<option value="">Select Section</option>'+
       dept.subdepts.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
-  } else {
-    sel.innerHTML='<option value="">No sections available</option>';
-  }
+  } else {sel.innerHTML='<option value="">No sections available</option>';}
 }
 
 // ════════════════════════════════════════
 // BOOT
 // ════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', async()=>{
+document.addEventListener('DOMContentLoaded',async()=>{
   showAuth(true);
   await loadDepartments();
-  // Populate signup dept list
   g('suDept').innerHTML='<option value="">Select Department</option>'+
     Object.values(departments).map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
-  // Restore session
-  const {data:{session}} = await sb.auth.getSession();
+  const {data:{session}}=await sb.auth.getSession();
   if(session){
-    const ok = await loadCurrentUserProfile(session.user.id);
-    if(ok){ showAuth(false); await loadApp(); }
+    const ok=await loadCurrentUserProfile(session.user.id);
+    if(ok){showAuth(false);await loadApp();}
   }
 });
 
 sb.auth.onAuthStateChange(event=>{
-  if(event==='SIGNED_OUT'){ currentUser=null; showAuth(true); }
+  if(event==='SIGNED_OUT'){currentUser=null;showAuth(true);}
 });
 </script>
 </body>
